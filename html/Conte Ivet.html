@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Aventures de la Bruixa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .title-font {
+            font-family: 'Baloo 2', cursive;
+        }
+        .chapter-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .word-cell {
+            width: 35px;
+            height: 35px;
+            border: 2px solid #667eea;
+            transition: all 0.2s;
+        }
+        .word-cell.selected {
+            background: #667eea;
+            color: white;
+        }
+        .word-cell.found {
+            background: #48bb78;
+            color: white;
+            border-color: #48bb78;
+        }
+        .sequence-item {
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        .sequence-item:hover {
+            transform: scale(1.02);
+        }
+        .sequence-item.dragging {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="p-4">
+    <!-- Barra de Progrés -->
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-lg z-50">
+        <div class="h-2 bg-gray-200">
+            <div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-green-400 to-blue-500" style="width: 0%"></div>
+        </div>
+        <div class="px-4 py-2 flex justify-between items-center">
+            <span class="title-font text-xl font-bold text-purple-700">Les Aventures de la Bruixa</span>
+            <span id="progressText" class="text-sm font-semibold text-gray-600">0% completat</span>
+        </div>
+    </div>
+
+    <div class="container mx-auto max-w-4xl mt-20 mb-8">
+        <!-- Pàgina d'Inici -->
+        <div id="page-intro" class="bg-white rounded-3xl shadow-2xl p-8 mb-8">
+            <div class="text-center">
+                <h1 class="title-font text-5xl font-bold text-purple-700 mb-4">Les Aventures de la Bruixa</h1>
+                <div class="my-8">
+                    <img src="https://via.placeholder.com/600x400/667eea/ffffff?text=La+Ivet+Bruixa+Aventurera" alt="Portada" class="rounded-2xl mx-auto shadow-lg">
+                </div>
+                <p class="text-xl text-gray-700 mb-8">Descobreix la màgica història de la Ivet i les seves aventures</p>
+                <button onclick="startBook()" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    Començar l'Aventura ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- Capítol 1 -->
+        <div id="page-chapter1" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-green-600 mb-6">📖 Capítol 1: El Descobriment Màgic</h2>
+            <div class="my-6">
+                <img src="https://files.catbox.moe/3qg3x2.png" alt="Capítol 1" class="rounded-2xl mx-auto shadow-lg max-w-full">
+            </div>
+            <div class="chapter-content text-gray-700 space-y-4">
+                <p>La Ivet tenia nou anys i un somni molt clar: volia ser la bruixa més aventurera del món. No una bruixa dolenta dels contes antics, sinó una bruixa valenta que descobrís llocs màgics i ajudés tothom pel camí.</p>
+                <p>Un matí, mentre rebuscava al desguàs de casa seva, va trobar un barret de bruixa polsegós i una escombra vella. Els ulls li van brillar d'emoció.</p>
+                <p>—Això és el que necessitava! —va cridar, posant-se el barret de cop.</p>
+                <p>Va agafar l'escombra i va pujar a l'hort de darrera casa. Es va asseure damunt l'escombra com havia vist als contes i va tancar els ulls amb força.</p>
+                <p>—Amunt, amunt, escombra màgica! —va dir amb veu potent.</p>
+                <p>Per sorpresa seva, l'escombra va començar a tremolar. De cop, la Ivet es va trobar volant uns pams per sobre del terra!</p>
+                <p>—Funciona! Funciona de debò! —va cridar d'alegria.</p>
+                <p>L'escombra la va portar volant sobre els arbres, per damunt dels terrats del barri, fins arribar a un bosc que ella no coneixia. Allà va veure una llum brillant entre els arbres.</p>
+            </div>
+            <div class="mt-8 text-center">
+                <button onclick="goToPage('page-game1')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    Continuar → Joc 1
+                </button>
+            </div>
+        </div>
+
+        <!-- Joc 1: Ordenar Seqüència -->
+        <div id="page-game1" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-orange-600 mb-6">🎮 Joc 1: Ordena la Seqüència</h2>
+            <p class="text-lg text-gray-700 mb-6">Arrrossega les frases per ordenar-les segons la història del Capítol 1</p>
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6">
+                <p class="font-semibold">Intents restants: <span id="attempts1">3</span>/3</p>
+            </div>
+            <div id="sequenceContainer" class="space-y-3 mb-6"></div>
+            <div class="flex gap-4 justify-center">
+                <button onclick="checkSequence()" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full font-bold shadow-lg">
+                    Comprovar Ordre
+                </button>
+                <button onclick="resetSequence()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-full font-bold shadow-lg">
+                    Reiniciar
+                </button>
+            </div>
+            <div id="sequenceFeedback" class="mt-6 text-center font-bold text-lg"></div>
+        </div>
+
+        <!-- Capítol 2 -->
+        <div id="page-chapter2" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-green-600 mb-6">📖 Capítol 2: La Bruixa Lavanda i la Missió</h2>
+            <div class="my-6">
+                <img src="https://files.catbox.moe/q9inqu.png" alt="Capítol 2" class="rounded-2xl mx-auto shadow-lg max-w-full">
+            </div>
+            <div class="chapter-content text-gray-700 space-y-4">
+                <p>Va aterrar amb un petit bot i va caminar cap a la llum. Era una caseta petita feta de caramels i galetes, amb finestres de sucre cristal·litzat.</p>
+                <p>—Guau... —va murmurar meravellada.</p>
+                <p>De sobte, la porta es va obrir i va sortir una senhora gran amb un barret punxegut encara més alt que el seu.</p>
+                <p>—Benvinguda, jove bruixa! —va dir la dona amb un somriure—. Fa temps que t'esperava.</p>
+                <p>—Tu també ets una bruixa? —va preguntar la Ivet, emocionada.</p>
+                <p>—Sóc la bruixa Lavanda, guardiana d'aquest bosc màgic. I tu deus ser la Ivet.</p>
+                <p>—Com sabs el meu nom?</p>
+                <p>—Les escombres màgiques només funcionen per a les bruixes de cor pur i esperit aventurer. La teva escombra em va avisar que venies.</p>
+                <p>La bruixa Lavanda la va convidar a entrar. A dins, hi havia pots plens de pols brillant de colors, llibres de pocions i una gàbia amb una reineta que cantava melodies màgiques.</p>
+                <p>—Necessito la teva ajuda —va dir la bruixa Lavanda—. El llac encantat del bosc s'està assecant. Sense la seva aigua màgica, tots els animals fantàstics desapareixeran.</p>
+                <p>—Jo t'ajudaré! —va dir la Ivet sense dubtar-ho—. Què he de fer?</p>
+                <p>—Has de trobar les tres gotes de llum estelar que es van perdre fa molts anys. Només una bruixa aventurera les pot recuperar.</p>
+                <p>La Lavanda li va donar un mapa i un flasconet buit.</p>
+            </div>
+            <div class="mt-8 text-center">
+                <button onclick="goToPage('page-game2')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    Continuar → Joc 2
+                </button>
+            </div>
+        </div>
+
+        <!-- Joc 2: Sopa de Lletres -->
+        <div id="page-game2" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-orange-600 mb-6">🎮 Joc 2: Sopa de Lletres</h2>
+            <p class="text-lg text-gray-700 mb-6">Troba les 5 paraules clau del Capítol 2</p>
+            <div class="mb-6">
+                <h3 class="font-bold text-lg mb-2">Paraules a trobar:</h3>
+                <div id="wordList" class="flex flex-wrap gap-3"></div>
+            </div>
+            <div id="wordSearch" class="inline-block bg-gray-50 p-4 rounded-xl mb-6"></div>
+            <div id="wordSearchFeedback" class="mt-6 text-center font-bold text-lg"></div>
+            <div class="mt-8 text-center">
+                <button onclick="goToPage('page-chapter3')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    Continuar → Capítol 3 📖
+                </button>
+            </div>
+        </div>
+
+        <!-- Capítol 3 -->
+        <div id="page-chapter3" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-green-600 mb-6">📖 Capítol 3: Les Tres Gotes i el Retorn</h2>
+            <div class="my-6">
+                <img src="https://files.catbox.moe/lgj6vh.png" alt="Capítol 3" class="rounded-2xl mx-auto shadow-lg max-w-full">
+            </div>
+            <div class="chapter-content text-gray-700 space-y-4">
+                <p>La Ivet va agafar la seva escombra i va volar per tot el bosc. La primera gota la va trobar al niu d'un àguila daurada, que li va demanar que primer l'ajudés a rescatar el seu pollet atrapat entre unes branques. La Ivet, sense por, va utilitzar l'escombra per arribar-hi i va alliberar el pollet.</p>
+                <p>La segona gota era al fons d'una cova fosca, guardada per un drac petit però grunyidor. La Ivet, en lloc de tenir por, li va fer pessigolles amb les branques de l'escombra fins que el drac va riure tant que li va donar la gota.</p>
+                <p>La tercera gota era la més difícil: estava al cim de la muntanya més alta, envoltada de núvols.</p>
+                <p>—Escombra, necessito que volis més alt que mai! —va dir la Ivet.</p>
+                <p>L'escombra va pujar i pujar, travessant els núvols, fins que van arribar al cim. Allà, la gota brillava sobre una pedra de cristall.</p>
+                <p>Quan va tenir les tres gotes, va tornar volant al llac. La bruixa Lavanda l'esperava amb un somriure.</p>
+                <p>—Has estat molt valenta, Ivet.</p>
+                <p>La Ivet va buidar el flasconet al llac. Les gotes van brillar i, de sobte, l'aigua va tornar a brollar cristal·lina i màgica. Unicornis, fades i criatures de llum van aparèixer per beure de l'aigua.</p>
+                <p>—Gràcies, petita bruixa aventurera —va dir la Lavanda—. Sempre que necessitis viure una aventura màgica, la teva escombra et portarà aquí.</p>
+                <p>La Ivet va tornar a casa volant, amb el cor ple de felicitat. Va amagar l'escombra i el barret al seu racó secret i va somriure.</p>
+                <p>Ja no era només la Ivet. Era la Ivet, la bruixa aventurera.</p>
+            </div>
+            <div class="mt-8 text-center">
+                <button onclick="goToPage('page-quiz')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    Continuar → Avaluació Final
+                </button>
+            </div>
+        </div>
+
+        <!-- Avaluació Final -->
+        <div id="page-quiz" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-purple-600 mb-6">📝 Avaluació Final</h2>
+            <p class="text-lg text-gray-700 mb-6">Respon les següents preguntes sobre la història</p>
+            <div id="quizContainer" class="space-y-8"></div>
+            <div class="mt-8 text-center">
+                <button onclick="checkQuiz()" class="bg-purple-500 hover:bg-purple-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    Finalitzar Avaluació
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultats Finals -->
+        <div id="page-results" class="bg-white rounded-3xl shadow-2xl p-8 mb-8 hidden">
+            <h2 class="title-font text-4xl font-bold text-green-600 mb-6 text-center">🎉 Felicitats!</h2>
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-4">🏆</div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Has completat Les Aventures de la Bruixa</h3>
+            </div>
+            <div id="resultsContainer" class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-6 mb-8"></div>
+            <div class="text-center space-y-4">
+                <button onclick="downloadReport()" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">
+                    📥 Descarregar Informe Detallat
+                </button>
+                <button onclick="restartBook()" class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg block w-full">
+                    🔄 Tornar a Començar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de Progrés
+        const pages = ['page-intro', 'page-chapter1', 'page-game1', 'page-chapter2', 'page-game2', 'page-chapter3', 'page-quiz', 'page-results'];
+        let currentPageIndex = 0;
+        let completedPages = new Set(['page-intro']);
+        
+        // Dades dels jocs
+        let attempts1 = 3;
+        let game1Completed = false;
+        let game2Completed = false;
+        
+        // Joc 1: Seqüència
+        const correctSequence = [
+            "La Ivet tenia nou anys i volia ser la bruixa més aventurera del món.",
+            "Va trobar un barret de bruixa i una escombra vella al desguàs.",
+            "Va pujar a l'hort i va provar de fer volar l'escombra.",
+            "L'escombra va començar a volar i la va portar pels aires.",
+            "Va volar sobre els arbres fins arribar a un bosc desconegut.",
+            "Al bosc va veure una llum brillant entre els arbres."
+        ];
+        
+        let currentSequence = [];
+        
+        // Joc 2: Sopa de Lletres
+        const wordsToFind = ['LAVANDA', 'BRUIXA', 'GOTES', 'LLAC', 'MAPA'];
+        const gridSize = 8;
+        let grid = [];
+        let foundWords = new Set();
+        let selectedCells = [];
+        let isSelecting = false;
+        
+        // Quiz
+        const quizQuestions = [
+            {
+                question: "Què va trobar la Ivet al desguàs que li va permetre volar?",
+                options: [
+                    "Una vareta màgica i un llibre de pocions",
+                    "Un barret de bruixa i una escombra vella",
+                    "Un anell màgic i una capa",
+                    "Unes botes voladores i uns guants"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qui era la bruixa Lavanda?",
+                options: [
+                    "La mare de la Ivet",
+                    "Una bruixa dolenta que volia atrapar la Ivet",
+                    "La guardiana del bosc màgic",
+                    "Una fada disfressada"
+                ],
+                correct: 2
+            },
+            {
+                question: "Quantes gotes de llum estelar havia de trobar la Ivet?",
+                options: [
+                    "Dues gotes",
+                    "Tres gotes",
+                    "Cinc gotes",
+                    "Sis gotes"
+                ],
+                correct: 1
+            }
+        ];
+        
+        let quizAnswers = {};
+        let results = {
+            game1Attempts: 0,
+            game1Success: false,
+            game2Words: 0,
+            quizCorrect: 0,
+            quizTotal: quizQuestions.length
+        };
+
+        function updateProgress() {
+            const progress = (completedPages.size / pages.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '% completat';
+        }
+
+        function goToPage(pageId) {
+            document.querySelectorAll('[id^="page-"]').forEach(page => page.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            completedPages.add(pageId);
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function startBook() {
+            goToPage('page-chapter1');
+        }
+
+        // Joc 1: Ordenar Seqüència
+        function initSequenceGame() {
+            currentSequence = [...correctSequence].sort(() => Math.random() - 0.5);
+            renderSequence();
+        }
+
+        function renderSequence() {
+            const container = document.getElementById('sequenceContainer');
+            container.innerHTML = '';
+            currentSequence.forEach((sentence, index) => {
+                const div = document.createElement('div');
+                div.className = 'sequence-item bg-gradient-to-r from-blue-100 to-purple-100 p-4 rounded-xl shadow-md cursor-move';
+                div.draggable = true;
+                div.dataset.index = index;
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">${index + 1}</span>
+                        <span class="flex-1">${sentence}</span>
+                        <span class="text-2xl">☰</span>
+                    </div>
+                `;
+                
+                div.addEventListener('dragstart', handleDragStart);
+                div.addEventListener('dragover', handleDragOver);
+                div.addEventListener('drop', handleDrop);
+                div.addEventListener('dragend', handleDragEnd);
+                
+                container.appendChild(div);
+            });
+        }
+
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            
+            if (draggedElement !== this) {
+                const draggedIndex = parseInt(draggedElement.dataset.index);
+                const targetIndex = parseInt(this.dataset.index);
+                
+                [currentSequence[draggedIndex], currentSequence[targetIndex]] = 
+                [currentSequence[targetIndex], currentSequence[draggedIndex]];
+                
+                renderSequence();
+            }
+            
+            return false;
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+        }
+
+        function checkSequence() {
+            attempts1--;
+            results.game1Attempts++;
+            document.getElementById('attempts1').textContent = attempts1;
+            
+            const isCorrect = JSON.stringify(currentSequence) === JSON.stringify(correctSequence);
+            const feedback = document.getElementById('sequenceFeedback');
+            
+            if (isCorrect) {
+                feedback.innerHTML = '<div class="bg-green-100 border-2 border-green-500 text-green-700 p-4 rounded-xl">✅ Excel·lent! Has ordenat la seqüència correctament!</div>';
+                results.game1Success = true;
+                game1Completed = true;
+                setTimeout(() => goToPage('page-chapter2'), 2000);
+            } else if (attempts1 === 0) {
+                feedback.innerHTML = '<div class="bg-red-100 border-2 border-red-500 text-red-700 p-4 rounded-xl mb-4">❌ Has esgotat els intents. Aquí tens l\'ordre correcte:</div>';
+                currentSequence = [...correctSequence];
+                renderSequence();
+                game1Completed = true;
+                setTimeout(() => {
+                    feedback.innerHTML += '<div class="bg-blue-100 border-2 border-blue-500 text-blue-700 p-4 rounded-xl mt-4">Continuem amb el Capítol 2! 📖</div>';
+                    setTimeout(() => goToPage('page-chapter2'), 2000);
+                }, 3000);
+            } else {
+                feedback.innerHTML = `<div class="bg-yellow-100 border-2 border-yellow-500 text-yellow-700 p-4 rounded-xl">⚠️ No és correcte. Et queden ${attempts1} intents. Torna-ho a provar!</div>`;
+            }
+        }
+
+        function resetSequence() {
+            currentSequence = [...correctSequence].sort(() => Math.random() - 0.5);
+            renderSequence();
+            document.getElementById('sequenceFeedback').innerHTML = '';
+        }
+
+        // Joc 2: Sopa de Lletres
+        function initWordSearch() {
+            grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+            
+            // Col·locar paraules
+            wordsToFind.forEach(word => {
+                let placed = false;
+                let attempts = 0;
+                while (!placed && attempts < 100) {
+                    const direction = 'H'; // Només horitzontal per facilitar
+                    const row = Math.floor(Math.random() * gridSize);
+                    const col = Math.floor(Math.random() * gridSize);
+                    
+                    if (canPlaceWord(word, row, col, direction)) {
+                        placeWord(word, row, col, direction);
+                        placed = true;
+                    }
+                    attempts++;
+                }
+            });
+            
+            // Omplir espais buits
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (grid[i][j] === '') {
+                        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                    }
+                }
+            }
+            
+            renderWordSearch();
+            renderWordList();
+        }
+
+        function canPlaceWord(word, row, col, direction) {
+            // Només col·loquem paraules horitzontals per fer-ho més fàcil
+            if (direction === 'H') {
+                if (col + word.length > gridSize) return false;
+                for (let i = 0; i < word.length; i++) {
+                    if (grid[row][col + i] !== '' && grid[row][col + i] !== word[i]) return false;
+                }
+            } else {
+                return false; // No permetre paraules verticals
+            }
+            return true;
+        }
+
+        function placeWord(word, row, col, direction) {
+            if (direction === 'H') {
+                for (let i = 0; i < word.length; i++) {
+                    grid[row][col + i] = word[i];
+                }
+            } else {
+                for (let i = 0; i < word.length; i++) {
+                    grid[row + i][col] = word[i];
+                }
+            }
+        }
+
+        function renderWordSearch() {
+            const container = document.getElementById('wordSearch');
+            container.innerHTML = '';
+            const table = document.createElement('table');
+            table.className = 'border-collapse';
+            
+            for (let i = 0; i < gridSize; i++) {
+                const tr = document.createElement('tr');
+                for (let j = 0; j < gridSize; j++) {
+                    const td = document.createElement('td');
+                    td.className = 'word-cell bg-white font-bold text-center';
+                    td.textContent = grid[i][j];
+                    td.dataset.row = i;
+                    td.dataset.col = j;
+                    
+                    td.addEventListener('mousedown', startSelection);
+                    td.addEventListener('mouseenter', continueSelection);
+                    td.addEventListener('mouseup', endSelection);
+                    
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+            container.appendChild(table);
+        }
+
+        function renderWordList() {
+            const container = document.getElementById('wordList');
+            container.innerHTML = '';
+            wordsToFind.forEach(word => {
+                const span = document.createElement('span');
+                span.className = foundWords.has(word) 
+                    ? 'px-4 py-2 bg-green-500 text-white rounded-full font-bold line-through'
+                    : 'px-4 py-2 bg-purple-200 text-purple-800 rounded-full font-bold';
+                span.textContent = word;
+                container.appendChild(span);
+            });
+        }
+
+        function startSelection(e) {
+            isSelecting = true;
+            selectedCells = [e.target];
+            e.target.classList.add('selected');
+        }
+
+        function continueSelection(e) {
+            if (isSelecting && !selectedCells.includes(e.target)) {
+                selectedCells.push(e.target);
+                e.target.classList.add('selected');
+            }
+        }
+
+        function endSelection() {
+            if (isSelecting) {
+                checkWord();
+                clearSelection();
+                isSelecting = false;
+            }
+        }
+
+        function checkWord() {
+            const word = selectedCells.map(cell => cell.textContent).join('');
+            const reversedWord = word.split('').reverse().join('');
+            
+            if (wordsToFind.includes(word) && !foundWords.has(word)) {
+                foundWords.add(word);
+                selectedCells.forEach(cell => cell.classList.add('found'));
+                results.game2Words++;
+                renderWordList();
+                
+                if (foundWords.size === wordsToFind.size) {
+                    document.getElementById('wordSearchFeedback').innerHTML = 
+                        '<div class="bg-green-100 border-2 border-green-500 text-green-700 p-4 rounded-xl mb-4">🎉 Molt bé! Has trobat totes les paraules!</div>' +
+                        '<div class="text-center"><button onclick="goToPage(\'page-chapter3\')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">Continuar → Capítol 3 📖</button></div>';
+                    game2Completed = true;
+                }
+            } else if (wordsToFind.includes(reversedWord) && !foundWords.has(reversedWord)) {
+                foundWords.add(reversedWord);
+                selectedCells.forEach(cell => cell.classList.add('found'));
+                results.game2Words++;
+                renderWordList();
+                
+                if (foundWords.size === wordsToFind.size) {
+                    document.getElementById('wordSearchFeedback').innerHTML = 
+                        '<div class="bg-green-100 border-2 border-green-500 text-green-700 p-4 rounded-xl mb-4">🎉 Molt bé! Has trobat totes les paraules!</div>' +
+                        '<div class="text-center"><button onclick="goToPage(\'page-chapter3\')" class="btn-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg">Continuar → Capítol 3 📖</button></div>';
+                    game2Completed = true;
+                }
+            }
+        }
+
+        function clearSelection() {
+            selectedCells.forEach(cell => {
+                if (!cell.classList.contains('found')) {
+                    cell.classList.remove('selected');
+                }
+            });
+            selectedCells = [];
+        }
+
+        // Quiz
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            quizQuestions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'bg-purple-50 p-6 rounded-xl';
+                div.innerHTML = `
+                    <h3 class="font-bold text-lg mb-4">${index + 1}. ${q.question}</h3>
+                    <div class="space-y-2">
+                        ${q.options.map((option, optIndex) => `
+                            <label class="flex items-center gap-3 p-3 bg-white rounded-lg cursor-pointer hover:bg-purple-100 transition">
+                                <input type="radio" name="question${index}" value="${optIndex}" class="w-5 h-5">
+                                <span>${option}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div id="feedback${index}" class="mt-3"></div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function checkQuiz() {
+            let allAnswered = true;
+            let correct = 0;
+            
+            quizQuestions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                const feedback = document.getElementById(`feedback${index}`);
+                
+                if (!selected) {
+                    allAnswered = false;
+                    feedback.innerHTML = '<p class="text-red-600 font-semibold">⚠️ Si us plau, selecciona una resposta</p>';
+                } else {
+                    const answer = parseInt(selected.value);
+                    quizAnswers[index] = answer;
+                    
+                    if (answer === q.correct) {
+                        correct++;
+                        feedback.innerHTML = '<p class="text-green-600 font-semibold">✅ Correcte!</p>';
+                    } else {
+                        feedback.innerHTML = `<p class="text-red-600 font-semibold">❌ Incorrecte. La resposta correcta era: ${q.options[q.correct]}</p>`;
+                    }
+                }
+            });
+            
+            if (allAnswered) {
+                results.quizCorrect = correct;
+                setTimeout(() => showResults(), 2000);
+            }
+        }
+
+        function showResults() {
+            const container = document.getElementById('resultsContainer');
+            const percentage = Math.round((results.quizCorrect / results.quizTotal) * 100);
+            
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="text-center">
+                        <div class="text-5xl mb-2">${percentage >= 70 ? '🌟' : '📚'}</div>
+                        <h3 class="text-2xl font-bold text-gray-800">Puntuació Final: ${percentage}%</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-xl shadow">
+                            <h4 class="font-bold text-purple-700 mb-2">🎮 Joc 1: Ordenar Seqüència</h4>
+                            <p>Intents utilitzats: ${results.game1Attempts}</p>
+                            <p>Resultat: ${results.game1Success ? '✅ Èxit' : '⚠️ Completat amb ajuda'}</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow">
+                            <h4 class="font-bold text-purple-700 mb-2">🔍 Joc 2: Sopa de Lletres</h4>
+                            <p>Paraules trobades: ${results.game2Words}/${wordsToFind.length}</p>
+                            <p>Resultat: ${results.game2Words === wordsToFind.length ? '✅ Totes trobades' : '⚠️ Completat parcialment'}</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow md:col-span-2">
+                            <h4 class="font-bold text-purple-700 mb-2">📝 Avaluació Final</h4>
+                            <p>Respostes correctes: ${results.quizCorrect}/${results.quizTotal}</p>
+                            <div class="mt-2 bg-gray-200 rounded-full h-4">
+                                <div class="bg-green-500 h-4 rounded-full" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center text-gray-700 mt-4">
+                        <p class="text-lg font-semibold">${percentage >= 70 ? '🎉 Excel·lent treball! Has completat l\'aventura amb èxit!' : '👍 Bona feina! Segueix practicant per millorar!'}</p>
+                    </div>
+                </div>
+            `;
+            
+            goToPage('page-results');
+        }
+
+        function downloadReport() {
+            const reportHTML = `
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe - Les Aventures de la Bruixa</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        h1 { color: #667eea; text-align: center; }
+        .section { background: #f7fafc; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .score { font-size: 48px; text-align: center; color: #48bb78; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #667eea; color: white; }
+    </style>
+</head>
+<body>
+    <h1>📊 Informe d'Aprenentatge</h1>
+    <h2>Les Aventures de la Bruixa</h2>
+    <p><strong>Data:</strong> ${new Date().toLocaleDateString('ca-ES')}</p>
+    
+    <div class="section">
+        <h3>Puntuació Final</h3>
+        <div class="score">${Math.round((results.quizCorrect / results.quizTotal) * 100)}%</div>
+    </div>
+    
+    <div class="section">
+        <h3>Detall de Resultats</h3>
+        <table>
+            <tr><th>Activitat</th><th>Resultat</th></tr>
+            <tr><td>Joc 1: Ordenar Seqüència</td><td>Intents: ${results.game1Attempts} - ${results.game1Success ? 'Èxit ✅' : 'Completat ⚠️'}</td></tr>
+            <tr><td>Joc 2: Sopa de Lletres</td><td>${results.game2Words}/${wordsToFind.length} paraules trobades</td></tr>
+            <tr><td>Avaluació Final</td><td>${results.quizCorrect}/${results.quizTotal} respostes correctes</td></tr>
+        </table>
+    </div>
+    
+    <div class="section">
+        <h3>Comentaris</h3>
+        <p>${Math.round((results.quizCorrect / results.quizTotal) * 100) >= 70 
+            ? 'Excel·lent comprensió de la història! Has demostrat atenció als detalls i bon seguiment de la narrativa.' 
+            : 'Bona participació! Et recomanem rellegir la història per millorar la comprensió.'}</p>
+    </div>
+</body>
+</html>
+            `;
+            
+            const blob = new Blob([reportHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'informe-les-aventures-bruixa.html';
+            a.click();
+        }
+
+        function restartBook() {
+            currentPageIndex = 0;
+            completedPages = new Set(['page-intro']);
+            attempts1 = 3;
+            game1Completed = false;
+            game2Completed = false;
+            foundWords = new Set();
+            quizAnswers = {};
+            results = {
+                game1Attempts: 0,
+                game1Success: false,
+                game2Words: 0,
+                quizCorrect: 0,
+                quizTotal: quizQuestions.length
+            };
+            updateProgress();
+            goToPage('page-intro');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProgress();
+        });
+
+        // Inicialitzar jocs quan es mostren
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.target.classList.forEach((className) => {
+                    if (!className.includes('hidden')) {
+                        if (mutation.target.id === 'page-game1' && !game1Completed) {
+                            initSequenceGame();
+                        } else if (mutation.target.id === 'page-game2' && !game2Completed) {
+                            initWordSearch();
+                        } else if (mutation.target.id === 'page-quiz') {
+                            initQuiz();
+                        }
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('[id^="page-"]').forEach((page) => {
+            observer.observe(page, { attributes: true, attributeFilter: ['class'] });
+        });
+    </script>
+</body>
+</html>

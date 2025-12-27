@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Els Temps Verbals de l'Emma</title>
+    <style>
+        /* ESTILS GENERALS */
+        body {
+            font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+            background-color: #FFFDF0; /* Crema suau */
+            color: #333; 
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6; 
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* SEPARADORS DE SECCIONS */
+        .seccio-titol {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        /* DISSENY DE LA FITXA */
+        .fitxa {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-left: 15px solid #ccc;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .fitxa:hover {
+            transform: scale(1.01);
+        }
+
+        .titol-temps {
+            font-size: 2em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* BLOCS D'INFORMACIÓ DINS LA FITXA */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .descripcio-principal {
+                grid-column: 1 / -1;
+            }
+        }
+
+        .capsa {
+            background-color: rgba(255,255,255,0.6);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(0,0,0,0.05);
+        }
+
+        .descripcio-principal {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .etiqueta {
+            display: block;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            opacity: 0.7;
+            font-weight: bold;
+        }
+
+        .text-destacat {
+            font-size: 1.2em;
+        }
+
+        /* COLORS ESPECÍFICS PER CADA TEMPS */
+        
+        /* Present */
+        .present { border-left-color: #48bb78; background-color: #f0fff4; }
+        .present .titol-temps { color: #2f855a; }
+        .present .capsa { background-color: #c6f6d5; border-color: #48bb78; }
+
+        /* Perfet (Passat Recent) */
+        .perfet { border-left-color: #4299e1; background-color: #ebf8ff; }
+        .perfet .titol-temps { color: #2b6cb0; }
+        .perfet .capsa { background-color: #bee3f8; border-color: #4299e1; }
+
+        /* Perifràstic */
+        .perifrastic { border-left-color: #f56565; background-color: #fff5f5; }
+        .perifrastic .titol-temps { color: #c53030; }
+        .perifrastic .capsa { background-color: #fed7d7; border-color: #f56565; }
+
+        /* Imperfet */
+        .imperfet { border-left-color: #ecc94b; background-color: #fffff0; }
+        .imperfet .titol-temps { color: #b7791f; }
+        .imperfet .capsa { background-color: #fefcbf; border-color: #ecc94b; }
+
+        /* Plusquamperfet */
+        .plusquam { border-left-color: #9f7aea; background-color: #faf5ff; }
+        .plusquam .titol-temps { color: #6b46c1; }
+        .plusquam .capsa { background-color: #e9d8fd; border-color: #9f7aea; }
+
+        /* Futur */
+        .futur { border-left-color: #38b2ac; background-color: #e6fffa; }
+        .futur .titol-temps { color: #2c7a7b; }
+        .futur .capsa { background-color: #b2f5ea; border-color: #38b2ac; }
+
+        /* Futur Perfet */
+        .futur-perfet { border-left-color: #319795; background-color: #b2f5ea; } /* To una mica més intens que el futur */
+        .futur-perfet .titol-temps { color: #285e61; }
+        .futur-perfet .capsa { background-color: #81e6d9; border-color: #319795; }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Els Temps Verbals</h1>
+
+        <div class="seccio-titol">ARA (El Present)</div>
+
+        <!-- 1. PRESENT -->
+        <div class="fitxa present">
+            <h2 class="titol-temps">✅ Present</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció que passa <span style="text-decoration: underline;">ara</span>.
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo canto.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div>Estàs cantant <strong>en aquest moment</strong>.</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>És el temps del <strong>present</strong>.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seccio-titol">ABANS (Els Passats)</div>
+
+        <!-- 2. PERFET (Molt a prop) -->
+        <div class="fitxa perfet">
+            <h2 class="titol-temps">✅ Perfet</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció <span style="text-decoration: underline;">passada i acabada</span>, però molt propera (avui).
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo he cantat.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div>Has cantat <strong>fa poc</strong> (aquest matí, avui).</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>Porta <strong>"he"</strong> + participi.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. PERIFRÀSTIC (Més lluny) -->
+        <div class="fitxa perifrastic">
+            <h2 class="titol-temps">✅ Passat Perifràstic</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció <span style="text-decoration: underline;">passada i acabada</span> puntualment.
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo vaig cantar.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div>Vas cantar <strong>ahir</strong> o en un moment concret.</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>Porta <strong>"vaig"</strong> + infinitiu.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. IMPERFET (Duració en el passat) -->
+        <div class="fitxa imperfet">
+            <h2 class="titol-temps">✅ Imperfet</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció <span style="text-decoration: underline;">passada</span> però que es repetia o durava.
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo cantava.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div>Cantaves <strong>sovint</strong> o durant un temps.</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>Acaba en <strong>-ava / -ia</strong>.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. PLUSQUAMPERFET (El més llunyà) -->
+        <div class="fitxa plusquam">
+            <h2 class="titol-temps">✅ Plusquamperfet</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció <span style="text-decoration: underline;">passada</span>, però abans d’una altra acció.
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo havia cantat.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div><strong>Ja havies cantat abans</strong> que passés una altra cosa.</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>Porta <strong>"havia"</strong> + participi.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seccio-titol">DESPRÉS (Els Futurs)</div>
+
+        <!-- 6. FUTUR SIMPLE -->
+        <div class="fitxa futur">
+            <h2 class="titol-temps">✅ Futur</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció que <span style="text-decoration: underline;">encara no ha passat</span>.
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo cantaré.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div>Cantaràs <strong>demà</strong> o més endavant.</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>Acaba en <strong>-ré, -ràs, -rà...</strong> (amb accent!).</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. FUTUR PERFET -->
+        <div class="fitxa futur-perfet">
+            <h2 class="titol-temps">✅ Futur Perfet</h2>
+            <div class="info-grid">
+                <div class="descripcio-principal">
+                    Acció que <span style="text-decoration: underline;">ja haurà acabat</span> en el futur.
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">📝 Exemple</span>
+                    <div class="text-destacat">Jo hauré cantat.</div>
+                </div>
+                <div class="capsa">
+                    <span class="etiqueta">💡 Què vol dir?</span>
+                    <div>Quan arribi l'hora, tu <strong>ja hauràs acabat</strong> de cantar.</div>
+                </div>
+                <div class="capsa" style="grid-column: 1 / -1;">
+                    <span class="etiqueta">🎯 Recorda</span>
+                    <div>Porta <strong>"hauré"</strong> + participi.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,799 @@
+
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judit la Policia - Llibre Gamificat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fef3e2 0%, #fae8c8 100%);
+            text-transform: uppercase;
+        }
+        h1, h2, h3 {
+            font-family: 'Baloo 2', cursive;
+        }
+        .story-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .draggable {
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        .draggable:hover {
+            transform: scale(1.02);
+        }
+        .dragging {
+            opacity: 0.5;
+        }
+        .word-search-cell {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+        .word-search-cell:hover {
+            background-color: #d1fae5;
+            transform: scale(1.05);
+        }
+        .word-search-cell.selected {
+            background-color: #10b981;
+            color: white;
+        }
+        .word-search-cell.found {
+            background-color: #f59e0b;
+            color: white;
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Barra de progrés -->
+    <div class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-xl font-bold text-emerald-700">JUDIT LA POLICIA</h2>
+                <span id="progress-text" class="text-sm font-semibold text-gray-600">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+                <div id="progress-bar" class="progress-bar bg-gradient-to-r from-emerald-500 to-orange-500 h-3 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contingut principal -->
+    <div class="container mx-auto px-4 pt-24 pb-12">
+        <!-- Portada -->
+        <div id="page-0" class="page-content max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8 text-center">
+                <div class="mb-6">
+                    <img src="https://files.catbox.moe/x9za1b.png" alt="Portada" class="w-full rounded-2xl shadow-lg">
+                </div>
+                <h1 class="text-5xl font-bold text-emerald-700 mb-4">JUDIT LA POLICIA</h1>
+                <p class="text-xl text-gray-600 mb-8">UNA AVENTURA DETECTIVESCA MOLT DOLÇA</p>
+                <button onclick="nextPage()" class="bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-8 py-4 rounded-full text-xl font-bold hover:shadow-lg transform hover:scale-105 transition">
+                    COMENÇAR L'AVENTURA! 🚀
+                </button>
+            </div>
+        </div>
+
+        <!-- Capítol 1 -->
+        <div id="page-1" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">CAPÍTOL 1: LA MISSIÓ COMENÇA</h2>
+                <div class="mb-6">
+                    <img src="https://files.catbox.moe/q8mtqk.png" alt="Capítol 1" class="w-full rounded-2xl shadow-lg">
+                </div>
+                <div class="story-text text-gray-700 space-y-4">
+                    <p>LA JUDIT MIRAVA EL SEU UNIFORME AL MIRALL DEL DORMITORI. LA GORRA LI QUEDAVA UNA MICA GRAN, PERÒ NO LI IMPORTAVA. AVUI ERA AGENT DE POLICIA I TENIA UNA MISSIÓ MOLT IMPORTANT: TROBAR EL CULPABLE QUE S'HAVIA MENJAT LES GALETES DE XOCOLATA.</p>
+                    <p>—MAMA! —VA CRIDAR BAIXANT LES ESCALES D'UN SALT—. COMENÇO LA INVESTIGACIÓ!</p>
+                    <p>LA SEVA MARE VA SOMRIURE DES DE LA CUINA.</p>
+                    <p>—MOLT BÉ, AGENT JUDIT. QUÈ NECESSITES?</p>
+                    <p>—SILENCI ABSOLUT! —VA DIR LA JUDIT, POSANT-SE SERIOSA—. I LA MEVA LUPA.</p>
+                </div>
+                <button onclick="nextPage()" class="mt-8 bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition">
+                    CONTINUAR →
+                </button>
+            </div>
+        </div>
+
+        <!-- Joc 1: Ordenar Seqüència -->
+        <div id="page-2" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-4">JOC 1: ORDENA LA SEQÜÈNCIA</h2>
+                <p class="text-gray-600 mb-6">ARROSSEGA LES FRASES PER ORDENAR-LES CORRECTAMENT SEGONS ELS ESDEVENIMENTS DEL CAPÍTOL 1:</p>
+                <div class="mb-4 text-sm text-gray-500">INTENTS RESTANTS: <span id="attempts" class="font-bold">3</span></div>
+                
+                <div id="sequence-container" class="space-y-3 mb-6">
+                    <!-- Les frases es generaran amb JavaScript -->
+                </div>
+
+                <div id="sequence-feedback" class="hidden mb-4 p-4 rounded-lg"></div>
+
+                <div class="flex gap-4">
+                    <button onclick="checkSequence()" id="check-sequence-btn" class="bg-emerald-600 text-white px-6 py-3 rounded-full font-bold hover:bg-emerald-700 transition">
+                        COMPROVAR
+                    </button>
+                    <button onclick="nextPage()" class="bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition">
+                        CONTINUAR →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Capítol 2 -->
+        <div id="page-3" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">CAPÍTOL 2: RECOLLINT PISTES</h2>
+                <div class="mb-6">
+                    <img src="https://files.catbox.moe/nc3vid.png" alt="Capítol 2" class="w-full rounded-2xl shadow-lg">
+                </div>
+                <div class="story-text text-gray-700 space-y-4">
+                    <p>VA COMENÇAR A INSPECCIONAR EL MENJADOR. SOTA LA TAULA VA TROBAR ENGRUNES. "PRIMERA PISTA", VA PENSAR. AL SOFÀ HI HAVIA MÉS ENGRUNES. "SEGONA PISTA". I AL COIXÍ... UNA TACA DE XOCOLATA!</p>
+                    <p>—AHA! —VA EXCLAMAR—. EL CULPABLE VA SEURE AQUÍ!</p>
+                    <p>VA CÓRRER AL PATI, ON EL SEU GOS TOBY DORMIA TRANQUIL·LAMENT AL SOL.</p>
+                    <p>—TOBY, DESPERTA'T! —VA DIR LA JUDIT, AGITANT LA CUA DEL GOS—. ETS TU EL LLADRE DE GALETES?</p>
+                    <p>TOBY VA BADALLAR I LI VA LLEPAR LA CARA.</p>
+                    <p>—NO POTS SER TU, ELS GOSSOS NO MENGEN AL SOFÀ —VA REFLEXIONAR EN VEU ALTA.</p>
+                </div>
+                <button onclick="nextPage()" class="mt-8 bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition">
+                    CONTINUAR →
+                </button>
+            </div>
+        </div>
+
+        <!-- Joc 2: Sopa de Lletres -->
+        <div id="page-4" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-4">JOC 2: SOPA DE LLETRES</h2>
+                <p class="text-gray-600 mb-6">TROBA LES 5 PARAULES CLAU DEL CAPÍTOL 2:</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <h3 class="font-bold text-emerald-700 mb-2">PARAULES A TROBAR:</h3>
+                        <ul id="words-list" class="space-y-1">
+                            <!-- Es generarà amb JavaScript -->
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-emerald-700 mb-2">TROBADES:</h3>
+                        <div id="found-words" class="space-y-1">
+                            <!-- Es generarà amb JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="word-search-grid" class="inline-block bg-gray-50 p-4 rounded-xl mb-6">
+                    <!-- La sopa de lletres es generarà amb JavaScript -->
+                </div>
+
+                <div id="word-search-feedback" class="hidden mb-4 p-4 rounded-lg"></div>
+
+                <button onclick="nextPage()" class="bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition">
+                    CONTINUAR →
+                </button>
+            </div>
+        </div>
+
+        <!-- Capítol 3 -->
+        <div id="page-5" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-6">CAPÍTOL 3: CAS RESOLT!</h2>
+                <div class="mb-6">
+                    <img src="https://files.catbox.moe/e22jpp.png" alt="Capítol 3" class="w-full rounded-2xl shadow-lg">
+                </div>
+                <div class="story-text text-gray-700 space-y-4">
+                    <p>DE SOBTE, VA SENTIR UN RIURE FAMILIAR. EL SEU GERMÀ PETIT, EN MARC, SORTIA DE DARRERE L'ARBRE AMB LA CARA PLENA DE XOCOLATA.</p>
+                    <p>—MARC! ESTÀS ARRESTAT! —VA CRIDAR LA JUDIT, CORRENT CAP A ELL.</p>
+                    <p>—NO HE ESTAT JO! —VA DIR EN MARC, RIENT.</p>
+                    <p>—TENS PROVES A LA CARA! —VA RESPONDRE ELLA, ASSENYALANT LES RESTES DE XOCOLATA—. CONFESSA!</p>
+                    <p>EN MARC VA SOSPIRAR.</p>
+                    <p>—D'ACORD, D'ACORD. EM VAIG MENJAR TRES GALETES MENTRE MIRÀVEU LA TELE.</p>
+                    <p>—CAS RESOLT! —VA PROCLAMAR LA JUDIT, TRIUMFANT—. MAMA, JA POTS PORTAR MÉS GALETES. PERÒ AQUESTA VEGADA, JO LES VIGILO!</p>
+                    <p>LA SEVA MARE VA RIURE DES DE LA FINESTRA. LA JUDIT ERA L'AGENT MÉS XERRAMECA I ATREVIDA QUE HAVIA VIST MAI, PERÒ SENS DUBTE, LA MÉS EFICIENT.</p>
+                </div>
+                <button onclick="nextPage()" class="mt-8 bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition">
+                    CONTINUAR →
+                </button>
+            </div>
+        </div>
+
+        <!-- Avaluació Final -->
+        <div id="page-6" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
+                <h2 class="text-3xl font-bold text-emerald-700 mb-4">AVALUACIÓ FINAL</h2>
+                <p class="text-gray-600 mb-6">RESPON AQUESTES PREGUNTES SOBRE LA HISTÒRIA:</p>
+
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Les preguntes es generaran amb JavaScript -->
+                </div>
+
+                <button onclick="submitQuiz()" id="submit-quiz-btn" class="mt-6 bg-emerald-600 text-white px-6 py-3 rounded-full font-bold hover:bg-emerald-700 transition">
+                    ENVIAR RESPOSTES
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultats Finals -->
+        <div id="page-7" class="page-content hidden max-w-3xl mx-auto">
+            <div class="bg-white rounded-3xl shadow-2xl p-8 text-center">
+                <h2 class="text-4xl font-bold text-emerald-700 mb-6">🎉 ENHORABONA! 🎉</h2>
+                <div class="mb-8">
+                    <img src="https://files.catbox.moe/x9za1b.png" alt="Felicitats" class="w-full max-w-md mx-auto rounded-2xl shadow-lg">
+                </div>
+                
+                <div class="bg-gradient-to-r from-emerald-100 to-orange-100 rounded-2xl p-6 mb-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">RESUM DEL RENDIMENT</h3>
+                    <div id="final-results" class="space-y-3 text-left max-w-md mx-auto">
+                        <!-- Es generarà amb JavaScript -->
+                    </div>
+                </div>
+
+                <button onclick="downloadReport()" class="bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-8 py-4 rounded-full text-xl font-bold hover:shadow-lg transform hover:scale-105 transition">
+                    📥 DESCARREGAR INFORME
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globals
+        let currentPage = 0;
+        const totalPages = 7;
+        let sequenceAttempts = 3;
+        let sequenceCompleted = false;
+        let wordSearchCompleted = false;
+        let quizScore = 0;
+        let selectedCells = [];
+        let foundWords = [];
+
+        // Dades del joc de seqüència
+        const correctSequence = [
+            "LA JUDIT ES MIRA L'UNIFORME DE POLICIA AL MIRALL",
+            "BAIXA LES ESCALES D'UN SALT PER COMENÇAR LA INVESTIGACIÓ",
+            "LA SEVA MARE LI PREGUNTA QUÈ NECESSITA",
+            "LA JUDIT DEMANA SILENCI ABSOLUT I LA SEVA LUPA",
+            "COMENÇA LA MISSIÓ DE TROBAR EL CULPABLE DE LES GALETES"
+        ];
+
+        let currentSequence = [...correctSequence].sort(() => Math.random() - 0.5);
+
+        // Dades de la sopa de lletres (més fàcil - graella 7x7)
+        const wordsToFind = ['TOBY', 'SOFA', 'PISTA', 'TACA', 'GOS'];
+        const gridSize = 7;
+        let grid = [];
+
+        // Dades del qüestionari
+        const quizQuestions = [
+            {
+                question: "QUIN ERA EL PAPER DE LA JUDIT EN AQUESTA HISTÒRIA?",
+                options: ["CUINERA", "AGENT DE POLICIA", "MESTRA", "METGESSA"],
+                correct: 1
+            },
+            {
+                question: "QUÈ BUSCAVA LA JUDIT?",
+                options: ["LES SEVES JOGUINES", "EL CULPABLE DE MENJAR GALETES", "EL SEU GOS TOBY", "LA SEVA GORRA"],
+                correct: 1
+            },
+            {
+                question: "QUI ERA EL CULPABLE DE MENJAR LES GALETES?",
+                options: ["LA JUDIT", "EL GOS TOBY", "EL GERMÀ MARC", "LA MARE"],
+                correct: 2
+            }
+        ];
+
+        let userAnswers = [];
+
+        // Funcions de navegació
+        function nextPage() {
+            if (currentPage < totalPages) {
+                document.getElementById(`page-${currentPage}`).classList.add('hidden');
+                currentPage++;
+                document.getElementById(`page-${currentPage}`).classList.remove('hidden');
+                updateProgress();
+                
+                // Inicialitzar jocs específics
+                if (currentPage === 2) initSequenceGame();
+                if (currentPage === 4) initWordSearch();
+                if (currentPage === 6) initQuiz();
+                if (currentPage === 7) showFinalResults();
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentPage / totalPages) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+        }
+
+        // Joc 1: Ordenar Seqüència
+        function initSequenceGame() {
+            const container = document.getElementById('sequence-container');
+            container.innerHTML = '';
+            
+            currentSequence.forEach((sentence, index) => {
+                const div = document.createElement('div');
+                div.className = 'draggable bg-gradient-to-r from-emerald-100 to-orange-100 p-4 rounded-lg shadow-md';
+                div.draggable = true;
+                div.dataset.index = index;
+                div.innerHTML = `<span class="font-semibold text-emerald-700">${index + 1}.</span> ${sentence}`;
+                
+                div.addEventListener('dragstart', handleDragStart);
+                div.addEventListener('dragover', handleDragOver);
+                div.addEventListener('drop', handleDrop);
+                div.addEventListener('dragend', handleDragEnd);
+                
+                container.appendChild(div);
+            });
+        }
+
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            if (this !== draggedElement) {
+                const allItems = [...document.querySelectorAll('.draggable')];
+                const draggedIndex = allItems.indexOf(draggedElement);
+                const targetIndex = allItems.indexOf(this);
+                
+                if (draggedIndex < targetIndex) {
+                    this.parentNode.insertBefore(draggedElement, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedElement, this);
+                }
+                
+                updateCurrentSequence();
+            }
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function updateCurrentSequence() {
+            const items = document.querySelectorAll('.draggable');
+            currentSequence = Array.from(items).map(item => {
+                const text = item.textContent;
+                return text.substring(text.indexOf('.') + 2);
+            });
+            
+            items.forEach((item, index) => {
+                const text = item.textContent;
+                const content = text.substring(text.indexOf('.') + 2);
+                item.innerHTML = `<span class="font-semibold text-emerald-700">${index + 1}.</span> ${content}`;
+            });
+        }
+
+        function checkSequence() {
+            if (sequenceCompleted) return;
+            
+            const isCorrect = JSON.stringify(currentSequence) === JSON.stringify(correctSequence);
+            const feedback = document.getElementById('sequence-feedback');
+            
+            if (isCorrect) {
+                feedback.className = 'mb-4 p-4 rounded-lg bg-green-100 border-2 border-green-500';
+                feedback.innerHTML = '<p class="text-green-700 font-bold">🎉 EXCEL·LENT! HAS ORDENAT CORRECTAMENT LA SEQÜÈNCIA!</p>';
+                feedback.classList.remove('hidden');
+                sequenceCompleted = true;
+                document.getElementById('check-sequence-btn').disabled = true;
+                document.getElementById('check-sequence-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                sequenceAttempts--;
+                document.getElementById('attempts').textContent = sequenceAttempts;
+                
+                if (sequenceAttempts > 0) {
+                    feedback.className = 'mb-4 p-4 rounded-lg bg-yellow-100 border-2 border-yellow-500';
+                    feedback.innerHTML = `<p class="text-yellow-700 font-bold">❌ NO ÉS CORRECTE. ET QUEDEN ${sequenceAttempts} INTENTS.</p>`;
+                    feedback.classList.remove('hidden');
+                } else {
+                    feedback.className = 'mb-4 p-4 rounded-lg bg-red-100 border-2 border-red-500';
+                    feedback.innerHTML = '<p class="text-red-700 font-bold mb-2">HAS ESGOTAT ELS INTENTS. AQUÍ TENS L\'ORDRE CORRECTE:</p>' +
+                        '<ol class="list-decimal list-inside space-y-1 text-red-700">' +
+                        correctSequence.map(s => `<li>${s}</li>`).join('') +
+                        '</ol>';
+                    feedback.classList.remove('hidden');
+                    sequenceCompleted = true;
+                    document.getElementById('check-sequence-btn').disabled = true;
+                    document.getElementById('check-sequence-btn').classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        // Joc 2: Sopa de Lletres (més fàcil)
+        function initWordSearch() {
+            createGrid();
+            placeWords();
+            fillEmptyCells();
+            renderGrid();
+            renderWordsList();
+        }
+
+        function createGrid() {
+            grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+        }
+
+        function placeWords() {
+            wordsToFind.forEach(word => {
+                let placed = false;
+                let attempts = 0;
+                while (!placed && attempts < 100) {
+                    // Només horizontal per facilitar
+                    const direction = 'horizontal';
+                    const row = Math.floor(Math.random() * gridSize);
+                    const col = Math.floor(Math.random() * gridSize);
+                    
+                    if (canPlaceWord(word, row, col, direction)) {
+                        placeWord(word, row, col, direction);
+                        placed = true;
+                    }
+                    attempts++;
+                }
+            });
+        }
+
+        function canPlaceWord(word, row, col, direction) {
+            if (direction === 'horizontal') {
+                if (col + word.length > gridSize) return false;
+                for (let i = 0; i < word.length; i++) {
+                    if (grid[row][col + i] !== '' && grid[row][col + i] !== word[i]) return false;
+                }
+            }
+            return true;
+        }
+
+        function placeWord(word, row, col, direction) {
+            for (let i = 0; i < word.length; i++) {
+                if (direction === 'horizontal') {
+                    grid[row][col + i] = word[i];
+                }
+            }
+        }
+
+        function fillEmptyCells() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (grid[i][j] === '') {
+                        grid[i][j] = letters[Math.floor(Math.random() * letters.length)];
+                    }
+                }
+            }
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('word-search-grid');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < gridSize; i++) {
+                const row = document.createElement('div');
+                row.className = 'flex gap-2';
+                for (let j = 0; j < gridSize; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'word-search-cell bg-white';
+                    cell.textContent = grid[i][j];
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    cell.addEventListener('click', handleCellClick);
+                    row.appendChild(cell);
+                }
+                container.appendChild(row);
+            }
+        }
+
+        function renderWordsList() {
+            const list = document.getElementById('words-list');
+            list.innerHTML = wordsToFind.map(word => 
+                `<li class="text-gray-700 text-lg" data-word="${word}">📌 ${word}</li>`
+            ).join('');
+        }
+
+        function handleCellClick(e) {
+            const cell = e.target;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+            
+            if (cell.classList.contains('found')) return;
+            
+            if (cell.classList.contains('selected')) {
+                cell.classList.remove('selected');
+                selectedCells = selectedCells.filter(c => !(c.row === row && c.col === col));
+            } else {
+                cell.classList.add('selected');
+                selectedCells.push({ row, col, letter: cell.textContent });
+            }
+            
+            checkWordFound();
+        }
+
+        function checkWordFound() {
+            if (selectedCells.length < 2) return;
+            
+            const selectedWord = selectedCells.map(c => c.letter).join('');
+            
+            wordsToFind.forEach(word => {
+                if (selectedWord === word || selectedWord === word.split('').reverse().join('')) {
+                    if (!foundWords.includes(word)) {
+                        foundWords.push(word);
+                        markWordAsFound(word);
+                        updateFoundWords();
+                        clearSelection();
+                        
+                        if (foundWords.length === wordsToFind.length) {
+                            wordSearchCompleted = true;
+                            showWordSearchComplete();
+                        }
+                    }
+                }
+            });
+        }
+
+        function markWordAsFound(word) {
+            selectedCells.forEach(cell => {
+                const cellElement = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.col}"]`);
+                cellElement.classList.remove('selected');
+                cellElement.classList.add('found');
+            });
+        }
+
+        function clearSelection() {
+            selectedCells.forEach(cell => {
+                const cellElement = document.querySelector(`[data-row="${cell.row}"][data-col="${cell.col}"]`);
+                if (!cellElement.classList.contains('found')) {
+                    cellElement.classList.remove('selected');
+                }
+            });
+            selectedCells = [];
+        }
+
+        function updateFoundWords() {
+            const container = document.getElementById('found-words');
+            container.innerHTML = foundWords.map(word => 
+                `<div class="text-emerald-700 font-bold text-lg">✅ ${word}</div>`
+            ).join('');
+            
+            const wordItems = document.querySelectorAll('#words-list li');
+            wordItems.forEach(item => {
+                if (foundWords.includes(item.dataset.word)) {
+                    item.classList.add('line-through', 'text-gray-400');
+                }
+            });
+        }
+
+        function showWordSearchComplete() {
+            const feedback = document.getElementById('word-search-feedback');
+            feedback.className = 'mb-4 p-4 rounded-lg bg-green-100 border-2 border-green-500';
+            feedback.innerHTML = '<p class="text-green-700 font-bold">🎉 EXCEL·LENT! HAS TROBAT TOTES LES PARAULES!</p>';
+            feedback.classList.remove('hidden');
+        }
+
+        // Avaluació Final
+        function initQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            quizQuestions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'bg-gradient-to-r from-emerald-50 to-orange-50 p-6 rounded-xl';
+                
+                let html = `<h3 class="font-bold text-lg text-gray-800 mb-4">${qIndex + 1}. ${q.question}</h3>`;
+                html += '<div class="space-y-2">';
+                
+                q.options.forEach((option, oIndex) => {
+                    html += `
+                        <label class="flex items-center space-x-3 p-3 bg-white rounded-lg cursor-pointer hover:bg-emerald-50 transition">
+                            <input type="radio" name="q${qIndex}" value="${oIndex}" class="w-5 h-5 text-emerald-600">
+                            <span class="text-gray-700">${option}</span>
+                        </label>
+                    `;
+                });
+                
+                html += '</div>';
+                html += `<div id="feedback-q${qIndex}" class="hidden mt-3 p-3 rounded-lg"></div>`;
+                questionDiv.innerHTML = html;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let allAnswered = true;
+            quizScore = 0;
+            
+            quizQuestions.forEach((q, qIndex) => {
+                const selected = document.querySelector(`input[name="q${qIndex}"]:checked`);
+                const feedback = document.getElementById(`feedback-q${qIndex}`);
+                
+                if (!selected) {
+                    allAnswered = false;
+                    return;
+                }
+                
+                const answer = parseInt(selected.value);
+                
+                if (answer === q.correct) {
+                    quizScore++;
+                    feedback.className = 'mt-3 p-3 rounded-lg bg-green-100 border-2 border-green-500';
+                    feedback.innerHTML = '<p class="text-green-700 font-bold">✅ CORRECTE!</p>';
+                } else {
+                    feedback.className = 'mt-3 p-3 rounded-lg bg-red-100 border-2 border-red-500';
+                    feedback.innerHTML = `<p class="text-red-700 font-bold">❌ INCORRECTE. LA RESPOSTA CORRECTA ÉS: <strong>${q.options[q.correct]}</strong></p>`;
+                }
+                
+                feedback.classList.remove('hidden');
+                
+                document.querySelectorAll(`input[name="q${qIndex}"]`).forEach(input => {
+                    input.disabled = true;
+                });
+            });
+            
+            if (!allAnswered) {
+                alert('SI US PLAU, RESPON TOTES LES PREGUNTES ABANS DE CONTINUAR.');
+                return;
+            }
+            
+            document.getElementById('submit-quiz-btn').disabled = true;
+            document.getElementById('submit-quiz-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            
+            const container = document.getElementById('quiz-container').parentElement;
+            const continueBtn = document.createElement('button');
+            continueBtn.onclick = nextPage;
+            continueBtn.className = 'mt-6 bg-gradient-to-r from-emerald-500 to-orange-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition';
+            continueBtn.textContent = 'VEURE RESULTATS FINALS →';
+            container.appendChild(continueBtn);
+        }
+
+        // Resultats Finals
+        function showFinalResults() {
+            const container = document.getElementById('final-results');
+            
+            const sequenceResult = sequenceCompleted && sequenceAttempts > 0 ? 
+                '<div class="flex justify-between items-center"><span>🎯 JOC SEQÜÈNCIA:</span><span class="font-bold text-green-600">COMPLETAT</span></div>' :
+                '<div class="flex justify-between items-center"><span>🎯 JOC SEQÜÈNCIA:</span><span class="font-bold text-orange-600">AJUDA NECESSÀRIA</span></div>';
+            
+            const wordSearchResult = wordSearchCompleted ? 
+                '<div class="flex justify-between items-center"><span>🔍 SOPA DE LLETRES:</span><span class="font-bold text-green-600">TOTES TROBADES!</span></div>' :
+                `<div class="flex justify-between items-center"><span>🔍 SOPA DE LLETRES:</span><span class="font-bold text-orange-600">${foundWords.length}/${wordsToFind.length} TROBADES</span></div>`;
+            
+            const quizPercentage = Math.round((quizScore / quizQuestions.length) * 100);
+            const quizResult = `<div class="flex justify-between items-center"><span>📝 QÜESTIONARI:</span><span class="font-bold ${quizScore === quizQuestions.length ? 'text-green-600' : 'text-orange-600'}">${quizScore}/${quizQuestions.length} (${quizPercentage}%)</span></div>`;
+            
+            container.innerHTML = sequenceResult + wordSearchResult + quizResult;
+        }
+
+        function downloadReport() {
+            const reportHTML = `
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe - Judit la Policia</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #fef3e2 0%, #fae8c8 100%);
+            text-transform: uppercase;
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #f59e0b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .badge-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .badge-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        h1 { margin: 0; font-size: 2em; }
+        h2 { color: #10b981; margin-top: 0; }
+        .date { color: #6b7280; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 INFORME D'APRENENTATGE</h1>
+        <p>JUDIT LA POLICIA</p>
+        <p class="date">DATA: ${new Date().toLocaleDateString('ca-ES')}</p>
+    </div>
+    
+    <div class="section">
+        <h2>RESUM DEL RENDIMENT</h2>
+        <div class="result-item">
+            <span>🎯 JOC SEQÜÈNCIA</span>
+            <span class="badge ${sequenceCompleted && sequenceAttempts > 0 ? 'badge-success' : 'badge-warning'}">
+                ${sequenceCompleted && sequenceAttempts > 0 ? 'COMPLETAT' : 'AJUDA NECESSÀRIA'}
+            </span>
+        </div>
+        <div class="result-item">
+            <span>🔍 SOPA DE LLETRES</span>
+            <span class="badge ${wordSearchCompleted ? 'badge-success' : 'badge-warning'}">
+                ${foundWords.length}/${wordsToFind.length} PARAULES TROBADES
+            </span>
+        </div>
+        <div class="result-item">
+            <span>📝 QÜESTIONARI FINAL</span>
+            <span class="badge ${quizScore === quizQuestions.length ? 'badge-success' : 'badge-warning'}">
+                ${quizScore}/${quizQuestions.length} CORRECTES (${Math.round((quizScore/quizQuestions.length)*100)}%)
+            </span>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>OBSERVACIONS</h2>
+        <p>${quizScore === quizQuestions.length && wordSearchCompleted && sequenceCompleted ? 
+            '🌟 EXCEL·LENT TREBALL! HAS COMPLETAT TOTES LES ACTIVITATS AMB ÈXIT. CONTINUES MOSTRANT GRAN COMPRENSIÓ LECTORA I HABILITATS DE RESOLUCIÓ DE PROBLEMES.' :
+            '👍 BON TREBALL! CONTINUES PROGRESSANT EN LES HABILITATS DE COMPRENSIÓ LECTORA I RESOLUCIÓ DE PROBLEMES. SEGUEIX PRACTICANT!'
+        }</p>
+    </div>
+</body>
+</html>`;
+
+            const blob = new Blob([reportHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'informe-judit-policia.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Inicialitzar
+        updateProgress();
+    </script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les coses de l'Albert</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        ios: {
+                            bg: '#f2f2f7',
+                            card: '#ffffff',
+                            text: '#1c1c1e',
+                            subtext: '#8e8e93',
+                            blue: '#007aff',
+                            gray: '#e5e5ea'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
+                        'hover': '0 8px 30px rgba(0, 0, 0, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f2f2f7;
+            color: #1c1c1e;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-active {
+            background-color: #ffffff;
+            color: #1c1c1e;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            font-weight: 600;
+        }
+
+        .tab-inactive {
+            color: #8e8e93;
+        }
+
+        .tab-inactive:hover {
+            color: #1c1c1e;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+        <!-- Header -->
+        <header class="flex flex-col items-center justify-center space-y-2 mb-10 text-center">
+            <div class="w-16 h-16 bg-white rounded-2xl shadow-soft flex items-center justify-center mb-4 text-3xl">
+                🏠
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Les coses de l'Albert</h1>
+            <!-- Subtitle removed -->
+        </header>
+
+        <!-- Filters -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-gray-200/50 p-1.5 rounded-full flex space-x-1 backdrop-blur-sm">
+                <button onclick="filterContent('tots')" id="btn-tots"
+                    class="tab-active px-6 py-2 rounded-full text-sm font-medium transition-all">
+                    Tots
+                </button>
+                <button onclick="filterContent('apps')" id="btn-apps"
+                    class="tab-inactive px-6 py-2 rounded-full text-sm font-medium transition-all">
+                    Apps & Eines
+                </button>
+                <button onclick="filterContent('contes')" id="btn-contes"
+                    class="tab-inactive px-6 py-2 rounded-full text-sm font-medium transition-all">
+                    Contes
+                </button>
+                <button onclick="filterContent('lectures')" id="btn-lectures"
+                    class="tab-inactive px-6 py-2 rounded-full text-sm font-medium transition-all">
+                    Lectures
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid Container -->
+        <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- APPS WEB (Vercel) -->
+            <a href="https://creixamentpersonal.vercel.app/" target="_blank" data-category="apps"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        🌱
+                    </div>
+                    <span
+                        class="bg-gra y-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">Vercel</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Creixement Personal</h3>
+                    <p class="text-gray-500 text-sm">Cursos de criança i recursos educatius.</p>
+                </div>
+            </a>
+
+            <a href="https://finances-lv17-beta.vercel.app/" target="_blank" data-category="apps"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        💰
+                    </div>
+                    <span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">Vercel</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Finances Familiars</h3>
+                    <p class="text-gray-500 text-sm">Gestió i control de l'economia domèstica.</p>
+                </div>
+            </a>
+
+            <a href="https://matematiques.vercel.app/" target="_blank" data-category="apps"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        ➗
+                    </div>
+                    <span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">Vercel</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Problemes de Mates</h3>
+                    <p class="text-gray-500 text-sm">Exercicis i pràctica matemàtica.</p>
+                </div>
+            </a>
+
+            <a href="html/Temps%20verbals.html" data-category="apps"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        📝
+                    </div>
+                    <span
+                        class="bg-orange-100 text-orange-600 text-xs font-semibold px-2.5 py-1 rounded-full">Local</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Eina Temps Verbals</h3>
+                    <p class="text-gray-500 text-sm">Utilitat per a repassar conjugacions.</p>
+                </div>
+            </a>
+
+            <a href="html/Podcast%20feed.html" data-category="apps"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        🎙️
+                    </div>
+                    <span
+                        class="bg-orange-100 text-orange-600 text-xs font-semibold px-2.5 py-1 rounded-full">Local</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Podcast Cleaner</h3>
+                    <p class="text-gray-500 text-sm">Neteja i gestió de feeds.</p>
+                </div>
+            </a>
+
+            <!-- CONTES (Vercel + Local) -->
+            <a href="https://llibre-emma2.vercel.app/" target="_blank" data-category="contes"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-pink-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        👸
+                    </div>
+                    <span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">Vercel</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Conte Interactiu Emma</h3>
+                    <p class="text-gray-500 text-sm">Aventura digital personalitzada.</p>
+                </div>
+            </a>
+
+            <a href="https://llibre-ivet.vercel.app/" target="_blank" data-category="contes"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        🧚
+                    </div>
+                    <span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">Vercel</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Conte Interactiu Ivet</h3>
+                    <p class="text-gray-500 text-sm">Conte màgic i interactiu.</p>
+                </div>
+            </a>
+
+            <a href="html/Conte%20Emma.html" data-category="contes"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        📖
+                    </div>
+                    <span
+                        class="bg-orange-100 text-orange-600 text-xs font-semibold px-2.5 py-1 rounded-full">Local</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Conte Emma</h3>
+                    <p class="text-gray-500 text-sm">Versió local del conte.</p>
+                </div>
+            </a>
+
+            <a href="html/Conte%20Judit.html" data-category="contes"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        🧸
+                    </div>
+                    <span
+                        class="bg-orange-100 text-orange-600 text-xs font-semibold px-2.5 py-1 rounded-full">Local</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Conte Judit</h3>
+                    <p class="text-gray-500 text-sm">La història especial de la Judit.</p>
+                </div>
+            </a>
+
+            <!-- TELEGRAPH SECTION (Wide Card) -->
+            <div data-category="lectures"
+                class="card-item col-span-1 sm:col-span-2 lg:col-span-3 bg-white p-8 rounded-3xl shadow-soft border border-white/50">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-2xl">
+                        📑
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Contes per anar dormir</h2>
+                        <p class="text-gray-500">Articles i aventures a Telegraph</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-8">
+                    <!-- Links List -->
+                    <a href="https://telegra.ph/El-conte-de-la-Candela-10-23" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">1.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">El conte de la Candela</span>
+                    </a>
+
+                    <a href="https://telegra.ph/El-Misteri-del-Rellotge-i-el-Planeta-Xuxes-07-23" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">2.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">El Planeta Xuxes</span>
+                    </a>
+
+                    <a href="https://telegra.ph/El-misteri-dels-llamps-i-els-trons-07-14" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">3.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Llamps i Trons</span>
+                    </a>
+
+                    <a href="https://telegra.ph/LEDAT-MITJANA-03-18" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">4.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">L'Edat Mitjana</span>
+                    </a>
+
+                    <a href="https://telegra.ph/La-m%C3%A0gia-i-el-misteri-del-m%C3%B2bil-nou-03-05" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">5.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">El Mòbil Nou</span>
+                    </a>
+
+                    <a href="https://telegra.ph/Les-aventures-de-lEmma-lIvet-i-la-Judit-a-Tossa-de-Mar-02-10"
+                        target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">6.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Tossa de Mar</span>
+                    </a>
+
+                    <a href="https://telegra.ph/Les-germanes-i-laventura-a-Vallter-02-10" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">7.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Aventura a Vallter</span>
+                    </a>
+
+                    <a href="https://telegra.ph/Joc-de-cartes--Especial-Germanes-02-10" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">8.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Joc de Cartes</span>
+                    </a>
+
+                    <a href="https://telegra.ph/El-mapa-del-bosc-m%C3%A0gic-02-10" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">9.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Bosc Màgic</span>
+                    </a>
+
+                    <a href="https://telegra.ph/El-rellotge-que-no-va-b%C3%A9-02-10" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">10.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Rellotge espatllat</span>
+                    </a>
+
+                    <a href="https://telegra.ph/LEstiu-M%C3%A0gic-al-C%C3%A0mping-Cypsela-02-10" target="_blank"
+                        class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
+                        <span class="text-gray-400 group-hover:text-blue-500 font-mono">11.</span>
+                        <span class="text-gray-700 font-medium group-hover:text-gray-900">Càmping Cypsela</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="text-center py-8 text-gray-400 text-sm">
+        Creat per Albert Garriga
+    </footer>
+
+    <!-- JavaScript for Filtering -->
+    <script>
+        function filterContent(category) {
+            // Update items
+            const items = document.querySelectorAll('.card-item');
+            items.forEach(item => {
+                if (category === 'tots' || item.dataset.category === category) {
+                    item.style.display = '';
+                    // Small animation when appearing
+                    item.animate([
+                        { opacity: 0, transform: 'scale(0.95)' },
+                        { opacity: 1, transform: 'scale(1)' }
+                    ], {
+                        duration: 300,
+                        easing: 'ease-out'
+                    });
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update buttons
+            const buttons = ['tots', 'apps', 'contes', 'lectures'];
+            buttons.forEach(btnId => {
+                const btn = document.getElementById('btn-' + btnId);
+                if (btnId === category) {
+                    btn.classList.remove('tab-inactive');
+                    btn.classList.add('tab-active');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('tab-inactive');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

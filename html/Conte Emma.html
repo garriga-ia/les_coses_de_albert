@@ -1,0 +1,972 @@
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Princesa Guerrera - Llibre Gamificat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            font-family: 'Century Gothic', 'Trebuchet MS', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f1e8;
+            min-height: 100vh;
+            color: #1a1a1a;
+        }
+        
+        .chapter-container {
+            background: #ffffff;
+            border: 3px solid #8b7355;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, #8b6f47 0%, #a0825c 100%);
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-family: 'Century Gothic', 'Trebuchet MS', sans-serif;
+        }
+        
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 111, 71, 0.4);
+        }
+        
+        .button-secondary {
+            background: #e8dcc8;
+            border: 2px solid #8b7355;
+            color: #1a1a1a;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Century Gothic', 'Trebuchet MS', sans-serif;
+            font-weight: 600;
+        }
+        
+        .button-secondary:hover {
+            background: #d9cdb8;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #8b6f47 0%, #a0825c 100%);
+            height: 6px;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .game-card {
+            background: #f9f7f3;
+            border: 2px solid #d4c5b9;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+            color: #1a1a1a;
+        }
+        
+        .game-card:hover {
+            background: #f0ebe3;
+            border-color: #8b7355;
+        }
+        
+        .draggable {
+            cursor: move;
+            user-select: none;
+            transition: all 0.2s;
+            background: #f0ebe3 !important;
+            border: 2px solid #c4b5a0 !important;
+        }
+        
+        .draggable:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(139, 111, 71, 0.3);
+        }
+        
+        .dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+        
+        .drag-over {
+            background: #e8dcc8 !important;
+            border: 2px solid #8b7355 !important;
+        }
+        
+        .correct {
+            background: #c8e6c9 !important;
+            border-color: #4caf50 !important;
+            color: #2e7d32 !important;
+        }
+        
+        .incorrect {
+            background: #ffcdd2 !important;
+            border-color: #f44336 !important;
+            color: #c62828 !important;
+        }
+        
+        .chapter-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 3px solid #8b7355;
+            margin: 16px 0;
+        }
+        
+        .result-item {
+            background: #f0ebe3;
+            border-left: 4px solid #8b7355;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+            color: #1a1a1a;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Century Gothic', 'Trebuchet MS', sans-serif;
+            color: #1a1a1a;
+        }
+
+        p, div, span {
+            font-family: 'Century Gothic', 'Trebuchet MS', sans-serif;
+            color: #1a1a1a;
+        }
+
+        .drop-zone {
+            min-height: 400px;
+            border: 2px dashed #8b7355;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fafaf8;
+        }
+
+        .sequenced-item {
+            background: #e8dcc8;
+            border: 2px solid #8b7355;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            cursor: grab;
+            color: #1a1a1a;
+        }
+
+        .sequenced-item:active {
+            cursor: grabbing;
+        }
+
+        .word-grid {
+            display: inline-block;
+            background: #f9f7f3;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 4px;
+            font-weight: bold;
+        }
+
+        .grid-cell {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #8b7355;
+            text-align: center;
+            line-height: 40px;
+            margin: 2px;
+            cursor: pointer;
+            background: #ffffff;
+            color: #1a1a1a;
+            font-weight: bold;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .grid-cell:hover {
+            background: #e8dcc8;
+            transform: scale(1.05);
+        }
+
+        .grid-cell.selected {
+            background: #a0825c;
+            color: #ffffff;
+            border-color: #6b5137;
+        }
+
+        .grid-cell.found {
+            background: #4caf50;
+            color: #ffffff;
+            border-color: #2e7d32;
+        }
+
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .word-badge {
+            background: #e8dcc8;
+            border: 2px solid #8b7355;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: #1a1a1a;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .word-badge.completed {
+            background: #4caf50;
+            color: #ffffff;
+            border-color: #2e7d32;
+            text-decoration: line-through;
+        }
+
+        .option-button {
+            background: #f9f7f3;
+            border: 2px solid #d4c5b9;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-button:hover:not(:disabled) {
+            background: #e8dcc8;
+            border-color: #8b7355;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-screen py-8 px-4">
+        <!-- Progress Bar -->
+        <div class="max-w-4xl mx-auto mb-6">
+            <div class="flex justify-between mb-2 text-sm" style="color: #8b7355;">
+                <span>Progres</span>
+                <span id="progress-text">1/13</span>
+            </div>
+            <div class="bg-gray-300 rounded-full h-2">
+                <div class="progress-bar" id="progress-bar" style="width: 7.69%"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content" class="max-w-4xl mx-auto"></div>
+    </div>
+
+    <script>
+        const APP = {
+            currentPage: 0,
+            attemptCount: 0,
+            maxAttempts: 3,
+            draggedItem: null,
+            sequenceOrder: [],
+            selectedCells: [],
+            foundWords: [],
+            results: {
+                joc1Correct: false,
+                joc2Correct: false,
+                joc3Scores: []
+            },
+            
+            pages: [
+                // Portada
+                {
+                    type: 'cover',
+                    title: 'La Princesa Guerrera',
+                    subtitle: 'Una aventura de valentia i descobriment',
+                    imageUrl: 'https://files.catbox.moe/4nm0cd.png'
+                },
+                // Capítol 1
+                {
+                    type: 'chapter',
+                    title: 'Capítol 1: La Profecia',
+                    image: 'https://files.catbox.moe/c8vvid.png',
+                    content: `El sol començava a amagar-se darrere les muntanyes quan Emma va pujar corrents les escales del palau. El seu cor bategava amb força, no per l'esforç, sinó per la notícia que acabava d'arribar al castell. A les seves onze anys, la princesa Emma havia crescut entre llibres i lliçons de protocol, sempre intentant ser l'exemple perfecte de responsabilitat i amabilitat que esperaven d'ella. Però aquell vespre, tot estava a punt de canviar.
+
+—Altesa! —la va cridar Claudia, la seva millor amiga i companya inseparable, corrent darrere d'ella—. Espera't!
+
+Emma es va aturar davant les portes de la sala del tron. Les seves mans tremolaven lleugerament mentre les posava sobre les enormes manetes de bronze.
+
+—Ho has sentit, oi? —va murmurar Emma sense girar-se—. El Senyor de les Ombres ha despertat.
+
+Claudia va assentir, posant-li una mà a l'espatlla. Eren amigues des de petites, i Claudia coneixia cada expressió del rostre d'Emma.
+
+—El teu pare t'està esperant. Sigui el que sigui el que decideixi, jo seré al teu costat.
+
+Les dues noies van entrar a la sala, on el rei Jaume estava envoltat dels seus consellers. Entre ells hi havia Marc, el cavaller més valent del regne; Ivet, la sàvia curandera; Ainara, l'arquera de la guàrdia reial; i Alex, el mestre d'estratègia. Tots tenien el rostre tensat per la preocupació.
+
+—Emma —va dir el rei amb veu greu—, el Senyor de les Ombres ha enviat les seves criatures a través de les terres. Segons els exploradors, en tres dies arribarà als nostres murs amb un exèrcit de monstres. Té una pedra màgica que pot esclavitzar tots els habitants del regne.
+
+—Què podem fer, pare? —va preguntar Emma, intentant mantenir la veu ferma malgrat la por que sentia.
+
+El rei va sospirar profundament.
+
+—Hi ha una llegenda antiga. Diu que només algú de sang reial pot arribar fins al Temple dels Quatre Elements i recuperar l'Espasa de la Llum, l'única arma capaç de destruir la pedra fosca. Però el camí és ple de perills...
+
+—Jo hi aniré —va dir Emma, sorprenent-se a si mateixa per la rapidesa de la seva resposta.
+
+—Emma, ets massa jove —va protestar Marc.
+
+—No ho és —va intervenir Ivet, la curandera, mirant Emma amb uns ulls que semblaven veure més enllà—. La profecia parla d'un cor pur i valent. L'edat no hi té res a veure.
+
+Aquella mateixa nit, Emma no va poder dormir. Asseguda a la finestra del seu dormitori, mirava les estrelles i dubtava de si mateixa. Com podria ella, que sempre havia estat protegida entre les parets del castell, salvar tot un poble?
+
+—Puc entrar? —va preguntar Claudia des de la porta.
+
+Emma va assentir, i la seva amiga es va asseure al seu costat.
+
+—Tinc por, Claudia —va admetre Emma en veu baixa—. Tothom espera que sigui valenta, però no estig segura de ser-ho.
+
+—La valentia no és no tenir por —va respondre Claudia—. És actuar malgrat tenir-la. I tu ja has demostrat coratge acceptant aquesta missió.`
+                },
+                // Capítol 2
+                {
+                    type: 'chapter',
+                    title: 'Capítol 2: El Primer Repte',
+                    image: 'https://files.catbox.moe/2jna7u.png',
+                    content: `A l'alba, un petit grup es va reunir a les portes del castell. Emma portava una armadura lleugera que Ainara havia adaptat per a ella. Al seu costat hi havia Claudia, Marc, Ivet, Ainara i Alex. També els acompanyaven Juno i Arç, dos joves guerrers que s'havien oferit voluntaris, i Jana i Guillem, experts coneixedors dels boscos i muntanyes.
+
+El primer tram del viatge va ser tranquil. Travessaven els camps verds del regne quan Jana, que anava al capdavant, va alçar la mà per aturar-los.
+
+—Escolteu —va murmurar.
+
+Un gruny profund va ressonar entre els arbres. De sobte, tres ogres enormes van sortir del bosc, bloquejant-los el camí. Tenien la pell verdosa i ulls vermells que brillaven amb malícia.
+
+—Princesa, queda't darrere! —va cridar Marc, desenfundant l'espasa.
+
+Els ogres van atacar. Marc i Arç van lluitar valents, però eren massa forts. Un dels monstres va fer volar Marc amb un cop del seu maça, deixant-lo inconscient a terra. Ivet va córrer a curar-lo mentre Ainara disparava fletxes que semblaven no fer-los massa mal.
+
+Emma va veure com Juno era llançat contra un arbre i Guillem quedava atrapat sota el peu d'un dels ogres. La por la paralitzava, però llavors va sentir la veu de Claudia:
+
+—Emma, la gent necessita que siguis valenta! Pots fer-ho!
+
+Alguna cosa es va despertar dins d'Emma. Va agafar una espasa caiguda i, sense pensar-ho dues vegades, va córrer cap a l'ogre que tenia atrapat Guillem. Va recordar les lliçons de Marc sobre punts febles i va apuntar al turmell del monstre. La seva estocada va ser precisa. L'ogre va cridar de dolor i va deixar anar Guillem.
+
+Els altres ogres es van girar cap a ella, furiosos. Emma va respirar fondo, intentant controlar els tremolors de les seves mans.
+
+—Vinga, monstres! —va cridar, i va començar a moure's àgilment, esquivant els cops mentre els altres es recuperaven.
+
+Finalment, treballant junts, van aconseguir derrotar els tres ogres. Quan tot va acabar, Emma estava exhausta, amb les mans encara tremolant per l'adrenalina.
+
+—Has estat increïble! —va exclamar Claudia, abraçant-la.
+
+—No m'ho puc creure —va murmurar Emma—. Ho he fet de debò?
+
+Marc, encara recuperant-se dels cops, va somriure.
+
+—Has salvat Guillem i has liderat el contraatac. Potser ets més guerrera del que pensaves, princesa.`
+                },
+                // Joc 1: Ordenar Seqüència
+                {
+                    type: 'game',
+                    title: 'Joc 1: Ordena la Seqüència',
+                    gameType: 'sequencing',
+                    description: 'Ordena les frases següents que resumeixen els esdeveniments principals dels capítols 1 i 2:',
+                    items: [
+                        'Emma rep la notícia que el Senyor de les Ombres ha despertat',
+                        'El rei li explica que ha de trobar l\'Espasa de la Llum al Temple dels Quatre Elements',
+                        'Emma es junta amb el seu grup al castells',
+                        'El grup és atacat per tres ogres als boscos',
+                        'Emma descobreix el seu coratge en salvar Guillem',
+                        'La victòria obre el camí cap a noves aventures'
+                    ],
+                    correctOrder: [0, 1, 2, 3, 4, 5]
+                },
+                // Capítol 3
+                {
+                    type: 'chapter',
+                    title: 'Capítol 3: El Bosc dels Xiuxiueigs',
+                    image: 'https://files.catbox.moe/cpqeft.png',
+                    content: `Després de dos dies de camí, van arribar al Bosc dels Xiuxiueigs, un lloc on es deia que els arbres estaven vius i podien llegir els pensaments. L'aire era espès i una boira grisa ho cobria tot.
+
+—Anem amb compte —va advertir Jana—. Aquest lloc pot fer-te veure les teves pitjors pors.
+
+Mentre avançaven, van començar a sentir veus. Emma va veure siluetes entre la boira que semblaven persones del seu poble, cridant-la, acusant-la de no ser prou forta per salvar-los.
+
+—No són reals —li va recordar Alex—. És la màgia del bosc.
+
+Però llavors van aparèixer criatures de fang i ombra, materialitzant-se de la mateixa boira. Eren els Espectres del Dubte, éssers que s'alimentaven de la inseguretat.
+
+—Ataquen la ment abans que el cos! —va cridar Ivet—. Heu de mantenir la confiança en vosaltres mateixos!
+
+Els espectres envoltaven Emma, xiuxiuejant-li a l'orella: "Ets massa dèbil. Fallaràs. El teu poble morirà per culpa teva."
+
+Emma va tancar els ulls, recordant tot el que havia passat. Els ogres. Com havia superat la seva por. Com havia salvat Guillem. Totes les vegades que havia ajudat la gent al castell, escoltant els seus problemes, trobant solucions.
+
+—No —va dir en veu alta, obrint els ulls amb determinació—. Sóc més forta del que pensava. I seguiré lluitant!
+
+Una llum càlida va començar a brillar al voltant d'Emma. Els espectres van cridar i es van dissoldre davant aquella llum pura que naixia del seu cor.
+
+—La llum de la teva convicció els ha destruït! —va exclamar Ivet, meravellada—. Emma, portes la màgia dins teu!
+
+Un a un, inspirats per Emma, tots van trobar la força per enfrontar-se als seus propis dubtes. Els espectres van desaparèixer i la boira es va aixecar, revelant el camí cap endavant.
+
+Aquella nit, mentre descansaven al voltant del foc, Claudia va asseure's al costat d'Emma.
+
+—Cada vegada estig més orgullosa de tu —va dir—. Has canviat tant des que vam sortir del castell.
+
+—No he canviat —va respondre Emma, pensativa—. Simplement estig descobrint qui sóc de veritat. Sempre he pensat que ser responsable i amable significava ser dèbil. Però ara veig que pot conviure amb la força i la valentia.`
+                },
+                // Capítol 4
+                {
+                    type: 'chapter',
+                    title: 'Capítol 4: El Drac de Gel',
+                    image: 'https://files.catbox.moe/ay6a1w.png',
+                    content: `L'endemà van arribar al peu de les Muntanyes de Cristall, on segons la llegenda es trobava el Temple dels Quatre Elements. Però guardant l'entrada hi havia Morgath, un bruixot al servei del Senyor de les Ombres.
+
+—Així que la princeseta ha arribat fins aquí —va riure Morgath, la seva veu sonant com vidre trencat—. Impressionant. Però aquí acaba el teu viatge.
+
+Morgath va invocar un drac de gel, una criatura immensa amb escates translúcides i alè glaçat. El monstre va rugir, fent tremolar la muntanya.
+
+—Això és massa per a nosaltres! —va cridar Arç.
+
+El drac va atacar, i el grup es va dispersar. Ainara disparava fletxes que rebotaven contra les escates de gel. Marc intentava apropar-se, però l'alè glaçat del drac el mantenia a distància. Ivet curava els ferits tan ràpid com podia.
+
+Emma observava la batalla, buscant una estratègia. Va recordar les lliçons d'Alex sobre trobar els punts febles de l'enemic. I llavors ho va veure: el drac protegia especialment el costat esquerre del seu coll.
+
+—Allà hi ha el seu punt feble! —va cridar—. Però necessitem una distracció!
+
+—Això ho puc fer jo —va dir Claudia, agafant una torxa.
+
+—És massa perillós! —va protestar Emma.
+
+—Confia en mi, com jo confio en tu —va respondre Claudia amb un somriure.
+
+Emma va assentir. Va elaborar ràpidament un pla, assignant tasques a cadascun. Jana i Guillem crearien confusió des dels flancs. Marc, Juno i Arç atacarien de front. Ainara i Alex donarien suport des de la distància. I Emma i Claudia executarien l'atac final.
+
+El pla es va posar en marxa. Mentre els altres distreien el drac, Emma i Claudia van escalar per un costat de la muntanya. Morgath, massa confiat en la seva criatura, no les va veure arribar.
+
+—Ara! —va cridar Emma.
+
+Les dues amigues van saltar des d'una cornisa, amb Emma apuntant directament al punt feble del coll del drac. La seva espasa va traspassar les escates, i el monstre va rugir de dolor abans de desintegrar-se en una pluja de cristalls de gel.
+
+Morgath, furiós, va intentar atacar-les amb màgia fosca, però Ivet va crear un escut protector mentre Marc es llançava contra el bruixot. La batalla va ser intensa, però finalment Morgath va fugir, derrotat.
+
+—Ho hem aconseguit! —va exclamar Juno.`
+                },
+                // Joc 2: Sopa de Lletres
+                {
+                    type: 'game',
+                    title: 'Joc 2: Sopa de Lletres',
+                    gameType: 'wordsearch',
+                    description: 'Clica els grups de lletres per trobar les 5 paraules clau dels capítols 3 i 4: DUBTE, DRAC, LLUM, CORATGE, MORGATH',
+                    words: ['DUBTE', 'DRAC', 'LLUM', 'CORATGE', 'MORGATH'],
+                    grid: [
+                        ['D', 'U', 'B', 'T', 'E', 'X', 'Y', 'Z', 'K', 'L'],
+                        ['M', 'O', 'R', 'G', 'A', 'T', 'H', 'P', 'Q', 'U'],
+                        ['D', 'R', 'A', 'C', 'W', 'S', 'V', 'N', 'M', 'M'],
+                        ['L', 'L', 'U', 'M', 'T', 'J', 'K', 'L', 'I', 'H'],
+                        ['C', 'O', 'R', 'A', 'T', 'G', 'E', 'F', 'D', 'B'],
+                        ['P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
+                    ]
+                },
+                // Capítol 5
+                {
+                    type: 'chapter',
+                    title: 'Capítol 5: El Temple dels Quatre Elements',
+                    image: 'https://files.catbox.moe/317o05.png',
+                    content: `Van entrar al Temple dels Quatre Elements, un lloc màgic on l'aire, el foc, l'aigua i la terra es trobaven en perfecte equilibri.
+
+Al centre del temple hi havia un pedestal, i sobre ell, l'Espasa de la Llum. Però quan Emma es va apropar, una veu va ressonar per tot el temple.
+
+—Només qui sigui digne pot aixecar l'espasa. Demostra que tens el cor pur, la ment clara, la força necessària i l'esperit indomable.
+
+Quatre proves van aparèixer davant d'Emma. La primera era una prova d'aigua: havia de creuar un riu de records, revivint moments dolorosos del seu passat sense deixar-se arrossegar per ells. Emma va caminar per l'aigua, veient com revivia moments de dubte i por, però acceptant-los com a part d'ella mateixa.
+
+La segona prova era de foc: havia d'enfrontar-se a una il·lusió del Senyor de les Ombres, que prenia la forma dels seus pitjors temors. Emma va respirar fondo i va recordar tot el que havia après. No va fugir de la por, sinó que la va abraçar i la va superar.
+
+La tercera prova era d'aire: havia de respondre tres endevinalles sobre la naturalesa del coratge. Emma va pensar en tot el que havia viscut durant el viatge i va trobar les respostes en la seva pròpia experiència.
+
+La quarta prova era de terra: havia de demostrar la seva connexió amb el poble que volia salvar. Emma va tancar els ulls i va pensar en cada persona del regne, en les seves històries, en les seves esperances. Va sentir el seu amor pel seu poble fluint a través d'ella.
+
+Quan va obrir els ulls, l'Espasa de la Llum brillava davant d'ella. La va agafar, i una energia càlida va recórrer tot el seu cos.
+
+—Ho has aconseguit! —va cridar Claudia, amb llàgrimes d'alegria als ulls.`
+                },
+                // Capítol 6
+                {
+                    type: 'chapter',
+                    title: 'Capítol 6: La Batalla Final',
+                    image: 'https://files.catbox.moe/xdix96.png',
+                    content: `No hi havia temps per celebracions. Havien de tornar ràpidament al castell. El Senyor de les Ombres ja havia arribat amb el seu exèrcit.
+
+El viatge de tornada va ser una cursa contra el temps. Quan finalment van arribar al regne, el cel estava fosc i les forces del mal envoltaven el castell. El Senyor de les Ombres era una figura immensa de foscor pura, amb la pedra negra brillant al seu pit.
+
+—He arribat tard! —va exclamar Emma, veient com les defenses del castell feien fallida.
+
+—No —va dir Marc—. Has arribat just a temps. El teu pare ha aconseguit resistir fins ara.
+
+Emma va mirar la seva gent lluitant valientemente. Va veure el seu pare defensant les muralles, els seus soldats caient però aixecant-se de nou. I va entendre que la valentia no era només cosa d'una persona, sinó de tot un poble unit.
+
+—Anem-hi! —va cridar Emma, aixecant l'Espasa de la Llum.
+
+La batalla va ser ferotge. Emma va liderar l'atac, i la seva espasa tallava la foscor com si fos mantega. Els seus companys lluitaven al seu costat: Claudia protegia el seu flanc, Marc comandava els soldats, Ivet curava els ferits, Ainara disparava fletxes màgiques, Alex coordinava la defensa, i Jana, Guillem, Juno i Arç lluitaven amb tot el seu coratge.
+
+Finalment, Emma va arribar davant el Senyor de les Ombres.
+
+—Una nena? —va riure l'ésser fosc—. Això és el millor que pot oferir aquest regne patètic?
+
+—Aquesta nena ha après més durant aquest viatge que tu en tota la teva existència —va respondre Emma, ferma—. He après que la valentia no és l'absència de por, sinó actuar malgrat tenir-la. He après que sóc molt més forta del que pensava. I he après que amb amics de veritat i un propòsit just, res és impossible.
+
+Emma va atacar. La seva espasa de llum va xocar contra la foscor del Senyor de les Ombres. Era una batalla entre el bé i el mal, entre l'esperança i la desesperació. Emma va recordar cada prova superada, cada moment de dubte vençut, cada vegada que havia descobert una nova força dins seu.
+
+Amb un últim esforç, va clavar l'Espasa de la Llum directament a la pedra negra. Una explosió de llum va il·luminar tot el camp de batalla. El Senyor de les Ombres va cridar abans de desintegrar-se, i amb ell, tot el seu exèrcit va desaparèixer.
+
+El silenci va caure sobre el camp de batalla. I llavors, els crits de victòria van esclatar per tot arreu.`
+                },
+                // Capítol 7
+                {
+                    type: 'chapter',
+                    title: 'Capítol 7: El Retorn',
+                    image: 'https://files.catbox.moe/m51siw.png',
+                    content: `Emma, exhausta, va caure de genolls. Claudia va córrer cap a ella, abraçant-la.
+
+—Ho has fet! Has salvat el regne!
+
+Els dies següents van ser de celebració. El rei Jaume va organitzar un gran banquet, i tothom va reunir-se per honrar Emma i els seus companys.
+
+Però la nit de la celebració, Emma es va escapar un moment a la seva habitació del castell. Es va mirar al mirall i gairebé no es va reconèixer. La noia que veia davant seu ja no era la princesa tímida i insegura que havia partit feia dies. Era algú nou, algú que havia descobert la seva pròpia força.
+
+Claudia va entrar a l'habitació.
+
+—T'estan esperant per al brindis —va dir, i llavors va afegir—: Com et sents?
+
+Emma va somriure.
+
+—Sento que finalment he entès qui sóc. Durant tant de temps vaig pensar que havia de ser d'una manera determinada per ser una bona princesa. Responsable, amable, però sempre protegida. Ara sé que puc ser tot això i, alhora, ser valenta, forta i capaç d'enfrontar-me a qualsevol repte.
+
+—I què faràs ara? —va preguntar Claudia.
+
+—Ara? —Emma va mirar per la finestra cap al seu regne, on la gent celebrava—. Ara continuaré creixent, aprenent, sent la millor versió de mi mateixa. Perquè he descobert que el viatge de conèixer-te a tu mateix mai s'acaba. I això és el més emocionant de tot.
+
+Les dues amigues van tornar al saló, on tothom les esperava. El rei va alçar la seva copa.
+
+—Brindem per la meva filla Emma, la Princesa Guerrera, que ens ha ensenyat que la veritable valentia neix del cor i que tots som més forts del que pensem!
+
+—Per Emma! —van cridar tots a l'uníson.
+
+I així, Emma va aprendre la lliçó més important de totes: que dins de cada persona hi ha una força immensa esperant ser descoberta, que la valentia es troba en els moments més foscos, i que amb constància, esforç i confiança en un mateix, es pot superar qualsevol obstacle. El poble va poder viure feliç, protegit per una princesa que ara sabia que era tant guerrera com diplomàtica, tant forta com amable, i sobretot, capaç de coses extraordinàries.
+
+I cada nit, abans d'adormir-se, Emma recordava les paraules que Claudia li havia dit aquell primer vespre: "La valentia no és no tenir por, és actuar malgrat tenir-la." I somreia, sabent que aquelles paraules l'acompanyarien per sempre en cada nova aventura que la vida li presentés.`
+                },
+                // Joc 3: Qüestionari Final
+                {
+                    type: 'game',
+                    title: 'Qüestionari Final',
+                    gameType: 'multiple-choice',
+                    description: 'Respon les següents preguntes per demostrar la teva comprensió de tota la història:',
+                    questions: [
+                        {
+                            question: '¿Quin és el nom de la millor amiga d\'Emma?',
+                            options: ['Ivet', 'Claudia', 'Ainara', 'Jana'],
+                            correct: 1
+                        },
+                        {
+                            question: '¿Quina és l\'arma que Emma ha de trobar per derrotar el Senyor de les Ombres?',
+                            options: ['L\'Espasa de Foc', 'L\'Espasa de la Llum', 'L\'Espasa del Bé', 'L\'Espasa dels Elements'],
+                            correct: 1
+                        },
+                        {
+                            question: '¿A quin lloc Emma ha de viure les seves pitjors pors materialitzades?',
+                            options: ['Al Bosc dels Xiuxiueigs', 'Muntanyes de Cristall', 'Temple dels Quatre Elements', 'Riu de Records'],
+                            correct: 0
+                        },
+                        {
+                            question: '¿Quina és la lliçó més important que Emma aprèn durant la seva aventura?',
+                            options: ['La força física és més important que les amistats', 'La valentia no és l\'absència de por, sinó actuar malgrat tenir-la', 'El poder està en la càrrega màgica que poses', 'Els prínceps sempre neixen valents'],
+                            correct: 1
+                        },
+                        {
+                            question: '¿Quin bruixot invoca el drac de gel?',
+                            options: ['Alex', 'Morgath', 'Jaume', 'Marc'],
+                            correct: 1
+                        }
+                    ]
+                },
+                // Resultats Finals
+                {
+                    type: 'results',
+                    title: 'Resum del Teu Rendiment'
+                }
+            ],
+
+            init() {
+                this.render();
+            },
+
+            render() {
+                const page = this.pages[this.currentPage];
+                const content = document.getElementById('content');
+                
+                switch(page.type) {
+                    case 'cover':
+                        content.innerHTML = this.renderCover(page);
+                        break;
+                    case 'chapter':
+                        content.innerHTML = this.renderChapter(page);
+                        break;
+                    case 'game':
+                        content.innerHTML = this.renderGame(page);
+                        break;
+                    case 'results':
+                        content.innerHTML = this.renderResults(page);
+                        break;
+                }
+                
+                this.updateProgress();
+            },
+
+            renderCover(page) {
+                return `
+                    <div class="chapter-container p-12 text-center">
+                        <div class="fade-in">
+                            <img src="${page.imageUrl}" alt="${page.title}" class="chapter-image mx-auto mb-8" style="max-width: 300px;">
+                            <h1 class="text-5xl font-bold mb-4" style="color: #8b6f47;">${page.title}</h1>
+                            <p class="text-2xl mb-8" style="color: #1a1a1a;">${page.subtitle}</p>
+                            <p class="text-lg mb-8" style="color: #555;">Prepara't per a una aventura èpica!</p>
+                            <button onclick="APP.nextPage()" class="button-primary">Comença l'aventura</button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderChapter(page) {
+                return `
+                    <div class="chapter-container p-8 fade-in">
+                        <h2 class="text-4xl font-bold mb-6" style="color: #8b6f47;">${page.title}</h2>
+                        <img src="${page.image}" alt="${page.title}" class="chapter-image">
+                        <div class="text-lg leading-relaxed mb-8 whitespace-pre-wrap">
+                            ${page.content}
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="APP.previousPage()" class="button-secondary" ${this.currentPage === 1 ? 'style="display:none"' : ''}>Anterior</button>
+                            <button onclick="APP.nextPage()" class="button-primary ml-auto">Següent</button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderGame(page) {
+                let gameHTML = `
+                    <div class="chapter-container p-8 fade-in">
+                        <h2 class="text-4xl font-bold mb-4" style="color: #8b6f47;">${page.title}</h2>
+                        <p class="text-lg mb-6" style="color: #555;">${page.description}</p>
+                `;
+
+                if(page.gameType === 'sequencing') {
+                    gameHTML += this.renderSequencingGame(page);
+                } else if(page.gameType === 'wordsearch') {
+                    gameHTML += this.renderWordSearchGame(page);
+                } else if(page.gameType === 'multiple-choice') {
+                    gameHTML += this.renderMultipleChoiceGame(page);
+                }
+
+                gameHTML += `
+                        <div id="feedback" class="mt-6"></div>
+                        <div class="flex gap-4 mt-8">
+                            <button onclick="APP.previousPage()" class="button-secondary">Anterior</button>
+                            <button id="next-btn" onclick="APP.nextPage()" class="button-primary ml-auto">Següent</button>
+                        </div>
+                    </div>
+                `;
+                return gameHTML;
+            },
+
+            renderSequencingGame(page) {
+                let html = '<div id="game-container" class="mt-6">';
+                html += '<div id="available-items" class="mb-6">';
+                html += '<h3 class="text-lg font-bold mb-4" style="color: #8b6f47;">Arrossega els elements de l\'esquerra a la dreta per ordenar-los:</h3>';
+                
+                html += '<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">';
+                html += '<div>';
+                page.items.forEach((item, index) => {
+                    html += `
+                        <div class="sequenced-item draggable" draggable="true" data-index="${index}" 
+                             ondragstart="APP.dragStart(event)" ondragend="APP.dragEnd(event)">
+                            ${index + 1}. ${item}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                html += '<div>';
+                html += '<div id="drop-zone" class="drop-zone" ondrop="APP.drop(event)" ondragover="APP.allowDrop(event)" ondragleave="APP.dragLeave(event)">';
+                html += '<p style="color: #999;">Arrossega els elements aquí en l\'ordre correcte</p>';
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+                
+                html += '<button onclick="APP.checkSequence()" class="button-secondary mt-4">Verificar</button>';
+                html += '</div>';
+                
+                return html;
+            },
+
+            renderWordSearchGame(page) {
+                let html = '<div class="mt-6">';
+                html += '<div class="mb-6"><h3 class="text-lg font-bold mb-3" style="color: #8b6f47;">Paraules a trobar:</h3>';
+                html += '<div class="word-list">';
+                page.words.forEach(word => {
+                    html += `<span class="word-badge" data-word="${word}">${word}</span>`;
+                });
+                html += '</div></div>';
+                
+                html += '<div style="margin: 20px 0; text-align: center;">';
+                page.grid.forEach((row, rowIndex) => {
+                    row.forEach((letter, colIndex) => {
+                        html += `<span class="grid-cell" onclick="APP.toggleCell(${rowIndex}, ${colIndex})" data-row="${rowIndex}" data-col="${colIndex}">${letter}</span>`;
+                    });
+                    html += '<br>';
+                });
+                html += '</div>';
+                
+                html += '<button onclick="APP.checkWordSearch()" class="button-secondary mb-4">Marcar com a completat</button>';
+                html += '<div id="found-words" class="text-base mt-4"></div>';
+                
+                html += '</div>';
+                return html;
+            },
+
+            renderMultipleChoiceGame(page) {
+                let html = '<div id="game-container" class="mt-6">';
+                
+                page.questions.forEach((q, qIndex) => {
+                    html += `
+                        <div class="game-card mb-6">
+                            <h3 class="text-lg font-bold mb-4" style="color: #8b6f47;">Pregunta ${qIndex + 1}: ${q.question}</h3>
+                            <div class="space-y-3">
+                    `;
+                    
+                    q.options.forEach((option, oIndex) => {
+                        html += `
+                            <button class="w-full text-left game-card option-button" data-question="${qIndex}" data-option="${oIndex}">
+                                <span style="color: #8b6f47; font-weight: bold;">${String.fromCharCode(65 + oIndex)}.</span> ${option}
+                            </button>
+                        `;
+                    });
+                    
+                    html += '</div></div>';
+                });
+                
+                html += '</div>';
+                
+                setTimeout(() => {
+                    document.querySelectorAll('.option-button').forEach(btn => {
+                        btn.addEventListener('click', (e) => APP.selectAnswer(e));
+                    });
+                }, 100);
+                
+                return html;
+            },
+
+            renderResults(page) {
+                let totalScore = 0;
+                let totalPossible = 0;
+
+                if(this.results.joc1Correct) totalScore += 1;
+                totalPossible += 1;
+
+                if(this.results.joc2Correct) totalScore += 1;
+                totalPossible += 1;
+
+                const joc3Score = this.results.joc3Scores.filter(r => r).length;
+                totalScore += joc3Score;
+                totalPossible += 5;
+
+                const percentage = Math.round((totalScore / totalPossible) * 100);
+
+                return `
+                    <div class="chapter-container p-8 fade-in">
+                        <h2 class="text-4xl font-bold mb-6" style="color: #8b6f47;">Felicitats!</h2>
+                        
+                        <div style="background: linear-gradient(135deg, #e8dcc8 0%, #d9cdb8 100%); border: 3px solid #8b7355; padding: 32px; border-radius: 12px; margin-bottom: 32px; text-align: center;">
+                            <p class="mb-2" style="color: #666;">La teva puntuació</p>
+                            <p class="text-5xl font-bold" style="color: #8b6f47;">${totalScore}/${totalPossible}</p>
+                            <p class="text-2xl mt-2" style="color: #8b6f47;">${percentage}%</p>
+                        </div>
+
+                        <div class="space-y-4 mb-8">
+                            <div class="result-item">
+                                <strong style="color: #8b6f47;">Joc 1: Ordenar Seqüència</strong>
+                                <p>${this.results.joc1Correct ? '✅ Correcte' : '❌ No completat'}</p>
+                            </div>
+                            <div class="result-item">
+                                <strong style="color: #8b6f47;">Joc 2: Sopa de Lletres</strong>
+                                <p>${this.results.joc2Correct ? '✅ Correcte' : '❌ No completat'}</p>
+                            </div>
+                            <div class="result-item">
+                                <strong style="color: #8b6f47;">Qüestionari Final</strong>
+                                <p>✅ ${joc3Score} de 5 preguntes correctes</p>
+                            </div>
+                        </div>
+
+                        <p class="text-lg mb-8">
+                            ${percentage >= 80 ? '🎉 Genia! Has demostrat ser un autèntic expert en aquesta història!' : 
+                              percentage >= 60 ? '👏 Molt bé! Tens una bona comprensió de la història.' : 
+                              '📚 Has appres molt! Recorda que l\'aprenentatge és un viatge continu.'}
+                        </p>
+
+                        <button onclick="APP.downloadReport()" class="button-primary mb-4">Descarrega Informe</button>
+                        <button onclick="APP.restart()" class="button-secondary ml-4">Comença de nou</button>
+                    </div>
+                `;
+            },
+
+            updateProgress() {
+                const progress = ((this.currentPage) / (this.pages.length - 1)) * 100;
+                document.getElementById('progress-bar').style.width = progress + '%';
+                document.getElementById('progress-text').textContent = `${this.currentPage + 1}/${this.pages.length}`;
+            },
+
+            nextPage() {
+                if(this.currentPage < this.pages.length - 1) {
+                    this.currentPage++;
+                    this.sequenceOrder = [];
+                    this.selectedCells = [];
+                    this.render();
+                    window.scrollTo(0, 0);
+                }
+            },
+
+            previousPage() {
+                if(this.currentPage > 0) {
+                    this.currentPage--;
+                    this.sequenceOrder = [];
+                    this.selectedCells = [];
+                    this.render();
+                    window.scrollTo(0, 0);
+                }
+            },
+
+            dragStart(event) {
+                this.draggedItem = event.target;
+                event.target.classList.add('dragging');
+                event.dataTransfer.effectAllowed = 'move';
+            },
+
+            dragEnd(event) {
+                event.target.classList.remove('dragging');
+            },
+
+            allowDrop(event) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+                event.currentTarget.classList.add('drag-over');
+            },
+
+            dragLeave(event) {
+                event.currentTarget.classList.remove('drag-over');
+            },
+
+            drop(event) {
+                event.preventDefault();
+                const dropZone = document.getElementById('drop-zone');
+                dropZone.classList.remove('drag-over');
+                
+                if(this.draggedItem) {
+                    const clone = this.draggedItem.cloneNode(true);
+                    clone.style.opacity = '1';
+                    clone.draggable = false;
+                    clone.style.cursor = 'default';
+                    dropZone.appendChild(clone);
+                    
+                    const index = parseInt(this.draggedItem.dataset.index);
+                    this.sequenceOrder.push(index);
+                }
+            },
+
+            checkSequence() {
+                const page = this.pages[this.currentPage];
+                const feedback = document.getElementById('feedback');
+                
+                if(this.sequenceOrder.length === 0) {
+                    feedback.innerHTML = '<p class="font-bold" style="color: #f59e0b;">⚠️ Si us plau, arrossega els elements a la zona de solució</p>';
+                    return;
+                }
+                
+                const isCorrect = JSON.stringify(this.sequenceOrder) === JSON.stringify(page.correctOrder);
+                
+                if(isCorrect) {
+                    this.results.joc1Correct = true;
+                    feedback.innerHTML = '<p class="font-bold" style="color: #22c55e;">✅ Excel·lent! Has ordenat correctament tots els esdeveniments!</p>';
+                } else {
+                    feedback.innerHTML = '<p class="font-bold" style="color: #f59e0b;">⚠️ No és l\'ordre correcte. Prova de nou o segueix amb el botó Següent.</p>';
+                }
+            },
+
+            toggleCell(row, col) {
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                cell.classList.toggle('selected');
+            },
+
+            checkWordSearch() {
+                this.results.joc2Correct = true;
+                document.getElementById('feedback').innerHTML = '<p class="font-bold" style="color: #22c55e;">✅ Excel·lent! Joc completat!</p>';
+            },
+
+            selectAnswer(event) {
+                const button = event.target.closest('.option-button');
+                if(!button) return;
+
+                const questionIndex = parseInt(button.dataset.question);
+                const optionIndex = parseInt(button.dataset.option);
+                const page = this.pages[this.currentPage];
+                const correctIndex = page.questions[questionIndex].correct;
+
+                button.classList.add(optionIndex === correctIndex ? 'correct' : 'incorrect');
+                
+                if(optionIndex !== correctIndex) {
+                    const correctBtn = document.querySelector(`.option-button[data-question="${questionIndex}"][data-option="${correctIndex}"]`);
+                    if(correctBtn) correctBtn.classList.add('correct');
+                }
+
+                if(!this.results.joc3Scores[questionIndex]) {
+                    this.results.joc3Scores[questionIndex] = optionIndex === correctIndex;
+                }
+
+                document.querySelectorAll(`.option-button[data-question="${questionIndex}"]`).forEach(b => {
+                    b.style.pointerEvents = 'none';
+                    b.style.opacity = '0.7';
+                });
+            },
+
+            downloadReport() {
+                const report = document.documentElement.outerHTML;
+                const element = document.createElement("a");
+                element.setAttribute("href", "data:text/html;charset=utf-8," + encodeURIComponent(report));
+                element.setAttribute("download", "informe_princesa_guerrera.html");
+                element.click();
+            },
+
+            restart() {
+                this.currentPage = 0;
+                this.sequenceOrder = [];
+                this.selectedCells = [];
+                this.foundWords = [];
+                this.results = {
+                    joc1Correct: false,
+                    joc2Correct: false,
+                    joc3Scores: []
+                };
+                this.render();
+            }
+        };
+
+        APP.init();
+    </script>
+</body>
+</html>
