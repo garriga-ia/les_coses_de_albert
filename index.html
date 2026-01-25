@@ -101,11 +101,67 @@
                     class="tab-inactive px-6 py-2 rounded-full text-sm font-medium transition-all">
                     Lectures
                 </button>
+                <button onclick="filterContent('iastudio')" id="btn-iastudio"
+                    class="tab-inactive px-6 py-2 rounded-full text-sm font-medium transition-all">
+                    IA Studio
+                </button>
             </div>
         </div>
 
         <!-- Grid Container -->
         <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- IA STUDIO APPS -->
+            <a href="https://ai.studio/apps/drive/1pewDyRcZOwkYa4mZ1_ttiZoM7GojElLJ?fullscreenApplet=true"
+                target="_blank" data-category="iastudio"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        🗣️
+                    </div>
+                    <span class="bg-blue-50 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-full">IA
+                        Studio</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Traductor</h3>
+                    <p class="text-gray-500 text-sm">Traducció intel·ligent multi-idioma.</p>
+                </div>
+            </a>
+
+            <a href="https://ai.studio/apps/drive/1ATfh0NZxHA6k_46fcHbC1ik5wGt0ftnV?fullscreenApplet=true"
+                target="_blank" data-category="iastudio"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        📊
+                    </div>
+                    <span class="bg-blue-50 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-full">IA
+                        Studio</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Anàlisi Sintàctica</h3>
+                    <p class="text-gray-500 text-sm">Anàlisi interactiva de frases.</p>
+                </div>
+            </a>
+
+            <a href="https://ai.studio/apps/drive/1733N6zj2tv-APmPc77ZwEl_GIXTDqKCj?fullscreenApplet=true"
+                target="_blank" data-category="iastudio"
+                class="card-item group bg-white p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/50">
+                <div class="flex justify-between items-start">
+                    <div
+                        class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        ➕
+                    </div>
+                    <span class="bg-blue-50 text-blue-600 text-xs font-semibold px-2.5 py-1 rounded-full">IA
+                        Studio</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">Suma +-</h3>
+                    <p class="text-gray-500 text-sm">Pràctica de càlcul matemàtic.</p>
+                </div>
+            </a>
 
             <!-- APPS WEB (Vercel) -->
             <a href="https://creixamentpersonal.vercel.app/" target="_blank" data-category="apps"
@@ -415,7 +471,7 @@
             });
 
             // Update buttons
-            const buttons = ['tots', 'apps', 'contes', 'lectures'];
+            const buttons = ['tots', 'apps', 'contes', 'lectures', 'iastudio'];
             buttons.forEach(btnId => {
                 const btn = document.getElementById('btn-' + btnId);
                 if (btnId === category) {
