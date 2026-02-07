@@ -19,25 +19,34 @@ const hubData = [
     },
     // EDUCACIO
     {
-        title: "Anàlisi Sintàctica",
+        title: "Análisis Sintáctico Interactivo",
         description: "Anàlisi interactiva de frases.",
         url: "https://ai.studio/apps/drive/1ATfh0NZxHA6k_46fcHbC1ik5wGt0ftnV?fullscreenApplet=true",
-        category: "educacio",
+        category: "ia",
         icon: "📊",
         tag: "IA Studio",
         tagColor: "blue"
     },
     {
-        title: "Suma +-",
+        title: "SUMA +-",
         description: "Pràctica de càlcul matemàtic.",
         url: "https://ai.studio/apps/drive/1733N6zj2tv-APmPc77ZwEl_GIXTDqKCj?fullscreenApplet=true",
-        category: "educacio",
+        category: "ia",
         icon: "➕",
         tag: "IA Studio",
         tagColor: "blue"
     },
     {
-        title: "Problemes de Mates",
+        title: "MATEMÀTIQUES PAS PAS",
+        description: "Resolució detallada de problemes matemàtics.",
+        url: "https://ai.studio/apps/drive/1iR6ejez5lo8AcJ2cB9ESe1Ui3HGA3yxf?fullscreenApplet=true",
+        category: "ia",
+        icon: "🔢",
+        tag: "IA Studio",
+        tagColor: "blue"
+    },
+    {
+        title: "Problemes Mates",
         description: "Exercicis i pràctica matemàtica.",
         url: "https://matematiques.vercel.app/",
         category: "educacio",
@@ -50,7 +59,7 @@ const hubData = [
         description: "Aprèn les hores de forma divertida.",
         url: "https://horaapp.vercel.app/",
         category: "educacio",
-        icon: "�",
+        icon: "⏰",
         tag: "Vercel",
         tagColor: "gray"
     },
@@ -74,7 +83,7 @@ const hubData = [
         tagColor: "gray"
     },
     {
-        title: "Finances Familiars",
+        title: "La pasta",
         description: "Gestió i control de l'economia domèstica.",
         url: "https://finances-lv17-beta.vercel.app/",
         category: "familia",
@@ -97,7 +106,7 @@ const hubData = [
         description: "Joc social per a tota la família.",
         url: "https://impostor-swart-kappa.vercel.app/",
         category: "jocs",
-        icon: "�",
+        icon: "🕵️",
         tag: "Vercel",
         tagColor: "gray"
     },
