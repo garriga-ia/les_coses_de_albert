@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraccions amb l'Emma 💡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 0.04em;
+            word-spacing: 0.15em;
+            line-height: 1.75;
+            background-color: #fdf8f0;
+            /* fons crema suau, menys fatiga visual */
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+        input {
+            font-size: 16px !important;
+            /* Evita que l'iPad faci zoom als camps al clicar */
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Fraccions: numerador i denominador visuals més grans */
+        .frac-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0.55;
+            text-align: center;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .step-card {
+            @apply p-8 rounded-[2rem] border-4 shadow-xl transition-all duration-500 mb-6;
+        }
+
+        .calc-btn {
+            @apply font-black py-4 rounded-2xl active:translate-y-1 active:shadow-none transition-all text-xl;
+        }
+
+        .problem-line {
+            @apply flex items-center gap-3 min-h-[3.5rem] leading-relaxed py-1;
+            white-space: normal;
+            /* permet el salt de línia en textos llargs */
+            flex-wrap: wrap;
+        }
+
+        /* Estil del missatge d'error inline (sense alert) */
+        .error-banner {
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-6px);
+            }
+
+            75% {
+                transform: translateX(6px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4 pb-24 relative">
+
+    <div x-data="fractionApp()" x-cloak
+        class="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-10 max-w-3xl w-full border-b-[12px] border-indigo-200">
+
+        <!-- MISSATGE ERROR INLINE (substitueix alerts) -->
+        <div x-show="errorMsg !== ''" x-transition
+            class="error-banner fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-red-100 border-2 border-red-300 text-red-800 font-bold text-lg px-6 py-4 rounded-2xl shadow-xl max-w-sm text-center"
+            x-text="errorMsg" @click="errorMsg = ''"></div>
+
+        <!-- PANTALLA MENÚ -->
+        <template x-if="view === 'menu'">
+            <div class="text-center space-y-8">
+                <div class="space-y-2">
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-600 tracking-tight text-center">Els
+                        Reptes de l'Emma 💡
+                    </h1>
+                    <p class="text-slate-500 font-medium text-lg md:text-xl text-center w-full">A per totes, escull un
+                        entrenament:</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                    <div class="bg-blue-50 p-6 rounded-[2rem] border-2 border-blue-100 flex flex-col gap-3">
+                        <h2
+                            class="text-xl font-bold text-blue-700 mb-2 flex items-center gap-2 text-center w-full justify-center">
+                            <span>➕</span> Operacions
+                        </h2>
+                        <template
+                            x-for="(name, i) in ['1. Sumes i Restes', '2. Equivalents (Ampliar)', '3. Simplificar Fraccions', '4. Mixt a Fracció', '5. Fracció a Mixt', '6. Sumes (dif. denominador)', '7. Fracció i Decimal']">
+                            <button @click="startApp('direct', i+1)"
+                                class="w-full text-left p-5 md:p-6 rounded-2xl bg-white hover:bg-blue-50 active:bg-blue-500 active:text-white transition-all border-b-4 border-blue-200 text-base md:text-lg font-bold shadow-sm active:scale-95 touch-manipulation"
+                                x-text="name"></button>
+                        </template>
+                    </div>
+                    <div class="bg-emerald-50 p-6 rounded-[2rem] border-2 border-emerald-100 flex flex-col gap-3">
+                        <h2
+                            class="text-xl font-bold text-emerald-700 mb-2 flex items-center gap-2 text-center w-full justify-center">
+                            <span>🍕</span> Problemes
+                        </h2>
+                        <template
+                            x-for="(name, i) in ['1. Sumes i Restes de Fraccions', '2. Fracció d\'un Número', '3. Càlcul del Restant', '4. Comparar Quantitats', '5. Dipòsits i Litres', '6. Receptes de Cuina']">
+                            <button @click="startApp('problem', i+1)"
+                                class="w-full text-left p-5 md:p-6 rounded-2xl bg-white hover:bg-emerald-50 active:bg-emerald-500 active:text-white transition-all border-b-4 border-emerald-200 text-base md:text-lg font-bold shadow-sm active:scale-95 touch-manipulation"
+                                x-text="name"></button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- PANTALLA REPTES -->
+        <template x-if="view === 'challenge'">
+            <div class="space-y-6">
+                <!-- Header -->
+                <div class="flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <button @click="view = 'menu'"
+                            class="text-slate-400 hover:text-indigo-600 font-bold flex items-center gap-1 transition-colors">←
+                            Menú</button>
+                        <div class="bg-indigo-600 text-white px-4 py-1 rounded-xl font-bold text-xs md:text-sm">
+                            <span x-text="levelName"></span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-slate-100 h-4 rounded-full border-2 border-slate-100 overflow-hidden">
+                        <div class="bg-indigo-400 h-full transition-all duration-500"
+                            :style="`width: ${(progress / totalExercises) * 100}%`"></div>
+                    </div>
+                </div>
+
+                <!-- ENUNCIAT -->
+                <div
+                    class="bg-indigo-50 rounded-[2rem] p-8 min-h-[160px] flex items-center justify-center border-2 border-indigo-100 shadow-inner overflow-x-auto">
+                    <div x-html="questionHTML" class="text-xl md:text-2xl font-bold text-slate-800 w-full min-w-max">
+                    </div>
+                </div>
+
+                <!-- PASSA A PAS (PROBLEMES) -->
+                <div x-show="mode === 'problem' && !answered" class="pt-4">
+                    <div x-show="step === 1" x-transition class="step-card border-blue-400 bg-white">
+                        <p class="font-bold text-blue-800 mb-6 text-xl flex items-center gap-2"><span>🔍</span> Pas 1:
+                            Busca les dades</p>
+                        <div class="flex flex-col gap-6">
+                            <template x-for="(d, i) in probDataFields">
+                                <div class="flex items-center justify-between bg-blue-50 p-4 rounded-2xl">
+                                    <span class="text-lg font-bold text-blue-700" x-text="d.label"></span>
+                                    <input type="number" x-model="d.val"
+                                        class="w-24 h-14 text-center border-4 border-blue-200 rounded-xl font-black text-2xl focus:border-blue-500 outline-none">
+                                </div>
+                            </template>
+                        </div>
+                        <button @click="checkStep()"
+                            class="mt-8 w-full bg-blue-500 hover:bg-blue-600 text-white font-black py-5 rounded-2xl shadow-[0_6px_0_rgb(29,78,216)] active:translate-y-1 active:shadow-none transition-all text-xl">Continuar
+                            →</button>
+                    </div>
+                    <div x-show="step === 2" x-transition class="step-card border-orange-400 bg-white">
+                        <p class="font-bold text-orange-800 mb-6 text-xl flex items-center gap-2"><span>💡</span> Pas 2:
+                            Quin és el pla?</p>
+                        <div class="grid grid-cols-1 gap-4">
+                            <template x-for="p in probPlanOptions">
+                                <button @click="probPlanSelected = p.id"
+                                    :class="probPlanSelected === p.id ? 'bg-orange-500 text-white shadow-inner scale-[0.98]' : 'bg-orange-50 text-orange-800 border-2 border-orange-100'"
+                                    class="p-5 rounded-2xl text-lg font-bold transition-all text-left"
+                                    x-text="p.label"></button>
+                            </template>
+                        </div>
+                        <button @click="checkStep()"
+                            class="mt-8 w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-5 rounded-2xl shadow-[0_10px_0_rgb(194,65,12)] active:translate-y-1 active:shadow-none transition-all text-xl">Continuar
+                            →</button>
+                    </div>
+                    <div x-show="step === 3" x-transition class="step-card border-purple-400 bg-white">
+                        <p class="font-bold text-purple-800 mb-6 text-xl flex items-center gap-2"><span>🧮</span> Pas 3:
+                            Fem els comptes</p>
+                        <div class="bg-purple-50 p-6 rounded-2xl space-y-4 text-center">
+                            <p class="text-lg font-bold text-purple-700" x-text="probStep3Label"></p>
+                            <input type="number" x-model="probStep3Input"
+                                class="w-full h-20 text-center border-4 border-purple-200 rounded-2xl font-black text-4xl focus:border-purple-500 outline-none">
+                        </div>
+                        <button @click="checkStep()"
+                            class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-5 rounded-2xl shadow-[0_10px_0_rgb(88,28,135)] active:translate-y-1 active:shadow-none transition-all text-xl">Continuar
+                            →</button>
+                    </div>
+                </div>
+
+                <!-- PAS A PAS (OPERACIONS) -->
+                <div x-show="mode === 'direct' && isStepByStep && !answered"
+                    class="bg-yellow-50 p-6 rounded-[2rem] border-4 border-yellow-200 space-y-4 shadow-lg">
+                    <p class="font-black text-yellow-800 text-center text-xl w-full">💡 Pista pas a pas:</p>
+                    <div class="flex flex-col gap-4">
+                        <!-- PAS 1 -->
+                        <div x-show="step1Text !== ''"
+                            class="flex items-start justify-between gap-4 p-5 rounded-2xl border-2 transition-all"
+                            :class="step === 1 ? 'border-yellow-500 bg-white shadow-md' : (step > 1 ? 'bg-green-50 border-green-200 opacity-70' : 'opacity-30 bg-slate-50 border-transparent')">
+                            <div class="flex items-start gap-3 flex-1">
+                                <span class="text-yellow-600 font-black text-lg mt-1"
+                                    x-text="step > 1 ? '✅' : '1️⃣'"></span>
+                                <span class="text-lg font-bold text-yellow-900 leading-snug" x-text="step1Text"></span>
+                            </div>
+                            <input type="number" x-model="step1Input" :disabled="step !== 1"
+                                class="w-24 h-14 text-center text-2xl font-black border-4 border-yellow-100 rounded-xl focus:border-yellow-500 outline-none shrink-0"
+                                x-show="step === 1">
+                            <span x-show="step > 1" class="text-green-700 font-black text-2xl shrink-0"
+                                x-text="step1Input"></span>
+                        </div>
+                        <!-- PAS 2 -->
+                        <div x-show="step2Text !== ''"
+                            class="flex items-start justify-between gap-4 p-5 rounded-2xl border-2 transition-all"
+                            :class="step === 2 ? 'border-yellow-500 bg-white shadow-md' : (step > 2 ? 'bg-green-50 border-green-200 opacity-70' : 'opacity-30 bg-slate-50 border-transparent')">
+                            <div class="flex items-start gap-3 flex-1">
+                                <span class="text-yellow-600 font-black text-lg mt-1"
+                                    x-text="step > 2 ? '✅' : '2️⃣'"></span>
+                                <span class="text-lg font-bold text-yellow-900 leading-snug" x-text="step2Text"></span>
+                            </div>
+                            <input type="number" x-model="step2Input" :disabled="step !== 2"
+                                class="w-24 h-14 text-center text-2xl font-black border-4 border-yellow-100 rounded-xl focus:border-yellow-500 outline-none shrink-0"
+                                x-show="step === 2">
+                            <span x-show="step > 2" class="text-green-700 font-black text-2xl shrink-0"
+                                x-text="step2Input"></span>
+                        </div>
+                        <!-- PAS 3 -->
+                        <div x-show="step3Text !== ''"
+                            class="flex items-start justify-between gap-4 p-5 rounded-2xl border-2 transition-all"
+                            :class="step === 3 ? 'border-purple-400 bg-white shadow-md' : (step > 3 ? 'bg-green-50 border-green-200 opacity-70' : 'opacity-30 bg-slate-50 border-transparent')">
+                            <div class="flex items-start gap-3 flex-1">
+                                <span class="text-purple-500 font-black text-lg mt-1">3️⃣</span>
+                                <span class="text-lg font-bold text-purple-900 leading-snug" x-text="step3Text"></span>
+                            </div>
+                            <input type="number" x-model="step3Input" :disabled="step !== 3"
+                                class="w-24 h-14 text-center text-2xl font-black border-4 border-purple-100 rounded-xl focus:border-purple-400 outline-none shrink-0"
+                                x-show="step === 3">
+                        </div>
+                    </div>
+                    <button @click="checkStep()" x-show="step < 3 || step3Text !== ''"
+                        class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 rounded-2xl shadow-[0_10px_0_rgb(161,98,7)] active:translate-y-1 active:shadow-none transition-all text-xl">Comprovar
+                        pista →</button>
+                </div>
+
+                <!-- AREA RESPOSTA FINAL -->
+                <div class="flex flex-col items-center gap-6 py-4"
+                    x-show="answered || (mode === 'problem' && step === 4) || (mode === 'direct' && (!isStepByStep || (step3Text === '' ? step >= 3 : step > 3)))">
+                    <span class="text-indigo-600 font-black text-xl text-center w-full" x-show="!answered">
+                        ✏️ Escriu el resultat final:
+                    </span>
+                    <div class="flex items-center gap-6 justify-center w-full">
+                        <template x-if="answerType === 'mixed'">
+                            <div class="flex items-end gap-4">
+                                <div class="flex flex-col items-center gap-1">
+                                    <span class="frac-label text-indigo-400">part entera</span>
+                                    <input type="number" x-model="userEnter"
+                                        class="w-24 h-24 text-center text-5xl font-black border-4 border-indigo-200 rounded-3xl focus:border-indigo-500 outline-none"
+                                        :disabled="answered">
+                                </div>
+                                <span class="text-4xl font-black text-indigo-300 mb-4">+</span>
+                                <div class="flex flex-col items-center gap-1">
+                                    <span class="frac-label text-indigo-400">de dalt</span>
+                                    <input type="number" x-model="userNum"
+                                        class="w-24 h-20 text-center text-4xl font-black border-4 border-indigo-200 rounded-2xl focus:border-indigo-500 outline-none"
+                                        :disabled="answered">
+                                    <hr class="w-24 border-4 border-slate-800 my-1 rounded-full">
+                                    <input type="number" x-model="userDen"
+                                        class="w-24 h-20 text-center text-4xl font-black border-4 border-indigo-200 rounded-2xl focus:border-indigo-500 outline-none"
+                                        :disabled="answered">
+                                    <span class="frac-label text-indigo-400">de baix</span>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="answerType === 'fraction'">
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="frac-label text-indigo-400">de dalt (numerador)</span>
+                                <input type="number" x-model="userNum"
+                                    class="w-28 h-24 text-center text-5xl font-black border-4 border-indigo-200 rounded-3xl focus:border-indigo-500 outline-none"
+                                    :disabled="answered">
+                                <hr class="w-28 border-4 border-slate-800 my-1 rounded-full">
+                                <input type="number" x-model="userDen"
+                                    class="w-28 h-24 text-center text-5xl font-black border-4 border-indigo-200 rounded-3xl focus:border-indigo-500 outline-none"
+                                    :disabled="answered">
+                                <span class="frac-label text-indigo-400">de baix (denominador)</span>
+                            </div>
+                        </template>
+                        <template x-if="answerType === 'number'">
+                            <input type="number" x-model="userSingle"
+                                class="w-48 h-28 text-center text-6xl font-black border-4 border-indigo-200 rounded-[2rem]"
+                                :disabled="answered">
+                        </template>
+                    </div>
+                    <button @click="checkAnswer()" x-show="!answered"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white text-3xl font-black py-6 px-16 rounded-[2rem] shadow-[0_10px_0_rgb(49,46,129)] active:translate-y-2 active:shadow-none transition-all">Comprovar
+                        ✨</button>
+                </div>
+
+                <!-- FEEDBACK -->
+                <div x-show="answered" class="p-8 rounded-[2.5rem] text-center border-4 transition-all"
+                    :class="isCorrect ? 'bg-green-100 text-green-900 border-green-300' : 'bg-orange-100 text-orange-900 border-orange-300'">
+                    <p class="font-black text-3xl mb-4 text-center w-full" x-text="feedbackMsg"></p>
+                    <div x-show="!isCorrect" class="text-xl leading-relaxed space-y-4 text-center w-full">
+                        <p x-text="explanation"></p>
+                        <div
+                            class="flex justify-center items-center gap-4 bg-white/50 p-4 rounded-2xl inline-flex mx-auto">
+                            <span class="font-bold text-indigo-600">Era:</span>
+                            <span x-html="correctHTML" class="text-2xl"></span>
+                        </div>
+                    </div>
+                    <button @click="newChallenge()"
+                        class="mt-8 bg-white border-b-8 border-current font-black py-4 px-10 rounded-2xl hover:bg-slate-50 transition-all text-xl mx-auto block">Següent
+                        Exercici →</button>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- PISSARRA DE DIBUIX -->
+    <div x-data="{
+            open: false,
+            tool: 'pen',
+            drawing: false,
+            canvas: null,
+            ctx: null,
+            lastX: 0, lastY: 0,
+            init() {
+                this.$nextTick(() => {
+                    this.canvas = this.$refs.drawCanvas;
+                    if (this.canvas) {
+                        this.ctx = this.canvas.getContext('2d');
+                        this.ctx.fillStyle = '#ffffff';
+                        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                        this.ctx.strokeStyle = '#1e40af';
+                        this.ctx.lineWidth = 3;
+                        this.ctx.lineCap = 'round';
+                        this.ctx.lineJoin = 'round';
+                    }
+                });
+            },
+            getPos(e) {
+                let r = this.canvas.getBoundingClientRect();
+                let src = e.touches ? e.touches[0] : e;
+                return { x: (src.clientX - r.left) * (this.canvas.width / r.width), y: (src.clientY - r.top) * (this.canvas.height / r.height) };
+            },
+            startDraw(e) {
+                e.preventDefault();
+                this.drawing = true;
+                let p = this.getPos(e);
+                this.lastX = p.x; this.lastY = p.y;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, this.tool === 'pen' ? 1.5 : 10, 0, Math.PI * 2);
+                this.ctx.fillStyle = this.tool === 'pen' ? '#1e40af' : '#ffffff';
+                this.ctx.fill();
+            },
+            draw(e) {
+                if (!this.drawing) return;
+                e.preventDefault();
+                let p = this.getPos(e);
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.lastX, this.lastY);
+                this.ctx.lineTo(p.x, p.y);
+                this.ctx.strokeStyle = this.tool === 'pen' ? '#1e40af' : '#ffffff';
+                this.ctx.lineWidth = this.tool === 'pen' ? 3 : 22;
+                this.ctx.stroke();
+                this.lastX = p.x; this.lastY = p.y;
+            },
+            stopDraw() { this.drawing = false; },
+            clearCanvas() {
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+        }" x-init="init()" class="fixed bottom-6 right-24 z-50">
+        <button @click="open = !open"
+            class="bg-white text-white p-5 rounded-full shadow-2xl hover:bg-indigo-50 transition-all transform hover:scale-110 active:scale-95 border-2 border-indigo-200">
+            <!-- Icona llàpis -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-500" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+        </button>
+        <div x-show="open" x-transition x-cloak class="fixed inset-0 z-40 flex items-center justify-center"
+            style="background: rgba(0,0,0,0.45);">
+            <div class="bg-white rounded-[2rem] shadow-2xl border-2 border-indigo-100 overflow-hidden flex flex-col"
+                style="width: 90vw; max-width: 1000px; height: 85vh;">
+                <!-- Barra d'eines -->
+                <div
+                    class="flex items-center justify-between px-6 py-4 bg-indigo-50 border-b border-indigo-100 shrink-0">
+                    <span class="font-black text-indigo-700 text-xl">✏️ Pissarra de treball</span>
+                    <div class="flex gap-3">
+                        <button @click="tool = 'pen'"
+                            :class="tool === 'pen' ? 'bg-indigo-500 text-white shadow-inner' : 'bg-white text-indigo-600 border border-indigo-200'"
+                            class="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-base transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M15.232 5.232l3.536 3.536M3 21h3.572L16.732 5.268a2.5 2.5 0 00-3.536-3.536L3 15.572V21z" />
+                            </svg>
+                            Llàpis
+                        </button>
+                        <button @click="tool = 'eraser'"
+                            :class="tool === 'eraser' ? 'bg-rose-500 text-white shadow-inner' : 'bg-white text-rose-500 border border-rose-200'"
+                            class="flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-base transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L17.5 6.5a2.121 2.121 0 00-3-3L3 15a2 2 0 000 2.828L5.172 20H9l9-9" />
+                            </svg>
+                            Goma
+                        </button>
+                        <button @click="clearCanvas()"
+                            class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-5 py-3 rounded-2xl font-bold text-base transition-all">
+                            🗑️ Netejar
+                        </button>
+                        <button @click="open = false"
+                            class="bg-red-100 hover:bg-red-200 text-red-700 px-5 py-3 rounded-2xl font-bold text-base transition-all">
+                            ✕ Tancar
+                        </button>
+                    </div>
+                </div>
+                <!-- Canvas gran -->
+                <canvas x-ref="drawCanvas" width="1020" height="1200"
+                    style="touch-action: none; display: block; background: white; cursor: crosshair; width: 100%; flex: 1; height: 0;"
+                    @mousedown="startDraw($event)" @mousemove="draw($event)" @mouseup="stopDraw()"
+                    @mouseleave="stopDraw()" @touchstart.prevent="startDraw($event)" @touchmove.prevent="draw($event)"
+                    @touchend="stopDraw()">
+                </canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALCULADORA (Estil iPhone) -->
+    <div x-data="{ open: false, display: '0', append(v) { this.display === '0' && v !== '.' ? this.display = v : this.display += v }, clear() { this.display = '0' }, calc() { try { let r = eval(this.display.replace('×', '*').replace('÷', '/')); this.display = Number.isInteger(r) ? r.toString() : r.toFixed(2).toString() } catch(e) { this.display = 'Error'; setTimeout(()=>this.clear(),1000) } } }"
+        class="fixed bottom-6 right-6 z-50">
+        <button @click="open = !open"
+            class="bg-slate-900 text-white p-5 rounded-full shadow-2xl hover:bg-black transition-all transform hover:scale-110 active:scale-95 border-2 border-slate-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-orange-500" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+        </button>
+        <div x-show="open" x-transition x-cloak
+            class="absolute bottom-28 right-0 bg-black rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] p-5 w-72 space-y-4 border border-slate-800">
+            <div class="px-3 pt-6 pb-2">
+                <div class="text-right font-light text-5xl text-white truncate tracking-tight w-full overflow-hidden"
+                    x-text="display"></div>
+            </div>
+            <div class="grid grid-cols-4 gap-3">
+                <button @click="clear()"
+                    class="col-span-2 bg-neutral-300 text-black font-semibold text-2xl h-16 rounded-full active:bg-neutral-400 transition-colors">AC</button>
+                <button @click="append('÷')"
+                    class="bg-orange-500 text-white font-semibold text-3xl h-16 rounded-full active:bg-orange-400 transition-colors">÷</button>
+                <button @click="append('×')"
+                    class="bg-orange-500 text-white font-semibold text-3xl h-16 rounded-full active:bg-orange-400 transition-colors">×</button>
+                <template x-for="r in [['7','8','9','-'], ['4','5','6','+'], ['1','2','3','='], ['0','.']]">
+                    <div class="contents">
+                        <template x-for="b in r">
+                            <button @click="b === '=' ? calc() : append(b)" :class="{
+                                    'bg-neutral-800 text-white active:bg-neutral-600': !['+','-','='].includes(b), 
+                                    'bg-orange-500 text-white active:bg-orange-400': ['+','-'].includes(b), 
+                                    'bg-orange-500 text-white active:bg-orange-400 row-span-2 h-[136px]': b === '=', 
+                                    'col-span-2 text-left pl-7': b === '0',
+                                    'h-16 rounded-full': b !== '='
+                                }" class="font-medium text-3xl transition-colors" x-text="b"></button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function fractionApp() {
+            return {
+                view: 'menu', mode: 'direct', level: 1, progress: 0, totalExercises: 5, levelName: '',
+                type: 'direct', questionHTML: '', answerType: 'fraction',
+                correctAnswer: { num: 0, den: 0, single: 0, enter: 0 }, correctHTML: '',
+                userNum: '', userDen: '', userSingle: '', userEnter: '',
+                answered: false, isCorrect: false, feedbackMsg: '', explanation: '', errorMsg: '',
+                isStepByStep: false, step: 1, probDataFields: [], probPlanOptions: [], probPlanSelected: null, probStep3Label: '', probStep3Input: '',
+                step1Text: '', step2Text: '', step3Text: '', step1Input: '', step2Input: '', step3Input: '',
+                tempEnter: 0, tempN1: 0, tempN2: 0, tempD: 0, tempTotal: 0, probStep3Correct: 0,
+
+                showError(msg) { this.errorMsg = msg; clearTimeout(this._errTimer); this._errTimer = setTimeout(() => this.errorMsg = '', 3000); },
+
+                gcd(a, b) { return b === 0 ? a : this.gcd(b, a % b); },
+                lcm(a, b) { return (a * b) / this.gcd(a, b); },
+
+                startApp(mode, level) { this.mode = mode; this.level = level; this.progress = 0; this.view = 'challenge'; this.newChallenge(); },
+                newChallenge() {
+                    this.answered = false; this.userNum = ''; this.userDen = ''; this.userSingle = ''; this.userEnter = '';
+                    this.step = 1; this.probPlanSelected = null; this.probStep3Input = ''; this.step1Input = ''; this.step2Input = ''; this.step3Input = '';
+                    if (this.mode === 'direct') {
+                        const names = ["Sumes i Restes", "Fraccions Equivalents", "Simplificar", "Mixt a Fracció", "Fracció a Mixt", "Sumes dif. den.", "Fracció i Decimal"];
+                        const exerciseCounts = [6, 5, 5, 5, 5, 5, 5];
+                        this.levelName = names[this.level - 1];
+                        this.totalExercises = exerciseCounts[this.level - 1];
+                        this.isStepByStep = true; this.generateOperation();
+                    } else {
+                        const names = ["Sumes i Restes de Fraccions", "Fracció d'un Número", "Càlcul del Restant", "Comparar Quantitats", "Dipòsits i Litres", "Receptes de Cuina"];
+                        this.levelName = names[this.level - 1]; this.totalExercises = 5; this.isStepByStep = true; this.generateProblem();
+                    }
+                },
+                checkStep() {
+                    if (this.mode === 'problem') {
+                        if (this.step === 1) { if (this.probDataFields.every(f => parseInt(f.val) === f.correct)) this.step = 2; else this.showError("Rellegeix bé el problema i assegura't que has trobat tots els números importants. 🔍"); }
+                        else if (this.step === 2) { if (this.probPlanSelected === 'correct') this.step = 3; else this.showError("Pensa quina acció et demana el problema... ha de sumar o restar alguna cosa? 🤔"); }
+                        else if (this.step === 3) { if (parseInt(this.probStep3Input) === this.probStep3Correct) this.step = 4; else this.showError("Revisa el càlcul intermedi. Pots usar la calculadora si cal! 🧠"); }
+                    } else {
+                        if (this.level === 1) {
+                            if (this.step === 1) {
+                                let v = parseInt(this.step1Input);
+                                if (v === this.tempD) this.step = 2;
+                                else this.showError("Observa bé els dos denominadors. Són iguals? Quin valor comparteixen? 🔍");
+                            } else if (this.step === 2) {
+                                if (parseInt(this.step2Input) === this.tempN1) this.step = 3;
+                                else this.showError("Fixa't en els numeradors de cada fracció i en el signe de l'operació. Prova-ho de nou! 🤔");
+                            }
+                        } else if (this.level === 2) {
+                            if (this.step === 1) {
+                                let v = parseInt(this.step1Input);
+                                if (v === this.tempEnter) this.step = 2;
+                                else this.showError("Compara el denominador de la fracció original amb el nou denominador. Quin nombre et dona la diferència? 🔍");
+                            } else if (this.step === 2) {
+                                if (parseInt(this.step2Input) === this.tempN1 * this.tempEnter) this.step = 3;
+                                else this.showError("Pensa: si el de baix s'ha multiplicat per aquell nombre, el de dalt ha de fer el mateix. Torna-ho a provar! 🤔");
+                            }
+                        } else if (this.level === 3) {
+                            if (this.step === 1) {
+                                let v = parseInt(this.step1Input);
+                                if (v > 1 && this.tempN1 % v === 0 && this.tempTotal % v === 0) {
+                                    this.tempEnter = v; this.step = 2;
+                                    this.setCorrect(this.tempN1 / v, this.tempTotal / v);
+                                } else this.showError("Busca un nombre (major que 1) que 'càpiga' exactament tant al numerador com al denominador. Prova amb nombres petits! 🔍");
+                            } else if (this.step === 2) {
+                                if (parseInt(this.step2Input) === this.tempN1 / this.tempEnter) this.step = 3;
+                                else this.showError("Intenta fer la divisió del numerador entre el nombre que has trobat. El resultat ha de ser un nombre enter. 🤔");
+                            }
+                        } else if (this.level === 4) {
+                            if (this.step === 1) {
+                                if (parseInt(this.step1Input) === this.tempEnter * this.tempD)
+                                    this.step = 2;
+                                else this.showError("Imagina que converteixes les parts SENCERES en parts fraccionàries. Quantes parts en total hi hauria? 🔍");
+                            } else if (this.step === 2) {
+                                if (parseInt(this.step2Input) === this.tempN1) this.step = 3;
+                                else this.showError("Ara suma les parts que ja tenies al resultat anterior. Quantes parts hi ha en total? 🤔");
+                            }
+                        } else if (this.level === 5) {
+                            if (this.step === 1) {
+                                if (parseInt(this.step1Input) === this.tempEnter) this.step = 2;
+                                else this.showError("Pensa quantes vegades caben [den] parts en el total del numerador, sense decimals. Pots usar la divisió entera! 🔍");
+                            } else if (this.step === 2) {
+                                if (parseInt(this.step2Input) === this.tempN1) this.step = 3;
+                                else this.showError("Calcula quantes parts sobren un cop has tret les unitats senceres. El resultat serà el nou numerador! 🤔");
+                            }
+                        } else if (this.level === 6) {
+                            // Sumes/Restes denominadors diferents: pas 1 = MCM, pas 2 = nou numerador
+                            if (this.step === 1) {
+                                let v = parseInt(this.step1Input);
+                                // Acceptem qualsevol múltiple comú (no només el mínim)
+                                if (v > 0 && v % this.tempD === 0 && v % this.tempTotal === 0) {
+                                    this.tempEnter = v; this.step = 2;
+                                    // Actualitzar el step2Text amb el valor concret entrat
+                                    this.step2Text = `Si el denominador comú és ${v}, per quant s'ha multiplicat el denominador de la primera fracció (${this.tempD})? Aplica-ho també al de dalt.`;
+                                } else this.showError(`Busca un nombre que sigui múltiple de ${this.tempD} i també de ${this.tempTotal}. Prova-ho multiplicant-los entre ells! 🔍`);
+                            } else if (this.step === 2) {
+                                let factor = this.tempEnter / this.tempD;
+                                if (parseInt(this.step2Input) === this.tempN1 * factor) this.step = 3;
+                                else this.showError(`La primera fracció té ${this.tempN1} de dalt. Si el denominador s'ha multiplicat per ${factor}, el numerador també ho ha de fer. 🤔`);
+                            }
+                        } else if (this.level === 7) {
+                            // Fracció ↔ Decimal: només 1 pas guia, la resposta és directa
+                            if (this.step === 1) this.step = 3; // passa directament a la resposta final
+                        }
+                    }
+                },
+                generateOperation() {
+                    this.answerType = 'fraction';
+                    if (this.level === 1) {
+                        // Sumes i Restes amb el MATEIX denominador
+                        this.tempD = Math.floor(Math.random() * 8) + 3; // denominador comú entre 3 i 10
+                        let maxN = this.tempD - 1;
+                        let n1 = Math.floor(Math.random() * maxN) + 1;
+                        let n2 = Math.floor(Math.random() * maxN) + 1;
+
+                        let op = '+';
+                        // Si n1 < n2, fem suma (per evitar resultats negatius a la resta)
+                        if (n1 > n2 && Math.random() > 0.4) op = '-';
+                        // Recalcular si la resta dona 0
+                        if (op === '-' && n1 === n2) n2 = Math.max(1, n2 - 1);
+
+                        this.tempN1 = op === '+' ? n1 + n2 : n1 - n2;
+
+                        this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                            <p class="text-lg font-bold text-slate-600">Calcula el resultat d'aquesta operació:</p>
+                            <div class="flex items-center justify-center gap-6 text-4xl font-bold">
+                                ${this.fmtFrac(n1, this.tempD, 'large')} <span class="text-blue-500">${op}</span> ${this.fmtFrac(n2, this.tempD, 'large')}
+                            </div>
+                        </div>`;
+                        // PISTA 1: Identificar el denominador comú
+                        this.step1Text = `Mira els dos denominadors. Quin nombre tenen en comú?`;
+                        // PISTA 2: Operar els numeradors
+                        this.step2Text = `Ara aplica l'operació (${op}) als números de DALT. Quin resultat obtens?`;
+                        this.step3Text = '';
+                        this.setCorrect(this.tempN1, this.tempD);
+                    } else if (this.level === 2) {
+                        // Equivalents: donem fracció original i el nou denominador, han de trobar el numerador
+                        this.tempN1 = Math.floor(Math.random() * 5) + 1;
+                        this.tempD = this.tempN1 + Math.floor(Math.random() * 4) + 2;
+                        this.tempEnter = Math.floor(Math.random() * 4) + 2; // factor multiplicador
+                        let newDen = this.tempD * this.tempEnter;
+                        this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                            <p class="text-lg font-bold text-slate-600">Troba la fracció equivalent amb denominador ${newDen}:</p>
+                            <div class="flex items-center gap-4 text-4xl font-bold justify-center">
+                                ${this.fmtFrac(this.tempN1, this.tempD, 'large')}
+                                <span class="text-blue-500">=</span>
+                                ${this.fmtFrac('?', newDen, 'large')}
+                            </div>
+                        </div>`;
+                        // PISTA 1: Detectar el factor de canvi
+                        this.step1Text = `Compara el denominador original (${this.tempD}) amb el nou denominador (${newDen}). Per quin nombre s'ha multiplicat?`;
+                        // PISTA 2: Aplicar el factor al numerador
+                        this.step2Text = `Si el denominador s'ha multiplicat per aquell nombre, el numerador ha de fer el mateix. Quin serà el nou numerador?`;
+                        this.step3Text = '';
+                        this.setCorrect(this.tempN1 * this.tempEnter, newDen);
+                    } else if (this.level === 3) {
+                        // Simplificar: dividint num i den pel mateix factor
+                        this.tempEnter = Math.floor(Math.random() * 4) + 2; // el factor divisor (MCD)
+                        this.tempN1 = (Math.floor(Math.random() * 4) + 1) * this.tempEnter;
+                        this.tempTotal = (Math.floor(Math.random() * 5) + 2) * this.tempEnter;
+                        if (this.tempN1 === this.tempTotal) this.tempTotal += this.tempEnter;
+                        this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                            <p class="text-lg font-bold text-slate-600">Simplifica dividint el numerador i denominador pel mateix nombre:</p>
+                            <div class="flex items-center justify-center">${this.fmtFrac(this.tempN1, this.tempTotal, 'large')}</div>
+                        </div>`;
+                        // PISTA 1: Trobar un divisor comú (sense dir quin és)
+                        this.step1Text = `Pensa en un nombre més gran que 1 que 'càpiga' exactament dins de ${this.tempN1} i també dins de ${this.tempTotal}. Quin podria ser?`;
+                        // PISTA 2: Dividir el numerador
+                        this.step2Text = `Ara divideix el numerador (de dalt) entre el nombre que has trobat. Quin resultat dona?`;
+                        this.step3Text = '';
+                        this.setCorrect(this.tempN1 / this.tempEnter, this.tempTotal / this.tempEnter);
+                    } else if (this.level === 4) {
+                        // Mixt → Fracció: ex. 2 + 3/5 → 13/5
+                        this.answerType = 'fraction';
+                        this.tempD = Math.floor(Math.random() * 6) + 2; // denominador entre 2 i 7
+                        this.tempEnter = Math.floor(Math.random() * 4) + 1; // part entera entre 1 i 4
+                        let fracNum = Math.floor(Math.random() * (this.tempD - 1)) + 1; // numerador fraccionari
+                        // Numerador resultat = enter * den + num
+                        this.tempN1 = this.tempEnter * this.tempD + fracNum;
+                        this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                            <p class="text-lg font-bold text-slate-600">Passa aquest nombre mixt a fracció:</p>
+                            <div class="flex items-center gap-3 text-5xl font-black justify-center">
+                                <span class="text-indigo-600">${this.tempEnter}</span>
+                                <span class="text-slate-400 text-3xl">+</span>
+                                ${this.fmtFrac(fracNum, this.tempD, 'large')}
+                            </div>
+                        </div>`;
+                        // PISTA 1: Quantes parts senceres => enter × den
+                        this.step1Text = `Si cada unitat sencera té ${this.tempD} parts, quantes parts fan en total les ${this.tempEnter} unitats senceres?`;
+                        // PISTA 2: Afegir les parts fraccionàries
+                        this.step2Text = `Ara afegeix les ${fracNum} parts fraccionàries que ja tenies. Quantes parts tens en total?`;
+                        this.step3Text = '';
+                        this.setCorrect(this.tempN1, this.tempD);
+                    } else if (this.level === 5) {
+                        // Fracció → Mixt: ex. 13/5 → 2 + 3/5
+                        this.answerType = 'mixed';
+                        this.tempD = Math.floor(Math.random() * 6) + 2; // denominador entre 2 i 7
+                        this.tempEnter = Math.floor(Math.random() * 4) + 1; // part entera (resultat divisió)
+                        this.tempN1 = Math.floor(Math.random() * (this.tempD - 1)) + 1; // residu
+                        let impropNum = this.tempEnter * this.tempD + this.tempN1; // numerador impropi
+                        this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                            <p class="text-lg font-bold text-slate-600">Passa aquesta fracció a nombre mixt:</p>
+                            <div class="flex items-center justify-center">${this.fmtFrac(impropNum, this.tempD, 'large')}</div>
+                        </div>`;
+                        // PISTA 1: Quantes vegades cap el denominador (part entera)
+                        this.step1Text = `Quantes vegades caben ${this.tempD} parts senceres dins de ${impropNum} parts? (Sense decimals, compte exacte)`;
+                        // PISTA 2: Quantes parts sobren (residu)
+                        this.step2Text = `Un cop has tret les unitats senceres, quantes parts fraccionàries sobren?`;
+                        this.step3Text = '';
+                        this.setCorrect(this.tempN1, this.tempD, null, this.tempEnter);
+                    } else if (this.level === 6) {
+                        // SUMES/RESTES DENOMINADORS DIFERENTS — aplicar MCM
+                        const dens = [[2, 3], [2, 5], [3, 4], [2, 7], [3, 5], [4, 5], [2, 9], [3, 7]];
+                        let [d1, d2] = dens[Math.floor(Math.random() * dens.length)];
+                        let mcm = this.lcm(d1, d2);
+                        let n1 = Math.floor(Math.random() * (d1 - 1)) + 1;
+                        let n2 = Math.floor(Math.random() * (d2 - 1)) + 1;
+                        let op = Math.random() > 0.5 ? '+' : '-';
+                        // Per a la resta, assegurem resultat positiu
+                        let resNum = op === '+' ? (n1 * (mcm / d1)) + (n2 * (mcm / d2)) : (n1 * (mcm / d1)) - (n2 * (mcm / d2));
+                        if (resNum <= 0) { op = '+'; resNum = (n1 * (mcm / d1)) + (n2 * (mcm / d2)); }
+                        let g = this.gcd(Math.abs(resNum), mcm);
+                        this.tempN1 = n1; this.tempD = d1;
+                        this.tempN2 = n2; this.tempTotal = d2;
+                        this.tempEnter = mcm; // mcm guardat
+                        this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                            <p class="text-lg font-bold text-slate-600">Calcula:</p>
+                            <div class="flex items-center gap-3 text-4xl font-bold justify-center flex-wrap">
+                                ${this.fmtFrac(n1, d1, 'large')}
+                                <span class="text-blue-500">${op}</span>
+                                ${this.fmtFrac(n2, d2, 'large')}
+                                <span class="text-blue-500">=</span>
+                                <span class="text-3xl text-slate-400">?</span>
+                            </div>
+                        </div>`;
+                        this.step1Text = `Mira els dos nombres de baix (${d1} i ${d2}). Quin és el mínim nombre que és múltiple dels dos?`;
+                        this.step2Text = `Si el denominador comú és ${mcm}, per quant s'ha multiplicat el denominador de la primera fracció (${d1})? Aplica-ho també al de dalt.`;
+                        this.step3Text = '';
+                        this.setCorrect(resNum / g, mcm / g);
+                    } else if (this.level === 7) {
+                        // FRACCIÓ ↔ DECIMAL
+                        const pairs = [{ n: 1, d: 2, dec: 0.5 }, { n: 1, d: 4, dec: 0.25 }, { n: 3, d: 4, dec: 0.75 }, { n: 1, d: 5, dec: 0.2 }, { n: 2, d: 5, dec: 0.4 }, { n: 3, d: 5, dec: 0.6 }, { n: 4, d: 5, dec: 0.8 }, { n: 1, d: 10, dec: 0.1 }, { n: 3, d: 10, dec: 0.3 }, { n: 7, d: 10, dec: 0.7 }];
+                        let p = pairs[Math.floor(Math.random() * pairs.length)];
+                        let mode7 = Math.random() > 0.5 ? 'frac2dec' : 'dec2frac';
+                        this.tempN1 = p.n; this.tempD = p.d; this.tempEnter = p.dec * 1000; // guardem decimal * 1000 per comparar enter
+                        if (mode7 === 'frac2dec') {
+                            this.answerType = 'number';
+                            this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                                <p class="text-lg font-bold text-slate-600">Passa aquesta fracció a número decimal:</p>
+                                <div class="flex items-center justify-center">${this.fmtFrac(p.n, p.d, 'large')}</div>
+                            </div>`;
+                            this.step1Text = `Divideix el número de dalt (${p.n}) entre el número de baix (${p.d}) amb la calculadora. Quin decimal obtens?`;
+                            this.step2Text = '';
+                            this.step3Text = '';
+                            this.setCorrect(0, 0, p.dec);
+                        } else {
+                            this.answerType = 'fraction';
+                            this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
+                                <p class="text-lg font-bold text-slate-600">Passa aquest decimal a fracció:</p>
+                                <div class="text-7xl font-black text-indigo-600">${p.dec}</div>
+                            </div>`;
+                            this.step1Text = `Pensa: ${p.dec} significa "${p.dec * 10 % 1 === 0 ? p.dec * 10 + ' d\'cada deu" — quin nombre de dalt i de baix ho representa?' : p.dec * 100 + ' de cada cent" — quin nombre de dalt i de baix ho representa?'}`;
+                            this.step2Text = '';
+                            this.step3Text = '';
+                            this.setCorrect(p.n, p.d);
+                        }
+                    }
+                },
+                generateProblem() {
+                    this.tempD = Math.floor(Math.random() * 4) + 4; this.tempN1 = Math.floor(Math.random() * (this.tempD - 2)) + 1;
+                    let v = Math.floor(Math.random() * 3);
+                    switch (this.level) {
+                        case 1:
+                            this.answerType = 'fraction';
+                            let scenarios = [
+                                { type: 'sum', e: '📖', p1: 'Parts al matí:', p2: 'Parts a la tarda:', line1: "L'Emma llegeix un còmic.", line2: "- Al matí en llegeix [F1] parts.", line3: "- Per la tarda en llegeix [F2] parts.", line4: "- Quina fracció del còmic ha llegit en total?" },
+                                { type: 'sub', e: '🏃‍♀️', p1: 'Total cursa (dalt):', p2: 'Parts fetes:', line1: "L'Emma fa una cursa escolar.", line2: "- Tota la ruta és el total: [F_TOTAL].", line3: "- Ja ha corregut [F1] parts.", line4: "- Quina fracció de cursa li queda?" },
+                                { type: 'sum', e: '🃏', p1: 'Parts pel germà:', p2: 'Parts per l\'amiga:', line1: "L'Emma reparteix adhesius.", line2: "- Dona [F1] parts al seu germà.", line3: "- Dona [F2] parts a la seva amiga.", line4: "- Quina fracció ha repartit en total?" },
+                                { type: 'sub', e: '💧', p1: 'Total aigua (dalt):', p2: 'Parts begudes:', line1: "L'Emma té l'ampolla d'aigua plena.", line2: "- Tota l'ampolla és: [F_TOTAL].", line3: "- Després de l'entrenament, en beu [F1] parts.", line4: "- Quina fracció d'aigua li queda?" },
+                                { type: 'sum', e: '🍰', p1: 'Tros Emma (dalt):', p2: 'Tros tiet (dalt):', line1: "Hi ha un pastís gegant.", line2: "- L'Emma se'n menja [F1] parts.", line3: "- El seu tiet se'n menja [F2] parts.", line4: "- Quina fracció de pastís han menjat?" }
+                            ];
+                            let s = scenarios[Math.floor(Math.random() * scenarios.length)];
+                            let d1 = Math.floor(Math.random() * 5) + 5; // den between 5 and 9
+                            let nn1, nn2, correctNumerator;
+
+                            let l2 = s.line2;
+                            let l3 = s.line3;
+
+                            if (s.type === 'sum') {
+                                nn1 = Math.floor(Math.random() * 2) + 1;
+                                nn2 = Math.floor(Math.random() * 2) + 1;
+                                l2 = l2.replace('[F1]', this.fmtFrac(nn1, d1, 'small'));
+                                l3 = l3.replace('[F2]', this.fmtFrac(nn2, d1, 'small'));
+                                this.probDataFields = [{ label: `Quina fracció correspon a la primera acció?`, val: '', correct: nn1 }, { label: `Quina fracció correspon a la segona acció?`, val: '', correct: nn2 }];
+                                this.probPlanOptions = [
+                                    { id: 'correct', label: '🤔 Les dues accions s\'afegeixen: necessito combinar-les' },
+                                    { id: 'x', label: '🤔 Una acció treu de l\'altra: necessito treure-la' }
+                                ];
+                                correctNumerator = nn1 + nn2;
+                            } else {
+                                nn1 = Math.floor(Math.random() * (d1 - 2)) + 1;
+                                l2 = l2.replace('[F_TOTAL]', this.fmtFrac(d1, d1, 'small'));
+                                l3 = l3.replace('[F1]', this.fmtFrac(nn1, d1, 'small'));
+                                this.probDataFields = [{ label: 'Quin és el total (el de dalt quan està tot ple)?', val: '', correct: d1 }, { label: 'Quina fracció s\'ha gastat o fet?', val: '', correct: nn1 }];
+                                this.probPlanOptions = [
+                                    { id: 'correct', label: '🤔 Necessito saber el que queda: treure el que s\'ha gastat del total' },
+                                    { id: 'x', label: '🤔 Necessito saber el total: afegir el que s\'ha gastat' }
+                                ];
+                                correctNumerator = d1 - nn1;
+                            }
+
+                            this.questionHTML = `<div class="text-left space-y-3 p-4">
+                                <div class="problem-line text-xl"><span class="mr-2">${s.e}</span><span class="font-bold">${s.line1}</span></div>
+                                <div class="problem-line text-xl"><span>${l2}</span></div>
+                                <div class="problem-line text-xl"><span>${l3}</span></div>
+                                <div class="problem-line text-xl font-bold text-indigo-700 mt-4 border-t-2 border-indigo-100 pt-4"><span>❓ ${s.line4}</span></div>
+                            </div>`;
+
+                            this.probStep3Label = "Ara fes l'operació amb els numeradors que has trobat. Quin resultat dona?"; this.probStep3Correct = correctNumerator;
+                            this.setCorrect(correctNumerator, d1); break;
+                        case 2:
+                            this.answerType = 'number'; this.tempTotal = this.tempD * (Math.floor(Math.random() * 5) + 4);
+                            let v2 = [
+                                { e: '👥', item: 'nens', line1: "L'Emma té un grup d'amics.", line2: "- Tota la colla són [TOTAL] nens.", line3: "- De la colla, [FRACCIO] parts tenen gos.", line4: "- Quants nens de la colla tenen gos?" },
+                                { e: '📚', item: 'llibres', line1: "L'Emma organitza la seva estanteria.", line2: "- En total té [TOTAL] llibres.", line3: "- Dels llibres, [FRACCIO] parts són còmics.", line4: "- Quants còmics té en total?" },
+                                { e: '🍬', item: 'caramels', line1: "L'Emma té una bossa de caramels.", line2: "- Hi ha un total de [TOTAL] caramels.", line3: "- De la bossa, [FRACCIO] parts són de maduixa.", line4: "- Quants caramels de maduixa hi ha?" }
+                            ][v];
+                            let l2_v2 = v2.line2.replace('[TOTAL]', this.tempTotal);
+                            let l3_v2 = v2.line3.replace('[FRACCIO]', this.fmtFrac(this.tempN1, this.tempD, 'small'));
+
+                            this.questionHTML = `<div class="text-left space-y-3 p-4">
+                                <div class="problem-line text-xl"><span class="mr-2">${v2.e}</span><span class="font-bold">${v2.line1}</span></div>
+                                <div class="problem-line text-xl"><span>${l2_v2}</span></div>
+                                <div class="problem-line text-xl"><span>${l3_v2}</span></div>
+                                <div class="problem-line text-xl font-bold text-indigo-700 mt-4 border-t-2 border-indigo-100 pt-4"><span>❓ ${v2.line4}</span></div>
+                            </div>`;
+                            this.probDataFields = [{ label: `Quin és el número total del problema?`, val: '', correct: this.tempTotal }, { label: 'Quin és el nombre de parts iguals en què es divideix?', val: '', correct: this.tempD }];
+                            this.probPlanOptions = [
+                                { id: 'correct', label: '🤔 Per trobar una fracció d\'un total, primer necessito saber quan fa cada part' },
+                                { id: 'x', label: '🤔 Sumo el total i la fracció per trobar el resultat' }
+                            ];
+                            this.probStep3Label = `Si divideixes el total entre el nombre de parts, quant val cada part sola?`; this.probStep3Correct = this.tempTotal / this.tempD;
+                            this.setCorrect(0, 0, (this.tempTotal / this.tempD) * this.tempN1); break;
+                        case 3:
+                            this.answerType = 'fraction'; this.tempN2 = Math.floor(Math.random() * (this.tempD - Math.max(this.tempN1, 2))) + 1 || 1;
+                            // asseguem que no doni sota 0 el restant
+                            let v3 = [
+                                { e: '🍰', p1: 'L\'Emma', p2: 'El pare', line1: "Fan un pastís en família.", line2: "- L'Emma es menja [F1] parts del pastís.", line3: "- El seu pare es menja [F2] parts del pastís.", line4: "- Quina fracció del pastís sobra (el q queda)?" },
+                                { e: '🎨', p1: 'L\'Emma', p2: 'La mare', line1: "Pinten un mural gran a la paret.", line2: "- L'Emma pinta [F1] parts del mural.", line3: "- La mare en pinta [F2] parts del mural.", line4: "- Quina fracció del mural falta pintar?" },
+                                { e: '🧩', p1: 'L\'Emma', p2: 'El germà', line1: "La família fa un puzle enorme.", line2: "- L'Emma munta [F1] parts del puzle.", line3: "- El seu germà en munta [F2] parts.", line4: "- Quina fracció de la caixa falta per fer?" }
+                            ][v];
+                            let l2_v3 = v3.line2.replace('[F1]', this.fmtFrac(this.tempN1, this.tempD, 'small'));
+                            let l3_v3 = v3.line3.replace('[F2]', this.fmtFrac(this.tempN2, this.tempD, 'small'));
+                            this.questionHTML = `<div class="text-left space-y-3 p-4">
+                                <div class="problem-line text-xl"><span class="mr-2">${v3.e}</span><span class="font-bold">${v3.line1}</span></div>
+                                <div class="problem-line text-xl"><span>${l2_v3}</span></div>
+                                <div class="problem-line text-xl"><span>${l3_v3}</span></div>
+                                <div class="problem-line text-xl font-bold text-indigo-700 mt-4 border-t-2 border-indigo-100 pt-4"><span>❓ ${v3.line4}</span></div>
+                            </div>`;
+                            this.probDataFields = [{ label: `Quina fracció ha fet ${v3.p1}?`, val: '', correct: this.tempN1 }, { label: `Quina fracció ha fet ${v3.p2}?`, val: '', correct: this.tempN2 }];
+                            this.probPlanOptions = [
+                                { id: 'correct', label: '🤔 Necessito saber quant queda: treure el que s\'ha usat del total (que és 1 sencer)' },
+                                { id: 'x', label: '🤔 Afegeixo el que han fet per saber el total' }
+                            ];
+                            this.probStep3Label = "Primer cal saber quant han fet en total entre les dues persones. Quant suma?"; this.probStep3Correct = this.tempN1 + this.tempN2;
+                            this.setCorrect(this.tempD - (this.tempN1 + this.tempN2), this.tempD); break;
+                        case 4:
+                            this.answerType = 'number'; this.tempN2 = this.tempN1 + 1;
+                            if (Math.random() > 0.5) { this.tempN2 = this.tempN1 - 1; if (this.tempN2 <= 0) this.tempN2 += 2; }
+
+                            let v4 = [
+                                { e: '😋', line1: "Anem a comparar el menjar.", line2: "- L'Emma (1) es menja [F1] parts de pastís.", line3: "- L'amic (2) es menja [F2] parts de pastís.", line4: "- Qui ha menjat MÉS (respon 1 o 2)?", c: this.tempN1 > this.tempN2 ? 1 : 2, isMore: true },
+                                { e: '📖', line1: "Competició de lectura.", line2: "- L'Emma (1) llegeix [F1] parts del llibre.", line3: "- El germà (2) llegeix [F2] parts del llibre.", line4: "- Qui ha llegit MÉS (respon 1 o 2)?", c: this.tempN1 > this.tempN2 ? 1 : 2, isMore: true },
+                                { e: '🎮', line1: "Joc de l'estona.", line2: "- L'Emma (1) ha jugat [F1] parts d'hora.", line3: "- L'amic (2) ha jugat [F2] parts d'hora.", line4: "- Qui ha jugat MENYS estona (respon 1 o 2)?", c: this.tempN1 < this.tempN2 ? 1 : 2, isMore: false }
+                            ][v];
+                            let l2_v4 = v4.line2.replace('[F1]', this.fmtFrac(this.tempN1, this.tempD, 'small'));
+                            let l3_v4 = v4.line3.replace('[F2]', this.fmtFrac(this.tempN2, this.tempD, 'small'));
+
+                            this.questionHTML = `<div class="text-left space-y-3 p-4">
+                                <div class="problem-line text-xl"><span class="mr-2">${v4.e}</span><span class="font-bold">${v4.line1}</span></div>
+                                <div class="problem-line text-xl"><span>${l2_v4}</span></div>
+                                <div class="problem-line text-xl"><span>${l3_v4}</span></div>
+                                <div class="problem-line text-xl font-bold text-indigo-700 mt-4 border-t-2 border-indigo-100 pt-4"><span>❓ ${v4.line4}</span></div>
+                            </div>`;
+                            this.probDataFields = [{ label: 'Quina fracció té la persona 1ª?', val: '', correct: this.tempN1 }, { label: 'Quina fracció té la persona 2ª?', val: '', correct: this.tempN2 }];
+                            this.probPlanOptions = [
+                                { id: 'correct', label: '🤔 Com que les fraccions tenen el mateix denominador, puc comparar directament els numeradors' },
+                                { id: 'x', label: '🤔 Sumo els denominadors per saber qui té més' }
+                            ];
+                            this.probStep3Label = v4.isMore ? "Quin dels dos numeradors és més gran?" : "Quin dels dos numeradors és més petit?";
+                            this.probStep3Correct = v4.isMore ? Math.max(this.tempN1, this.tempN2) : Math.min(this.tempN1, this.tempN2);
+                            this.setCorrect(0, 0, v4.c); break;
+                        case 5:
+                            this.answerType = 'number'; this.tempTotal = this.tempD * (Math.floor(Math.random() * 5) + 4) * 10;
+                            let v5 = [
+                                { e: '🚰', unit: 'Litres', line1: "L'Emma revisa el dipòsit d'estiu.", line2: "- En total al dipòsit hi caben [TOTAL] litres.", line3: "- Ara l'aigua arriba fins a [FRACCIO] parts.", line4: "- Quants litres ens falten per omplir-lo sencer?" },
+                                { e: '💰', unit: 'Euros', line1: "L'Emma obre la guardiola digital.", line2: "- L'objectiu final per estalviar són [TOTAL] euros.", line3: "- Està plena fins a [FRACCIO] parts del total.", line4: "- Quants euros li falten per aconseguir la quantitat?" },
+                                { e: '🧵', unit: 'Metres', line1: "Teixint per hivern amb material especial.", line2: "- Necessita [TOTAL] metres de fil.", line3: "- Ja ha fet anat gastant, utilitzant [FRACCIO] parts.", line4: "- Quants metres falten per acabar de teixir?" }
+                            ][v];
+                            let l2_v5 = v5.line2.replace('[TOTAL]', this.tempTotal);
+                            let l3_v5 = v5.line3.replace('[FRACCIO]', this.fmtFrac(this.tempN1, this.tempD, 'small'));
+
+                            this.questionHTML = `<div class="text-left space-y-3 p-4">
+                                <div class="problem-line text-xl"><span class="mr-2">${v5.e}</span><span class="font-bold">${v5.line1}</span></div>
+                                <div class="problem-line text-xl"><span>${l2_v5}</span></div>
+                                <div class="problem-line text-xl"><span>${l3_v5}</span></div>
+                                <div class="problem-line text-xl font-bold text-indigo-700 mt-4 border-t-2 border-indigo-100 pt-4"><span>❓ ${v5.line4}</span></div>
+                            </div>`;
+                            this.probDataFields = [{ label: 'Quin és el valor total del depòsit / objectiu?', val: '', correct: this.tempTotal }, { label: 'En quantes parts iguals es divideix el total?', val: '', correct: this.tempD }];
+                            this.probPlanOptions = [
+                                { id: 'correct', label: '🤔 Necessito saber quant falta: primer trobo quant val cada part, després calculo el que ja hi és i finalment el que falta' },
+                                { id: 'x', label: '🤔 Sumo el total i la fracció directament' }
+                            ];
+                            this.probStep3Label = `Si divideixes el total entre el nombre de parts iguals, quant val cadascuna?`; this.probStep3Correct = this.tempTotal / this.tempD;
+                            this.setCorrect(0, 0, this.tempTotal - ((this.tempTotal / this.tempD) * this.tempN1)); break;
+                        case 6:
+                            // RECEPTES DE CUINA 🍳 — doblegar o reduir una recepta
+                            this.answerType = 'fraction';
+                            const ingreds = [
+                                { e: '🍰', nom: 'sucre', unitat: 'tasses' },
+                                { e: '🥛', nom: 'farina', unitat: 'tasses' },
+                                { e: '🧄', nom: 'mantequilla', unitat: 'cullerades' },
+                                { e: '🍯', nom: 'mel', unitat: 'cullerades' }
+                            ];
+                            const ing = ingreds[Math.floor(Math.random() * ingreds.length)];
+                            // Fraccions simples de recepta
+                            const recFracs = [{ n: 1, d: 2 }, { n: 1, d: 3 }, { n: 2, d: 3 }, { n: 3, d: 4 }, { n: 1, d: 4 }];
+                            let rf = recFracs[Math.floor(Math.random() * recFracs.length)];
+                            let isDoblar = Math.random() > 0.5;
+                            let persOrig = [4, 6][Math.floor(Math.random() * 2)];
+                            let persDest = isDoblar ? persOrig * 2 : persOrig / 2;
+                            // Resultat: multiplicar o dividir la fracció per 2
+                            let resN = isDoblar ? rf.n * 2 : rf.n;
+                            let resD = isDoblar ? rf.d : rf.d * 2;
+                            let gRec = this.gcd(resN, resD);
+                            resN = resN / gRec; resD = resD / gRec;
+                            this.tempN1 = rf.n; this.tempD = rf.d;
+                            this.tempN2 = isDoblar ? 2 : 1; // factor multiplicador
+                            this.tempTotal = isDoblar ? 1 : 2; // factor divisor (guardem com a 1 o 2)
+                            this.questionHTML = `<div class="text-left space-y-3 p-4">
+                                <div class="problem-line text-xl"><span class="mr-2">${ing.e}</span><span class="font-bold">Recepta de cuina.</span></div>
+                                <div class="problem-line text-xl"><span>- La recepta original és per a ${persOrig} persones.</span></div>
+                                <div class="problem-line text-xl"><span>- Necessita ${this.fmtFrac(rf.n, rf.d, 'small')} ${ing.unitat} de ${ing.nom}.</span></div>
+                                <div class="problem-line text-xl"><span>- Ara volen fer-la per a ${persDest} persones.</span></div>
+                                <div class="problem-line text-xl font-bold text-indigo-700 mt-4 border-t-2 border-indigo-100 pt-4"><span>❓ Quantes ${ing.unitat} de ${ing.nom} calen ara?</span></div>
+                            </div>`;
+                            this.probDataFields = [
+                                { label: 'Quantes persones té la recepta original?', val: '', correct: persOrig },
+                                { label: 'Quantes persones volem fer?', val: '', correct: persDest }
+                            ];
+                            this.probPlanOptions = [
+                                { id: 'correct', label: `🤔 Paso de ${persOrig} a ${persDest} persones: la quantitat d'ingredient ${isDoblar ? 'es dobla' : 'es redueix a la meitat'}` },
+                                { id: 'x', label: `🤔 Sumo les dues quantitats per tenir el nou total` }
+                            ];
+                            this.probStep3Label = `Si ${isDoblar ? 'dobles' : 'redueixes a la meitat'} la fracció ${rf.n}/${rf.d}, quin és el numerador nou?`;
+                            this.probStep3Correct = resN;
+                            this.setCorrect(resN, resD); break;
+                    }
+                },
+                fmtFrac(n, d, size = 'small') {
+                    const sizeClasses = size === 'large' ? 'px-4 py-2 border-4 text-5xl font-black' : 'px-2 py-1 border-2 text-2xl font-bold';
+                    const hrWidth = size === 'large' ? 'border-[5px]' : 'border-[3px]';
+                    return `<div class="inline-flex flex-col items-center align-middle mx-1 bg-white rounded-xl border-slate-200 shadow-sm ${sizeClasses}">
+                        <span class="leading-none mb-1 text-indigo-600">${n}</span>
+                        <hr class="w-full border-slate-800 rounded-full ${hrWidth}">
+                        <span class="leading-none mt-1 text-indigo-600">${d}</span>
+                    </div>`;
+                },
+                setCorrect(n, d, s = null, e = 0) {
+                    this.correctAnswer = { num: n, den: d, single: s, enter: e };
+                    if (this.answerType === 'mixed') this.correctHTML = `<div class="flex items-center gap-2 justify-center">${e} + ${this.fmtFrac(n, d, 'large')}</div>`;
+                    else this.correctHTML = s !== null ? `<b>${s}</b>` : this.fmtFrac(n, d, 'large');
+                },
+                checkAnswer() {
+                    if (this.answerType === 'fraction') this.isCorrect = (parseInt(this.userNum) === this.correctAnswer.num && parseInt(this.userDen) === this.correctAnswer.den);
+                    else if (this.answerType === 'mixed') this.isCorrect = (parseInt(this.userEnter) === this.correctAnswer.enter && parseInt(this.userNum) === this.correctAnswer.num && parseInt(this.userDen) === this.correctAnswer.den);
+                    else {
+                        // per nombre simple: acceptem enter o decimal (nivell 7)
+                        let userVal = parseFloat(this.userSingle);
+                        this.isCorrect = Math.abs(userVal - this.correctAnswer.single) < 0.001;
+                    }
+                    this.answered = true;
+                    if (this.isCorrect) {
+                        this.feedbackMsg = 'Ho has fet increïble! ✨'; this.progress++; confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
+                        if (this.progress >= this.totalExercises) { setTimeout(() => { alert("Molt bé! Nivell completat. 🎉"); this.view = 'menu'; }, 1500); }
+                    } else { this.feedbackMsg = 'Gairebé! Torna-ho a provar 💪'; if (this.progress > 0) this.progress--; }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

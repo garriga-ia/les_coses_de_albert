@@ -5,6 +5,7 @@ https://creixamentpersonal.vercel.app/ Creixament personal
 https://matematiques.vercel.app/ Problemes mates
 https://horaapp.vercel.app/ Les Hores
 https://impostor-swart-kappa.vercel.app/ Impostor
+https://daily-journal-two-rho.vercel.app/ Daily_Journal
 
 
 

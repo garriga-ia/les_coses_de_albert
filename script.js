@@ -72,6 +72,15 @@ const hubData = [
         tag: "Local",
         tagColor: "orange"
     },
+    {
+        title: "Fraccions amb l'Emma",
+        description: "Reptes de fraccions per a 6è de primària.",
+        url: "html/Fraccions.html",
+        category: "educacio",
+        icon: "🔢",
+        tag: "Local",
+        tagColor: "orange"
+    },
     // FAMILIA
     {
         title: "Creixement Personal",
@@ -99,6 +108,15 @@ const hubData = [
         icon: "🎙️",
         tag: "Local",
         tagColor: "orange"
+    },
+    {
+        title: "Daily Journal",
+        description: "Diari personal diari amb reflexions i notes.",
+        url: "https://daily-journal-two-rho.vercel.app/",
+        category: "familia",
+        icon: "📔",
+        tag: "Vercel",
+        tagColor: "gray"
     },
     // JOCS
     {
