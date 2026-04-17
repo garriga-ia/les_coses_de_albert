@@ -81,6 +81,15 @@ const hubData = [
         tag: "Local",
         tagColor: "orange"
     },
+    {
+        title: "El Cos Humà",
+        description: "Recurs interactiu sobre l'anatomia humana.",
+        url: "https://cos-huma.vercel.app/",
+        category: "educacio",
+        icon: "🦴",
+        tag: "Vercel",
+        tagColor: "gray"
+    },
     // FAMILIA
     {
         title: "Creixement Personal",
