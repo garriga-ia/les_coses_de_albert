@@ -17,7 +17,6 @@ const hubData = [
         tag: "IA Studio",
         tagColor: "blue"
     },
-    // EDUCACIO
     {
         title: "Análisis Sintáctico Interactivo",
         description: "Anàlisi interactiva de frases.",
@@ -45,6 +44,7 @@ const hubData = [
         tag: "IA Studio",
         tagColor: "blue"
     },
+    // EDUCACIO
     {
         title: "Problemes Mates",
         description: "Exercicis i pràctica matemàtica.",
@@ -208,38 +208,32 @@ const hubData = [
 
 let currentCategory = 'tots';
 let searchQuery = '';
+let debounceTimer = null;
 
-function createCard(item) {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+// ─── Search with debounce ───────────────────────────────────
+function handleSearch(e) {
+    const value = e.target.value;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        searchQuery = value;
+        renderContent();
+    }, 300);
+}
 
-    if (item.type === 'telegraph') {
-        const linksHtml = item.links.map(link => `
-            <a href="${link.url}" onclick="trackClick('${item.title}')" target="_blank"
-                class="flex items-center space-x-3 p-2 rounded-lg hover:bg-white/5 transition-colors group">
-                <span class="text-gray-400 group-hover:text-blue-500 font-mono">${link.id}.</span>
-                <span class="text-ios-text-primary font-medium group-hover:text-ios-blue transition-colors">${link.title}</span>
-            </a>
-        `).join('');
-
-        return `
-            <div data-category="${item.category}"
-                class="card-item col-span-1 sm:col-span-2 lg:col-span-3 bg-ios-card p-8 rounded-3xl shadow-soft border border-white/10 animate-in">
-                <div class="flex items-center space-x-4 mb-6">
-                    <div class="w-12 h-12 bg-slate-100/10 rounded-xl flex items-center justify-center text-2xl">
-                        ${item.icon}
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-ios-text-primary">${item.title}</h2>
-                        <p class="text-ios-text-secondary">${item.description}</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-8">
-                    ${linksHtml}
-                </div>
-            </div>
-        `;
+// ─── Check if an item matches the search query ──────────────
+function itemMatchesSearch(item, query) {
+    const q = query.toLowerCase();
+    if (item.title.toLowerCase().includes(q)) return true;
+    if (item.description.toLowerCase().includes(q)) return true;
+    // Also search inside telegraph links
+    if (item.type === 'telegraph' && item.links) {
+        return item.links.some(link => link.title.toLowerCase().includes(q));
     }
+    return false;
+}
 
+// ─── Build a card for a regular (non-telegraph) item ────────
+function createCard(item) {
     const tagColors = {
         blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
         gray: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
@@ -257,8 +251,9 @@ function createCard(item) {
     const iconBg = iconBgColors[item.category] || 'bg-gray-100 dark:bg-gray-800';
 
     return `
-        <a href="${item.url}" onclick="trackClick('${item.title}')" target="_blank" data-category="${item.category}"
-            class="card-item group bg-ios-card p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/10 animate-in">
+        <a href="${item.url}" onclick="trackClick('${item.title.replace(/'/g, "\\'")}')" target="_blank"
+            rel="noopener noreferrer" data-category="${item.category}"
+            class="card-item group bg-ios-card p-6 rounded-3xl shadow-soft card-hover flex flex-col justify-between h-48 border border-white/10 animate-in focus-card">
             <div class="flex justify-between items-start">
                 <div class="w-12 h-12 ${iconBg} rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
                     ${item.icon}
@@ -275,14 +270,118 @@ function createCard(item) {
     `;
 }
 
+// ─── Build the telegraph mega-card ───────────────────────────
+function createTelegraphCard(item) {
+    const linksHtml = item.links.map(link => `
+        <a href="${link.url}" onclick="trackClick('${item.title.replace(/'/g, "\\'")}')" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center space-x-3 p-2 rounded-lg hover:bg-white/5 transition-colors group focus-telegraph">
+            <span class="text-gray-400 group-hover:text-blue-500 font-mono">${link.id}.</span>
+            <span class="text-ios-text-primary font-medium group-hover:text-ios-blue transition-colors">${link.title}</span>
+        </a>
+    `).join('');
+
+    return `
+        <div data-category="${item.category}"
+            class="card-item col-span-1 sm:col-span-2 lg:col-span-3 bg-ios-card p-8 rounded-3xl shadow-soft border border-white/10 animate-in">
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="w-12 h-12 bg-slate-100/10 rounded-xl flex items-center justify-center text-2xl">
+                    ${item.icon}
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-ios-text-primary">${item.title}</h2>
+                    <p class="text-ios-text-secondary">${item.description}</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-3 gap-x-8">
+                ${linksHtml}
+            </div>
+        </div>
+    `;
+}
+
+// ─── Recents: small pill-style links ─────────────────────────
+function createRecentPill(item) {
+    const tagColors = {
+        blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+        gray: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
+        orange: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+    };
+
+    if (item.type === 'telegraph') {
+        // For telegraph, link to the anchor of the telegraph card (jump to it)
+        return `
+            <a href="#telegraph-card" onclick="trackClick('${item.title.replace(/'/g, "\\'")}')"
+                class="flex items-center space-x-2 bg-ios-card px-4 py-2.5 rounded-full shadow-soft border border-white/10 card-hover focus-card whitespace-nowrap shrink-0"
+                aria-label="Tornar a ${item.title}">
+                <span class="text-lg">${item.icon}</span>
+                <span class="font-medium text-sm text-ios-text-primary">${item.title}</span>
+            </a>
+        `;
+    }
+
+    return `
+        <a href="${item.url}" onclick="trackClick('${item.title.replace(/'/g, "\\'")}')" target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center space-x-2 bg-ios-card px-4 py-2.5 rounded-full shadow-soft border border-white/10 card-hover focus-card whitespace-nowrap shrink-0"
+            aria-label="Tornar a ${item.title}">
+            <span class="text-lg">${item.icon}</span>
+            <span class="font-medium text-sm text-ios-text-primary">${item.title}</span>
+        </a>
+    `;
+}
+
+// ─── Render the recents section ──────────────────────────────
+function renderRecents() {
+    const recents = JSON.parse(localStorage.getItem('recents') || '[]');
+    if (recents.length === 0) return '';
+
+    // Look up items by title
+    const recentItems = [];
+    const seen = new Set();
+    for (const title of recents) {
+        if (seen.has(title)) continue;
+        const item = hubData.find(d => d.title === title);
+        if (item) {
+            recentItems.push(item);
+            seen.add(title);
+        }
+    }
+
+    if (recentItems.length === 0) return '';
+
+    const pillsHtml = recentItems.map(item => createRecentPill(item)).join('');
+
+    return `
+        <div class="col-span-full mb-2 mt-2">
+            <div class="flex items-center space-x-3 mb-4">
+                <span class="text-xl">🕐</span>
+                <h2 class="text-lg font-bold text-ios-text-primary uppercase tracking-wider text-sm opacity-80">Visitats recentment</h2>
+                <button onclick="clearRecents()"
+                    class="ml-auto text-xs text-ios-text-secondary hover:text-red-500 transition-colors px-3 py-1 rounded-full bg-ios-card border border-white/5"
+                    aria-label="Esborrar historial de recents">
+                    Esborra
+                </button>
+            </div>
+            <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar scroll-shadows-x">
+                ${pillsHtml}
+            </div>
+        </div>
+    `;
+}
+
+// ─── Clear recents ───────────────────────────────────────────
+function clearRecents() {
+    localStorage.removeItem('recents');
+    renderContent();
+}
+
+// ─── Main render ─────────────────────────────────────────────
 function renderContent() {
     const container = document.getElementById('grid-container');
 
-    // Filter by search query first
-    const searchFiltered = hubData.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Filter by search query (with telegraph link support)
+    const searchFiltered = hubData.filter(item => itemMatchesSearch(item, searchQuery));
 
     if (searchFiltered.length === 0) {
         container.innerHTML = `
@@ -296,8 +395,8 @@ function renderContent() {
     }
 
     if (currentCategory === 'tots' && searchQuery === '') {
-        // Render by sections
-        let html = '';
+        // Render by sections with recents at top
+        let html = renderRecents();
         const order = ['ia', 'educacio', 'familia', 'jocs', 'biblioteca'];
 
         order.forEach(catKey => {
@@ -313,31 +412,37 @@ function renderContent() {
 
                 const catInfo = categories[catKey];
                 html += `
-                    <div class="col-span-full mt-12 mb-6 flex items-center space-x-3">
+                    <div class="col-span-full mt-8 mb-4 flex items-center space-x-3">
                         <span class="text-3xl">${catInfo.icon}</span>
                         <h2 class="text-2xl font-bold text-ios-text-primary uppercase tracking-wider text-sm opacity-80">${catInfo.title}</h2>
                         <div class="flex-grow h-px bg-ios-text-secondary opacity-20 ml-4"></div>
                     </div>
-                    ${sortedItems.map(item => createCard(item)).join('')}
+                    ${sortedItems.map(item => {
+                        if (item.type === 'telegraph') return createTelegraphCard(item);
+                        return createCard(item);
+                    }).join('')}
                 `;
             }
         });
         container.innerHTML = html;
     } else {
-        // Render list (filtered by category if not 'tots')
+        // Render filtered list (by category if not 'tots', or by search)
         const finalFiltered = currentCategory === 'tots'
             ? searchFiltered
             : searchFiltered.filter(item => item.category === currentCategory);
 
-        container.innerHTML = finalFiltered.map(item => createCard(item)).join('');
+        container.innerHTML = finalFiltered.map(item => {
+            if (item.type === 'telegraph') return createTelegraphCard(item);
+            return createCard(item);
+        }).join('');
     }
 }
 
+// ─── Category filter ─────────────────────────────────────────
 function filterContent(category) {
     currentCategory = category;
     renderContent();
 
-    // Update buttons ARIA and classes
     const buttons = ['tots', 'ia', 'educacio', 'biblioteca', 'familia', 'jocs'];
     buttons.forEach(cat => {
         const btn = document.getElementById('btn-' + cat);
@@ -353,13 +458,15 @@ function filterContent(category) {
             }
         }
     });
+
+    // Scroll the active button into view on mobile
+    const activeBtn = document.getElementById('btn-' + category);
+    if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 }
 
-function handleSearch(e) {
-    searchQuery = e.target.value;
-    renderContent();
-}
-
+// ─── Dark mode ───────────────────────────────────────────────
 function toggleDarkMode() {
     const html = document.documentElement;
     const isDark = html.getAttribute('data-theme') === 'dark';
@@ -375,15 +482,38 @@ function updateThemeIcon() {
     icon.textContent = isDark ? '☀️' : '🌙';
 }
 
+// ─── Click tracking (feeds recents) ──────────────────────────
 function trackClick(title) {
     let recents = JSON.parse(localStorage.getItem('recents') || '[]');
     recents = [title, ...recents.filter(t => t !== title)].slice(0, 5);
     localStorage.setItem('recents', JSON.stringify(recents));
 }
 
-// Initial render
+// ─── Scroll shadow detection for filter nav ──────────────────
+function updateFilterScrollShadows() {
+    const nav = document.getElementById('filter-nav');
+    if (!nav) return;
+
+    const hasOverflow = nav.scrollWidth > nav.clientWidth;
+    const isAtEnd = nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 2;
+    const isAtStart = nav.scrollLeft <= 2;
+
+    if (hasOverflow && !isAtEnd) {
+        nav.classList.add('scroll-shadow-right');
+    } else {
+        nav.classList.remove('scroll-shadow-right');
+    }
+
+    if (hasOverflow && !isAtStart) {
+        nav.classList.add('scroll-shadow-left');
+    } else {
+        nav.classList.remove('scroll-shadow-left');
+    }
+}
+
+// ─── Init ────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    // Load theme
+    // Theme
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -393,4 +523,12 @@ document.addEventListener('DOMContentLoaded', () => {
     updateThemeIcon();
 
     renderContent();
+
+    // Scroll shadows on filter nav
+    const filterNav = document.getElementById('filter-nav');
+    if (filterNav) {
+        filterNav.addEventListener('scroll', updateFilterScrollShadows);
+        window.addEventListener('resize', updateFilterScrollShadows);
+        updateFilterScrollShadows();
+    }
 });

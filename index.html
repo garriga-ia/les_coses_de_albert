@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<!-- Deployment trigger: 2026-02-28 20:54 -->
+<!-- Deployment trigger: 2026-05-08 11:00 -->
 <html lang="ca">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Les coses de l'Albert | Hub Personal</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏠</text></svg>">
 
     <!-- SEO & Metadata -->
     <meta name="description"
@@ -59,7 +62,7 @@
                 <div class="w-16 h-16 bg-ios-card rounded-2xl shadow-soft flex items-center justify-center text-3xl">
                     🏠
                 </div>
-                <button onclick="toggleDarkMode()" class="dark-mode-toggle text-xl" title="Canvia el tema">
+                <button onclick="toggleDarkMode()" class="dark-mode-toggle text-xl" title="Canvia el tema" aria-label="Canvia entre mode clar i fosc">
                     <span id="theme-icon">🌙</span>
                 </button>
             </div>
@@ -70,45 +73,47 @@
             <div class="w-full max-w-md relative group">
                 <div
                     class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-ios-text-secondary group-focus-within:text-ios-blue transition-colors">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
-                <input type="text" oninput="handleSearch(e || event)" placeholder="Cerca una app, conte o article..."
+                <input type="text" oninput="handleSearch(event)" placeholder="Cerca una app, conte o article..."
                     class="search-input w-full pl-12 pr-4 py-3 rounded-2xl text-base transition-all border-none"
                     aria-label="Cercador">
             </div>
         </header>
 
-        <nav class="flex justify-center mb-12 overflow-x-auto py-6 no-scrollbar" aria-label="Filtres de contingut">
-            <div class="flex space-x-3 px-4">
-                <button onclick="filterContent('tots')" id="btn-tots" aria-pressed="true"
-                    class="tab-active px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    Tots
-                </button>
-                <button onclick="filterContent('ia')" id="btn-ia" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🤖 IA
-                </button>
-                <button onclick="filterContent('educacio')" id="btn-educacio" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🎓 Educació
-                </button>
-                <button onclick="filterContent('biblioteca')" id="btn-biblioteca" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    📖 Biblioteca
-                </button>
-                <button onclick="filterContent('familia')" id="btn-familia" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🏠 Família
-                </button>
-                <button onclick="filterContent('jocs')" id="btn-jocs" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🎮 Jocs
-                </button>
-            </div>
-        </nav>
+        <div class="filter-nav-container" aria-label="Filtres de contingut">
+            <nav id="filter-nav" class="flex justify-center mb-12 overflow-x-auto py-6 no-scrollbar scroll-shadows-x" aria-label="Filtres de contingut">
+                <div class="flex space-x-3 px-4">
+                    <button onclick="filterContent('tots')" id="btn-tots" aria-pressed="true"
+                        class="tab-active px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
+                        Tots
+                    </button>
+                    <button onclick="filterContent('ia')" id="btn-ia" aria-pressed="false"
+                        class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
+                        🤖 IA
+                    </button>
+                    <button onclick="filterContent('educacio')" id="btn-educacio" aria-pressed="false"
+                        class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
+                        🎓 Educació
+                    </button>
+                    <button onclick="filterContent('biblioteca')" id="btn-biblioteca" aria-pressed="false"
+                        class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
+                        📖 Biblioteca
+                    </button>
+                    <button onclick="filterContent('familia')" id="btn-familia" aria-pressed="false"
+                        class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
+                        🏠 Família
+                    </button>
+                    <button onclick="filterContent('jocs')" id="btn-jocs" aria-pressed="false"
+                        class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
+                        🎮 Jocs
+                    </button>
+                </div>
+            </nav>
+        </div>
 
         <!-- Grid Container (Generated via JS) -->
         <main id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

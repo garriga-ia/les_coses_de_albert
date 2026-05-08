@@ -41,6 +41,19 @@ body {
     transition: all 0.1s;
 }
 
+/* Focus styles for keyboard accessibility */
+.focus-card:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px #007aff, 0 8px 30px rgba(0, 122, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.focus-telegraph:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #007aff;
+    border-radius: 0.5rem;
+}
+
 .tab-active {
     background-color: #007aff;
     color: #ffffff;
@@ -67,6 +80,11 @@ body {
     transform: translateY(-1px);
 }
 
+.tab-inactive:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #007aff;
+}
+
 .search-input {
     background-color: var(--input-bg);
     color: var(--text-primary);
@@ -77,6 +95,76 @@ body {
     background-color: var(--card-bg);
     box-shadow: 0 0 0 2px #007aff;
     outline: none;
+}
+
+/* Scroll shadows for filter nav */
+.scroll-shadows-x {
+    /* Uses a background-attachment trick for scroll shadows */
+    background:
+        /* Shadow cover left */
+        linear-gradient(to right, var(--bg-color) 30%, transparent),
+        /* Shadow cover right */
+        linear-gradient(to left, var(--bg-color) 30%, transparent),
+        /* Left shadow */
+        radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,0.15), transparent),
+        /* Right shadow */
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.15), transparent);
+    background-attachment: local, local, scroll, scroll;
+    background-repeat: no-repeat;
+    background-size: 50px 100%, 50px 100%, 20px 100%, 20px 100%;
+    background-position: 0 0, 100% 0, 0 0, 100% 0;
+}
+
+[data-theme="dark"] .scroll-shadows-x {
+    background:
+        linear-gradient(to right, var(--bg-color) 30%, transparent),
+        linear-gradient(to left, var(--bg-color) 30%, transparent),
+        radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,0.4), transparent),
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.4), transparent);
+    background-attachment: local, local, scroll, scroll;
+    background-repeat: no-repeat;
+    background-size: 50px 100%, 50px 100%, 20px 100%, 20px 100%;
+    background-position: 0 0, 100% 0, 0 0, 100% 0;
+}
+
+/* Shadow indicators for the filter nav (overflow detection) */
+.filter-nav-container {
+    position: relative;
+}
+
+.filter-nav-container::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to right, transparent, var(--bg-color));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.filter-nav-container.scroll-shadow-right::after {
+    opacity: 1;
+}
+
+.filter-nav-container::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to left, transparent, var(--bg-color));
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.filter-nav-container.scroll-shadow-left::before {
+    opacity: 1;
 }
 
 /* Animations */
@@ -109,4 +197,19 @@ body {
 
 .dark-mode-toggle:hover {
     background-color: var(--tab-bg);
+}
+
+.dark-mode-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #007aff;
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
