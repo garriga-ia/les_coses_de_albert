@@ -294,6 +294,18 @@ const hubData = [
         url: "html/Temps%20verbals.html",
         badge: "Gramàtica",
         actionText: "OBRIR"
+    },
+    {
+        id: "cos-huma",
+        title: "El Cos Humà",
+        description: "Recurs interactiu sobre l'anatomia humana i biologia.",
+        category: "educacio",
+        icon: '<svg class="w-6 h-6 text-white drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.28"/></svg>',
+        tag: "Vercel",
+        gradient: "from-rose-600 to-indigo-600",
+        url: "https://cos-huma.vercel.app/",
+        badge: "Ciències",
+        actionText: "OBRIR"
     }
 ];
 
