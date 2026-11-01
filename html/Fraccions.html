@@ -247,15 +247,18 @@
                             class="flex items-start justify-between gap-4 p-5 rounded-2xl border-2 transition-all"
                             :class="step === 3 ? 'border-purple-400 bg-white shadow-md' : (step > 3 ? 'bg-green-50 border-green-200 opacity-70' : 'opacity-30 bg-slate-50 border-transparent')">
                             <div class="flex items-start gap-3 flex-1">
-                                <span class="text-purple-500 font-black text-lg mt-1">3️⃣</span>
+                                <span class="text-purple-500 font-black text-lg mt-1"
+                                    x-text="step > 3 ? '✅' : '3️⃣'"></span>
                                 <span class="text-lg font-bold text-purple-900 leading-snug" x-text="step3Text"></span>
                             </div>
                             <input type="number" x-model="step3Input" :disabled="step !== 3"
                                 class="w-24 h-14 text-center text-2xl font-black border-4 border-purple-100 rounded-xl focus:border-purple-400 outline-none shrink-0"
                                 x-show="step === 3">
+                            <span x-show="step > 3" class="text-green-700 font-black text-2xl shrink-0"
+                                x-text="step3Input"></span>
                         </div>
                     </div>
-                    <button @click="checkStep()" x-show="step < 3 || step3Text !== ''"
+                    <button @click="checkStep()" x-show="step < 3 || (step === 3 && step3Text !== '')"
                         class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-black py-4 rounded-2xl shadow-[0_10px_0_rgb(161,98,7)] active:translate-y-1 active:shadow-none transition-all text-xl">Comprovar
                         pista →</button>
                 </div>
@@ -573,19 +576,25 @@
                                 else this.showError("Calcula quantes parts sobren un cop has tret les unitats senceres. El resultat serà el nou numerador! 🤔");
                             }
                         } else if (this.level === 6) {
-                            // Sumes/Restes denominadors diferents: pas 1 = MCM, pas 2 = nou numerador
+                            // Sumes/Restes denominadors diferents: pas 1=MCM, pas 2=1r num, pas 3=2n num
                             if (this.step === 1) {
                                 let v = parseInt(this.step1Input);
-                                // Acceptem qualsevol múltiple comú (no només el mínim)
-                                if (v > 0 && v % this.tempD === 0 && v % this.tempTotal === 0) {
+                                let correctMcm = this.lcm(this.tempD, this.tempTotal);
+                                if (v === correctMcm) {
                                     this.tempEnter = v; this.step = 2;
-                                    // Actualitzar el step2Text amb el valor concret entrat
-                                    this.step2Text = `Si el denominador comú és ${v}, per quant s'ha multiplicat el denominador de la primera fracció (${this.tempD})? Aplica-ho també al de dalt.`;
-                                } else this.showError(`Busca un nombre que sigui múltiple de ${this.tempD} i també de ${this.tempTotal}. Prova-ho multiplicant-los entre ells! 🔍`);
+                                    let f1 = this.tempEnter / this.tempD;
+                                    let f2 = this.tempEnter / this.tempTotal;
+                                    this.step2Text = `El denominador comú és ${v}. La primera fracció tenia ${this.tempD} a baix → s'ha multiplicat per ${f1}. Quin és el nou numerador de dalt (${this.tempN1} × ${f1})?`;
+                                    this.step3Text = `Ara la segona fracció. Tenia ${this.tempTotal} a baix → s'ha multiplicat per ${f2}. Quin és el nou numerador de dalt (${this.tempN2} × ${f2})?`;
+                                } else this.showError(`El m.c.m. de ${this.tempD} i ${this.tempTotal} no és ${v}. Busca el múltiple més petit que comparteixen els dos números! 🔍`);
                             } else if (this.step === 2) {
-                                let factor = this.tempEnter / this.tempD;
-                                if (parseInt(this.step2Input) === this.tempN1 * factor) this.step = 3;
-                                else this.showError(`La primera fracció té ${this.tempN1} de dalt. Si el denominador s'ha multiplicat per ${factor}, el numerador també ho ha de fer. 🤔`);
+                                let factor1 = this.tempEnter / this.tempD;
+                                if (parseInt(this.step2Input) === this.tempN1 * factor1) this.step = 3;
+                                else this.showError(`La primera fracció té ${this.tempN1} de dalt. El denominador s'ha multiplicat per ${factor1}, el numerador ha de fer el mateix (${this.tempN1} × ${factor1}). 🤔`);
+                            } else if (this.step === 3) {
+                                let factor2 = this.tempEnter / this.tempTotal;
+                                if (parseInt(this.step3Input) === this.tempN2 * factor2) this.step = 4;
+                                else this.showError(`La segona fracció té ${this.tempN2} de dalt. El denominador s'ha multiplicat per ${factor2}, el numerador ha de fer el mateix (${this.tempN2} × ${factor2}). 🤔`);
                             }
                         } else if (this.level === 7) {
                             // Fracció ↔ Decimal: només 1 pas guia, la resposta és directa
@@ -699,19 +708,20 @@
                         this.setCorrect(this.tempN1, this.tempD, null, this.tempEnter);
                     } else if (this.level === 6) {
                         // SUMES/RESTES DENOMINADORS DIFERENTS — aplicar MCM
-                        const dens = [[2, 3], [2, 5], [3, 4], [2, 7], [3, 5], [4, 5], [2, 9], [3, 7]];
+                        // Parells compostos: el mcm NO és el producte, cal descompondre
+                        const dens = [[4, 6], [6, 9], [4, 10], [6, 8], [4, 8], [3, 6], [6, 10], [9, 12]];
                         let [d1, d2] = dens[Math.floor(Math.random() * dens.length)];
                         let mcm = this.lcm(d1, d2);
-                        let n1 = Math.floor(Math.random() * (d1 - 1)) + 1;
-                        let n2 = Math.floor(Math.random() * (d2 - 1)) + 1;
+                        // Numeradors petits (1-3) per no complicar la conversió
+                        let n1 = Math.floor(Math.random() * Math.min(d1 - 1, 3)) + 1;
+                        let n2 = Math.floor(Math.random() * Math.min(d2 - 1, 3)) + 1;
                         let op = Math.random() > 0.5 ? '+' : '-';
                         // Per a la resta, assegurem resultat positiu
                         let resNum = op === '+' ? (n1 * (mcm / d1)) + (n2 * (mcm / d2)) : (n1 * (mcm / d1)) - (n2 * (mcm / d2));
                         if (resNum <= 0) { op = '+'; resNum = (n1 * (mcm / d1)) + (n2 * (mcm / d2)); }
-                        let g = this.gcd(Math.abs(resNum), mcm);
                         this.tempN1 = n1; this.tempD = d1;
                         this.tempN2 = n2; this.tempTotal = d2;
-                        this.tempEnter = mcm; // mcm guardat
+                        this.tempEnter = mcm; // mcm correcte (s'actualitza al step 1)
                         this.questionHTML = `<div class="flex flex-col items-center gap-4 text-center w-full">
                             <p class="text-lg font-bold text-slate-600">Calcula:</p>
                             <div class="flex items-center gap-3 text-4xl font-bold justify-center flex-wrap">
@@ -722,10 +732,11 @@
                                 <span class="text-3xl text-slate-400">?</span>
                             </div>
                         </div>`;
-                        this.step1Text = `Mira els dos nombres de baix (${d1} i ${d2}). Quin és el mínim nombre que és múltiple dels dos?`;
-                        this.step2Text = `Si el denominador comú és ${mcm}, per quant s'ha multiplicat el denominador de la primera fracció (${d1})? Aplica-ho també al de dalt.`;
-                        this.step3Text = '';
-                        this.setCorrect(resNum / g, mcm / g);
+                        this.step1Text = `Mira els dos nombres de baix (${d1} i ${d2}). Quin és el m.c.m. (mínim comú múltiple)?`;
+                        this.step2Text = `Quin serà el nou numerador de la primera fracció (${n1}/${d1})?`;
+                        this.step3Text = `Quin serà el nou numerador de la segona fracció (${n2}/${d2})?`;
+                        // Guardem el resultat sense simplificar: l'alumna escriu num/mcm directament
+                        this.setCorrect(resNum, mcm);
                     } else if (this.level === 7) {
                         // FRACCIÓ ↔ DECIMAL
                         const pairs = [{ n: 1, d: 2, dec: 0.5 }, { n: 1, d: 4, dec: 0.25 }, { n: 3, d: 4, dec: 0.75 }, { n: 1, d: 5, dec: 0.2 }, { n: 2, d: 5, dec: 0.4 }, { n: 3, d: 5, dec: 0.6 }, { n: 4, d: 5, dec: 0.8 }, { n: 1, d: 10, dec: 0.1 }, { n: 3, d: 10, dec: 0.3 }, { n: 7, d: 10, dec: 0.7 }];
@@ -831,8 +842,11 @@
                             this.probStep3Label = `Si divideixes el total entre el nombre de parts, quant val cada part sola?`; this.probStep3Correct = this.tempTotal / this.tempD;
                             this.setCorrect(0, 0, (this.tempTotal / this.tempD) * this.tempN1); break;
                         case 3:
-                            this.answerType = 'fraction'; this.tempN2 = Math.floor(Math.random() * (this.tempD - Math.max(this.tempN1, 2))) + 1 || 1;
-                            // asseguem que no doni sota 0 el restant
+                            this.answerType = 'fraction';
+                            // Assegurem restant sempre > 0: tempN1 + tempN2 < tempD
+                            let maxN2 = this.tempD - this.tempN1 - 1;
+                            if (maxN2 <= 0) { this.tempN1 = 1; maxN2 = this.tempD - 2; }
+                            this.tempN2 = Math.floor(Math.random() * maxN2) + 1;
                             let v3 = [
                                 { e: '🍰', p1: 'L\'Emma', p2: 'El pare', line1: "Fan un pastís en família.", line2: "- L'Emma es menja [F1] parts del pastís.", line3: "- El seu pare es menja [F2] parts del pastís.", line4: "- Quina fracció del pastís sobra (el q queda)?" },
                                 { e: '🎨', p1: 'L\'Emma', p2: 'La mare', line1: "Pinten un mural gran a la paret.", line2: "- L'Emma pinta [F1] parts del mural.", line3: "- La mare en pinta [F2] parts del mural.", line4: "- Quina fracció del mural falta pintar?" },
@@ -913,7 +927,8 @@
                             ];
                             const ing = ingreds[Math.floor(Math.random() * ingreds.length)];
                             // Fraccions simples de recepta
-                            const recFracs = [{ n: 1, d: 2 }, { n: 1, d: 3 }, { n: 2, d: 3 }, { n: 3, d: 4 }, { n: 1, d: 4 }];
+                            // Fraccions que al doblar-se no generen impropia (núm > den)
+                            const recFracs = [{ n: 1, d: 2 }, { n: 1, d: 3 }, { n: 1, d: 4 }, { n: 1, d: 6 }, { n: 2, d: 5 }];
                             let rf = recFracs[Math.floor(Math.random() * recFracs.length)];
                             let isDoblar = Math.random() > 0.5;
                             let persOrig = [4, 6][Math.floor(Math.random() * 2)];
@@ -961,8 +976,15 @@
                     else this.correctHTML = s !== null ? `<b>${s}</b>` : this.fmtFrac(n, d, 'large');
                 },
                 checkAnswer() {
-                    if (this.answerType === 'fraction') this.isCorrect = (parseInt(this.userNum) === this.correctAnswer.num && parseInt(this.userDen) === this.correctAnswer.den);
-                    else if (this.answerType === 'mixed') this.isCorrect = (parseInt(this.userEnter) === this.correctAnswer.enter && parseInt(this.userNum) === this.correctAnswer.num && parseInt(this.userDen) === this.correctAnswer.den);
+                    if (this.answerType === 'fraction') {
+                        if (this.level === 6) {
+                            // Acceptem fraccions equivalents (simplificades o no)
+                            let uN = parseInt(this.userNum), uD = parseInt(this.userDen);
+                            this.isCorrect = uD > 0 && uN * this.correctAnswer.den === this.correctAnswer.num * uD;
+                        } else {
+                            this.isCorrect = (parseInt(this.userNum) === this.correctAnswer.num && parseInt(this.userDen) === this.correctAnswer.den);
+                        }
+                    } else if (this.answerType === 'mixed') this.isCorrect = (parseInt(this.userEnter) === this.correctAnswer.enter && parseInt(this.userNum) === this.correctAnswer.num && parseInt(this.userDen) === this.correctAnswer.den);
                     else {
                         // per nombre simple: acceptem enter o decimal (nivell 7)
                         let userVal = parseFloat(this.userSingle);

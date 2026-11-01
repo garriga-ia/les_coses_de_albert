@@ -1,128 +1,374 @@
 <!DOCTYPE html>
-<!-- Deployment trigger: 2026-02-28 20:54 -->
-<html lang="ca">
+<html lang="ca" class="dark">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Les coses de l'Albert | Hub Personal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Les Coses de l'Albert | Hub de Creacions & IA</title>
 
-    <!-- SEO & Metadata -->
-    <meta name="description"
-        content="Hub personal de l'Albert Garriga amb accessos a aplicacions d'IA, contes interactius i eines educatives.">
-    <meta property="og:title" content="Les coses de l'Albert">
-    <meta property="og:description" content="Explora les aplicacions, contes i eines creades per l'Albert Garriga.">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#f2f2f7">
+    <!-- SEO & Metadades per a mòbil i xarxes -->
+    <meta name="description" content="Hub personal de l'Albert Garriga amb accés a aplicacions d'IA, contes interactius i eines educatives.">
+    <meta property="og:title" content="Les Coses de l'Albert | Hub Personal">
+    <meta property="og:description" content="Explora els contes interactius, jocs i eines d'IA creades per l'Albert Garriga.">
+    <meta name="theme-color" content="#07080d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        ios: {
-                            bg: 'var(--bg-color)',
-                            card: 'var(--card-bg)',
-                            'text-primary': 'var(--text-primary)',
-                            'text-secondary': 'var(--text-secondary)',
-                            blue: '#007aff',
-                            gray: '#e5e5ea'
-                        }
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px rgba(0, 0, 0, 0.05)',
-                        'hover': '0 8px 30px rgba(0, 0, 0, 0.1)',
-                    }
-                }
-            }
-        }
-    </script>
 
-    <!-- External CSS -->
+    <!-- Estils propis -->
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+<body class="min-h-screen pb-32 flex flex-col items-center selection:bg-indigo-500 selection:text-white">
 
-    <div class="max-w-6xl mx-auto space-y-8">
-        <!-- Header & Search -->
-        <header class="flex flex-col items-center justify-center space-y-6 mb-10 text-center">
-            <div class="w-full flex justify-between items-center max-w-2xl px-4 lg:px-0">
-                <div class="w-10"></div> <!-- Spacer -->
-                <div class="w-16 h-16 bg-ios-card rounded-2xl shadow-soft flex items-center justify-center text-3xl">
-                    🏠
+    <!-- CONTENIDOR PRINCIPAL (Mòbil-first, centrat i fluid a qualsevol pantalla) -->
+    <main class="w-full max-w-lg px-4 sm:px-6 pt-6 space-y-6">
+
+        <!-- 1. CAPÇALERA D'AUTOR + ESTAT DEL SISTEMA (ESTIL OS) -->
+        <header class="flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+                <!-- Avatar amb anell gradient dinàmic -->
+                <div class="relative">
+                    <div class="w-13 h-13 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-[2px]">
+                        <div class="w-12 h-12 rounded-[14px] bg-[#121420] flex items-center justify-center text-2xl shadow-inner">
+                            ⚡
+                        </div>
+                    </div>
+                    <!-- Indicador actiu verd -->
+                    <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#07080d] rounded-full"></span>
                 </div>
-                <button onclick="toggleDarkMode()" class="dark-mode-toggle text-xl" title="Canvia el tema">
-                    <span id="theme-icon">🌙</span>
-                </button>
+                <div>
+                    <div class="flex items-center space-x-1.5">
+                        <h1 class="text-lg font-black tracking-tight text-white">Albert Garriga</h1>
+                        <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Hub</span>
+                    </div>
+                    <p class="text-xs text-slate-400 font-medium">Contes, IA & Eines Digitals</p>
+                </div>
             </div>
 
-            <h1 class="text-3xl font-bold tracking-tight text-ios-text-primary">Les coses de l'Albert</h1>
+            <!-- Accions de capçalera -->
+            <div class="flex items-center space-x-2">
+                <!-- Botó Selector de Temes de Color -->
+                <button onclick="openThemeModal()" title="Canviar tema de color"
+                    class="flex items-center justify-center w-8 h-8 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-slate-300 active:scale-95 transition-all">
+                    🎨
+                </button>
 
-            <!-- Search Bar -->
-            <div class="w-full max-w-md relative group">
-                <div
-                    class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-ios-text-secondary group-focus-within:text-ios-blue transition-colors">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                <!-- Botó Mode Personalitzar (Estrelles & Corona) -->
+                <button id="btn-edit-mode" onclick="toggleEditMode()" title="Personalitzar Portada i Carrusel"
+                    class="flex items-center space-x-1.5 px-3 py-1.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-semibold text-slate-300 active:scale-95 transition-all">
+                    <span id="edit-icon">⚙️</span>
+                    <span id="edit-label" class="hidden xs:inline">Personalitzar</span>
+                </button>
+
+                <!-- Comptador de creacions actives -->
+                <div class="flex items-center space-x-2 bg-white/[0.04] border border-white/10 px-3 py-1.5 rounded-2xl">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-xs font-bold text-slate-200">18 Actives</span>
                 </div>
-                <input type="text" oninput="handleSearch(e || event)" placeholder="Cerca una app, conte o article..."
-                    class="search-input w-full pl-12 pr-4 py-3 rounded-2xl text-base transition-all border-none"
-                    aria-label="Cercador">
             </div>
         </header>
 
-        <nav class="flex justify-center mb-12 overflow-x-auto py-6 no-scrollbar" aria-label="Filtres de contingut">
-            <div class="flex space-x-3 px-4">
-                <button onclick="filterContent('tots')" id="btn-tots" aria-pressed="true"
-                    class="tab-active px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    Tots
-                </button>
-                <button onclick="filterContent('ia')" id="btn-ia" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🤖 IA
-                </button>
-                <button onclick="filterContent('educacio')" id="btn-educacio" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🎓 Educació
-                </button>
-                <button onclick="filterContent('biblioteca')" id="btn-biblioteca" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    📖 Biblioteca
-                </button>
-                <button onclick="filterContent('familia')" id="btn-familia" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🏠 Família
-                </button>
-                <button onclick="filterContent('jocs')" id="btn-jocs" aria-pressed="false"
-                    class="tab-inactive px-8 py-4 rounded-2xl text-base font-bold transition-all whitespace-nowrap">
-                    🎮 Jocs
+        <!-- BANNER D'INSTRUCCIONS DE MODE PERSONALITZAR (S'activa amb el botó) -->
+        <div id="edit-banner" class="hidden rounded-2xl p-3.5 bg-gradient-to-r from-amber-500/15 via-indigo-500/15 to-emerald-500/15 border border-amber-500/30 text-xs text-slate-200 animate-fade-in">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <span class="text-xl">✨</span>
+                    <div>
+                        <p class="font-bold text-white leading-tight">Mode Personalitzar Actiu</p>
+                        <p class="text-[11px] text-slate-300">Toca <b>👑</b> per Portada, <b>⭐</b> per Carrusel, o <b>📌</b> per al Dock inferior (màx 4).</p>
+                    </div>
+                </div>
+                <button onclick="toggleEditMode()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] shadow-sm">
+                    Fet ✓
                 </button>
             </div>
-        </nav>
+        </div>
 
-        <!-- Grid Container (Generated via JS) -->
-        <main id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- El contingut es genera dinàmicament -->
-        </main>
+        <!-- 2. DESTACAT DEL DIA (HERO STORY ESTIL APP STORE / TODAY) -->
+        <section>
+            <div class="flex items-center justify-between mb-2.5 px-1">
+                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span>⭐</span>
+                    <span>Destacat del dia</span>
+                </span>
+                <span class="text-[11px] text-indigo-400 font-semibold">Creació d'Autor</span>
+            </div>
+            <div id="hero-story-container">
+                <!-- Es genera automàticament des de script.js segons DESTACAT_DEL_DIA_ID -->
+            </div>
+        </section>
 
+        <!-- 3. CARRUSEL HORITZONTAL: CREACIONS ESTRELLA (LLISCA AMB EL DIT GROS) -->
+        <section>
+            <div class="flex items-center justify-between mb-2.5 px-1">
+                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span>✨</span>
+                    <span>Projectes seleccionats</span>
+                </span>
+                <span class="text-[11px] text-slate-500">Llisca →</span>
+            </div>
+            <div id="carousel-container" class="flex space-x-3 overflow-x-auto no-scrollbar pb-1">
+                <!-- Es genera automàticament des de script.js segons PROJECTES_SELECCIONATS_IDS -->
+            </div>
+        </section>
+
+        <!-- 4. CERCA & FILTRES RÀPIDS AMB EL DIT GROS -->
+        <section id="apps-section" class="space-y-3 pt-2">
+            
+            <!-- Barra de cerca en temps real -->
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <input type="text" id="search-input" oninput="handleSearch(event)" placeholder="Cerca una eina, conte o joc..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:bg-white/[0.08] transition-all">
+            </div>
+
+            <!-- Botons / Pills de categoria -->
+            <nav class="flex space-x-1.5 overflow-x-auto no-scrollbar py-1">
+                <button onclick="filterContent('tots')" data-category="tots" class="filter-pill pill-active px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap cursor-pointer transition-all">
+                    Tots (18)
+                </button>
+                <button onclick="filterContent('ia')" data-category="ia" class="filter-pill pill-inactive px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap cursor-pointer transition-all">
+                    🤖 IA
+                </button>
+                <button onclick="filterContent('biblioteca')" data-category="biblioteca" class="filter-pill pill-inactive px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap cursor-pointer transition-all">
+                    📖 Contes
+                </button>
+                <button onclick="filterContent('familia')" data-category="familia" class="filter-pill pill-inactive px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap cursor-pointer transition-all">
+                    💰 Finances
+                </button>
+                <button onclick="filterContent('educacio')" data-category="educacio" class="filter-pill pill-inactive px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap cursor-pointer transition-all">
+                    🎓 Educació
+                </button>
+                <button onclick="filterContent('jocs')" data-category="jocs" class="filter-pill pill-inactive px-3.5 py-1.5 rounded-xl text-xs whitespace-nowrap cursor-pointer transition-all">
+                    🎮 Jocs
+                </button>
+            </nav>
+        </section>
+
+        <!-- 5. CALAIX D'APLICACIONS GENERAT DINÀMICAMENT -->
+        <section id="apps-container" class="space-y-4">
+            <!-- El contingut es renderitza dinàmicament des de script.js -->
+        </section>
+
+        <!-- 6. SECCIÓ ESPECIAL: CONTES DE TELEGRAPH -->
+        <section class="rounded-3xl p-5 theme-surface border border-white/10 shadow-lg">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-base">📑</span>
+                    <h3 class="text-sm font-bold text-white">Contes de Bona Nit (Telegraph)</h3>
+                </div>
+                <span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">
+                    12 relats
+                </span>
+            </div>
+            <p class="text-[11px] text-slate-400 mb-3.5">
+                Històries curtes escrites per a llegir directament des del mòbil abans d'anar a dormir.
+            </p>
+
+            <div id="telegraph-grid" class="grid grid-cols-2 gap-2 text-left">
+                <!-- Es genera des de script.js -->
+            </div>
+        </section>
+
+        <!-- PEU DE PÀGINA -->
+        <footer class="pt-6 pb-4 text-center">
+            <p class="text-xs text-slate-500">
+                Hub creat per <span class="text-slate-300 font-medium">Albert Garriga</span> · 2026
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- 7. DOCK FLOTANT INFERIOR D'ACCÉS RÀPID (ESTIL IPHONE / OS) -->
+    <aside class="fixed bottom-4 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
+        <div class="glass-dock rounded-[28px] px-3.5 py-2.5 flex items-center space-x-3 shadow-2xl pointer-events-auto">
+            
+            <!-- Apps del Dock (Generades dinàmicament des de script.js segons selecció amb 📌) -->
+            <div id="dock-apps-container" class="flex items-center space-x-3"></div>
+
+            <div class="w-[1px] h-6 bg-white/10 mx-0.5"></div>
+
+            <!-- Botó Cerca Ràpida -->
+            <button onclick="openSearchModal()" title="Cercar aplicació" 
+                class="w-11 h-11 rounded-2xl bg-white/10 hover:bg-white/15 active:scale-95 flex items-center justify-center text-slate-200 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+
+        </div>
+    </aside>
+
+    <!-- 8. MODAL DE CERCA RÀPIDA OVERLAY (CMD/TAP) -->
+    <div id="search-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="w-full max-w-md theme-surface border border-white/10 rounded-3xl p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-indigo-400">🔍</span>
+                    <h3 class="text-sm font-bold text-white">Cerca ràpida al Hub</h3>
+                </div>
+                <button onclick="closeSearchModal()" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-white/5">
+                    Tancar ✕
+                </button>
+            </div>
+
+            <input type="text" id="modal-search-input" oninput="handleModalSearch(event)" placeholder="Escriu el nom de l'app, conte o eina..."
+                class="w-full px-4 py-3 rounded-2xl bg-white/[0.05] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+
+            <div id="modal-search-results" class="max-h-64 overflow-y-auto space-y-1">
+                <p class="text-xs text-slate-500 text-center py-6">Comença a escriure per trobar qualsevol creació...</p>
+            </div>
+        </div>
     </div>
 
-    <footer class="text-center py-8 text-gray-400 text-sm">
-        Feta per Albert Garriga.
-    </footer>
+    <!-- 9. MODAL SELECTOR DE TEMES DE COLOR -->
+    <div id="theme-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="w-full max-w-sm theme-surface border border-white/10 rounded-3xl p-5 shadow-2xl space-y-4 animate-fade-in">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center space-x-2">
+                    <span>🎨</span>
+                    <h3 class="text-sm font-bold text-white">Temes de Color</h3>
+                </div>
+                <button onclick="closeThemeModal()" class="text-xs text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-white/5">
+                    Tancar ✕
+                </button>
+            </div>
 
-    <!-- External JS -->
+            <p class="text-[11px] text-slate-400">Tria l'ambient visual que més t'agradi per al teu Hub:</p>
+
+            <div class="space-y-4 max-h-[70vh] overflow-y-auto pr-1 no-scrollbar">
+
+                <!-- GRUP 1: TEMES FOSCOS -->
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-2 px-1">
+                        🌙 Ambients Foscos (Nit & OLED)
+                    </span>
+                    <div class="space-y-1.5">
+                        <!-- Tema 1: Midnight -->
+                        <button onclick="setTheme('midnight')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-indigo-500/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="midnight">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Midnight Aurora</p>
+                                    <p class="text-[10px] text-slate-400">Indigo & Púrpura</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-indigo-400 hidden">✓</span>
+                        </button>
+
+                        <!-- Tema 2: Emerald -->
+                        <button onclick="setTheme('emerald')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-emerald-500/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="emerald">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-500 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Emerald Forest</p>
+                                    <p class="text-[10px] text-slate-400">Maragda & Menta fosca</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-emerald-400 hidden">✓</span>
+                        </button>
+
+                        <!-- Tema 3: Sunset -->
+                        <button onclick="setTheme('sunset')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-rose-500/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="sunset">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-rose-500 via-orange-500 to-amber-400 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Sunset Neon</p>
+                                    <p class="text-[10px] text-slate-400">Coral, Taronja & Ambre</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-rose-400 hidden">✓</span>
+                        </button>
+
+                        <!-- Tema 4: Ocean -->
+                        <button onclick="setTheme('ocean')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-sky-500/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="ocean">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Ocean Deep</p>
+                                    <p class="text-[10px] text-slate-400">Blau Elèctric & Cian</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-sky-400 hidden">✓</span>
+                        </button>
+
+                        <!-- Tema 5: Titanium -->
+                        <button onclick="setTheme('titanium')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-zinc-400/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="titanium">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-zinc-700 via-zinc-400 to-zinc-900 border border-zinc-500/40 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Titanium OLED</p>
+                                    <p class="text-[10px] text-slate-400">Negre Absolut & Titani</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-white hidden">✓</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GRUP 2: TEMES CLARS -->
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-2 px-1">
+                        ☀️ Ambients Clars (Dia & Lluminós)
+                    </span>
+                    <div class="space-y-1.5">
+                        <!-- Tema 6: Snow Minimal -->
+                        <button onclick="setTheme('snow')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-blue-500/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="snow">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-500 via-sky-300 to-slate-100 border border-slate-300 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Snow Minimal</p>
+                                    <p class="text-[10px] text-slate-400">Blanc pur & Blau Apple</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-blue-500 hidden">✓</span>
+                        </button>
+
+                        <!-- Tema 7: Paper Editorial -->
+                        <button onclick="setTheme('paper')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-amber-600/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="paper">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-600 via-amber-200 to-stone-100 border border-amber-300 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Paper Editorial</p>
+                                    <p class="text-[10px] text-slate-400">Crema càlid, Beix & Cafè</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-amber-600 hidden">✓</span>
+                        </button>
+
+                        <!-- Tema 8: Mint Breeze -->
+                        <button onclick="setTheme('mint')" class="theme-option w-full p-2.5 rounded-2xl border border-white/10 hover:border-emerald-600/50 flex items-center justify-between bg-white/[0.03] active:scale-98 transition-all" data-theme-target="mint">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-500 via-emerald-200 to-teal-100 border border-emerald-300 shadow-md"></span>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-white">Mint Breeze</p>
+                                    <p class="text-[10px] text-slate-400">Menta fresca & Turquesa</p>
+                                </div>
+                            </div>
+                            <span class="theme-check text-xs font-bold text-emerald-600 hidden">✓</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="script.js"></script>
+
 </body>
 
 </html>

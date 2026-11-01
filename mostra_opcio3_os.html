@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ca" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Opció 3: Sistema Operatiu Mòbil (Launcher) | Albert Garriga</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #07090e;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.12) 0px, transparent 50%);
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+        }
+
+        /* Icona squircle estil iOS */
+        .app-icon {
+            border-radius: 22px;
+            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .app-icon:active {
+            transform: scale(0.9);
+            filter: brightness(0.9);
+        }
+
+        /* Dock flotant */
+        .dock {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between pb-6">
+
+    <!-- BARRA SELECTORA SUPERIOR PER NAVEGAR ENTRE LES OPCIONS -->
+    <div class="sticky top-0 z-50 w-full max-w-md bg-[#07090e]/90 backdrop-blur-md px-3 py-2.5 border-b border-white/10 flex items-center justify-between">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mostres:</span>
+        <div class="flex space-x-1">
+            <a href="mostra_disseny.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">1. Bento</a>
+            <a href="mostra_opcio2_feed.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">2. Feed</a>
+            <a href="mostra_opcio3_os.html" class="text-[11px] px-2 py-1 rounded-lg bg-indigo-600 text-white font-bold">3. OS</a>
+            <a href="mostra_hibrid_2_i_3.html" class="text-[11px] px-2.5 py-1 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold shadow-sm">⭐ 4. Híbrid</a>
+        </div>
+    </div>
+
+    <!-- CONTENIDOR PANTALLA PRINCIPAL MÒBIL -->
+    <main class="w-full max-w-md px-5 pt-4 flex-1 flex flex-col justify-between">
+
+        <!-- WIDGET SUPERIOR (DATA & HUB STATUS) -->
+        <div>
+            <div class="flex items-center justify-between px-2 pt-1 mb-4">
+                <span class="text-xs font-bold tracking-tight text-slate-300">ALBERT OS · v2.0</span>
+                <span class="flex items-center space-x-1 text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>14 Apps actives</span>
+                </span>
+            </div>
+
+            <!-- Gran Widget estil iOS -->
+            <div class="rounded-3xl p-5 bg-white/[0.04] border border-white/10 backdrop-blur-xl mb-6 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-2xl shadow-md">
+                        ⚡
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white">Hub Personal</h2>
+                        <p class="text-xs text-slate-400">Contes, IA i eines creades per l'Albert</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUADRÍCULA D'APLICACIONS (4 COLUMNES COM UN SMARTPHONE) -->
+            <div class="grid grid-cols-4 gap-y-5 gap-x-3 text-center">
+
+                <!-- 1. Conte Emma -->
+                <button onclick="previewApp('Conte Emma', 'Aventura interactiva amb IA')" class="flex flex-col items-center group">
+                    <div class="w-15 h-15 w-[60px] h-[60px] app-icon bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-2xl mb-1.5">
+                        👸
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Emma</span>
+                </button>
+
+                <!-- 2. Conte Ivet -->
+                <button onclick="previewApp('Conte Ivet', 'Història màgica de fades')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-pink-600 to-rose-400 flex items-center justify-center text-2xl mb-1.5">
+                        🧚
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Ivet</span>
+                </button>
+
+                <!-- 3. Conte Judit -->
+                <button onclick="previewApp('Conte Judit', 'Història especial per a la Judit')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center text-2xl mb-1.5">
+                        🧸
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Judit</span>
+                </button>
+
+                <!-- 4. La Pasta -->
+                <button onclick="previewApp('La Pasta', 'Quadre d\'economia domèstica')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-2xl mb-1.5">
+                        💰
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">La Pasta</span>
+                </button>
+
+                <!-- 5. Traductor IA -->
+                <button onclick="previewApp('Traductor IA', 'Traducció multi-idioma intel·ligent')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-2xl mb-1.5">
+                        🗣️
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Traductor</span>
+                </button>
+
+                <!-- 6. L'Impostor -->
+                <button onclick="previewApp('L\'Impostor', 'Joc social de deducció')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-violet-800 to-indigo-900 flex items-center justify-center text-2xl mb-1.5 border border-purple-500/30">
+                        🕵️
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Impostor</span>
+                </button>
+
+                <!-- 7. Mates Pas a Pas -->
+                <button onclick="previewApp('Mates Pas a Pas', 'Resolució interactiva d\'exercicis')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-indigo-700 to-blue-500 flex items-center justify-center text-2xl mb-1.5">
+                        🔢
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Mates</span>
+                </button>
+
+                <!-- 8. Les Hores -->
+                <button onclick="previewApp('Les Hores', 'Joc per aprendre les hores')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-sky-600 to-blue-400 flex items-center justify-center text-2xl mb-1.5">
+                        ⏰
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Hores</span>
+                </button>
+
+                <!-- 9. Fraccions -->
+                <button onclick="previewApp('Fraccions', 'Reptes de càlcul de 6è')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-yellow-600 to-amber-500 flex items-center justify-center text-2xl mb-1.5">
+                        ➗
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Fraccions</span>
+                </button>
+
+                <!-- 10. Daily Journal -->
+                <button onclick="previewApp('Daily Journal', 'Diari personal i reflexions')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-amber-700 to-yellow-500 flex items-center justify-center text-2xl mb-1.5">
+                        📔
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Diari</span>
+                </button>
+
+                <!-- 11. Creixement Personal -->
+                <button onclick="previewApp('Creixement', 'Cursos de criança i recursos')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-green-600 to-emerald-400 flex items-center justify-center text-2xl mb-1.5">
+                        🌱
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Creixement</span>
+                </button>
+
+                <!-- 12. Telegraph Stories -->
+                <button onclick="previewApp('Contes Telegraph', '12 contes curts per dormir')" class="flex flex-col items-center group">
+                    <div class="w-[60px] h-[60px] app-icon bg-gradient-to-tr from-slate-700 to-slate-500 flex items-center justify-center text-2xl mb-1.5">
+                        📑
+                    </div>
+                    <span class="text-[11px] font-medium text-slate-200 tracking-tight truncate max-w-[68px]">Telegraph</span>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- SEPARADOR / INDICADOR DE PÀGINES ESTIL SMARTPHONE -->
+        <div class="flex justify-center space-x-1.5 my-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-white/20"></span>
+        </div>
+
+        <!-- DOCK FLOTANT INFERIOR AMB LES 4 APPS PREFERIDES -->
+        <div class="dock rounded-[32px] p-3 flex justify-around items-center">
+            <button onclick="previewApp('Conte Emma', 'Accés directe')" class="flex flex-col items-center">
+                <div class="w-12 h-12 app-icon bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-xl">
+                    👸
+                </div>
+            </button>
+            <button onclick="previewApp('La Pasta', 'Accés directe')" class="flex flex-col items-center">
+                <div class="w-12 h-12 app-icon bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-xl">
+                    💰
+                </div>
+            </button>
+            <button onclick="previewApp('Traductor IA', 'Accés directe')" class="flex flex-col items-center">
+                <div class="w-12 h-12 app-icon bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center text-xl">
+                    🗣️
+                </div>
+            </button>
+            <button onclick="previewApp('L\'Impostor', 'Accés directe')" class="flex flex-col items-center">
+                <div class="w-12 h-12 app-icon bg-gradient-to-tr from-violet-800 to-indigo-900 flex items-center justify-center text-xl border border-purple-500/30">
+                    🕵️
+                </div>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- TOAST / MODAL DE PREVISUALITZACIÓ EN FER CLIC A QUALSEVOL ICONA -->
+    <div id="modal-app" class="fixed inset-x-0 bottom-0 p-5 bg-[#13151f]/95 border-t border-white/10 backdrop-blur-2xl rounded-t-3xl transition-transform transform translate-y-full z-50 max-w-md mx-auto">
+        <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4"></div>
+        <div class="flex items-center justify-between mb-2">
+            <h3 id="modal-title" class="text-base font-bold text-white">Aplicació</h3>
+            <button onclick="closeModal()" class="text-xs text-slate-400 bg-white/5 px-2.5 py-1 rounded-lg">Tancar</button>
+        </div>
+        <p id="modal-desc" class="text-xs text-slate-400 mb-4">Descripció</p>
+        <button class="w-full py-3 rounded-2xl bg-indigo-600 text-white font-bold text-xs uppercase tracking-wider">
+            Executar Aplicació (Simulació)
+        </button>
+    </div>
+
+    <script>
+        function previewApp(name, desc) {
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('modal-app').classList.remove('translate-y-full');
+        }
+        function closeModal() {
+            document.getElementById('modal-app').classList.add('translate-y-full');
+        }
+    </script>
+
+</body>
+</html>
+

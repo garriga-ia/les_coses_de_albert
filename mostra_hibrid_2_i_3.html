@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ca" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Híbrid (Feed + OS) | Albert Garriga</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #07080d;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.15) 0px, transparent 40%),
+                radial-gradient(at 100% 25%, rgba(217, 70, 239, 0.1) 0px, transparent 40%);
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Icona App Squircle estil iOS */
+        .squircle {
+            border-radius: 18px;
+            box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            transition: transform 0.15s ease;
+        }
+        .squircle:active {
+            transform: scale(0.92);
+        }
+
+        /* Targeta gran destacada estil App Store */
+        .hero-story {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            transition: transform 0.2s ease;
+        }
+        .hero-story:active {
+            transform: scale(0.985);
+        }
+
+        /* Dock flotant d'accés ràpid */
+        .glass-dock {
+            background: rgba(18, 20, 29, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Amagar scrollbar horitzontal */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen pb-32 flex flex-col items-center">
+
+    <!-- BARRA SELECTORA SUPERIOR -->
+    <div class="sticky top-0 z-50 w-full max-w-md bg-[#07080d]/85 backdrop-blur-md px-3 py-2.5 border-b border-white/10 flex items-center justify-between">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mostres:</span>
+        <div class="flex space-x-1">
+            <a href="mostra_disseny.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">1. Bento</a>
+            <a href="mostra_opcio2_feed.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">2. Feed</a>
+            <a href="mostra_opcio3_os.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">3. OS</a>
+            <a href="mostra_hibrid_2_i_3.html" class="text-[11px] px-2.5 py-1 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold shadow-sm">⭐ 4. Híbrid</a>
+        </div>
+    </div>
+
+    <!-- CONTENIDOR MÒBIL -->
+    <main class="w-full max-w-md px-5 pt-5 space-y-6">
+
+        <!-- 1. CAPÇALERA D'AUTOR + SMART OS WIDGET -->
+        <header class="flex items-center justify-between">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-400">ALBERT HUB OS</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                </div>
+                <h1 class="text-2xl font-black tracking-tight text-white mt-0.5">Les meves creacions</h1>
+            </div>
+
+            <!-- Perfil avatar amb botó d'estat -->
+            <div class="flex items-center space-x-2 bg-white/5 border border-white/10 pl-2 pr-3 py-1.5 rounded-2xl">
+                <div class="w-7 h-7 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-sm shadow">
+                    ⚡
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] font-bold text-white leading-none">14 Projectes</p>
+                    <p class="text-[9px] text-emerald-400 font-semibold leading-tight">En línia</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. DESTACAT DEL DIA (HERO STORY ESTIL APP STORE) -->
+        <section>
+            <div class="flex items-center justify-between mb-2.5 px-1">
+                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span>🔥</span>
+                    <span>Destacat del dia</span>
+                </span>
+                <span class="text-[11px] text-indigo-400 font-semibold cursor-pointer">Història completa →</span>
+            </div>
+
+            <article class="hero-story rounded-[32px] overflow-hidden bg-gradient-to-b from-[#2e1065] via-[#1e1b4b] to-[#0f172a] relative">
+                <!-- Efecte radiant de fons -->
+                <div class="absolute -right-12 -top-12 w-48 h-48 bg-purple-500/25 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="p-6 pb-20">
+                    <div class="inline-flex items-center space-x-1.5 bg-purple-500/20 border border-purple-400/30 px-2.5 py-1 rounded-full mb-3">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest text-purple-200">CREACIÓ D'AUTOR</span>
+                    </div>
+                    <h2 class="text-2xl font-black text-white leading-tight">El conte màgic de l'Emma</h2>
+                    <p class="text-xs text-purple-200/80 mt-2 leading-relaxed">
+                        Aventura infantil interactiva amb il·lustracions creades amb IA, música i decisions en temps real per a la meva filla.
+                    </p>
+                </div>
+
+                <!-- Barra inferior d'acció ràpida integrada -->
+                <div class="absolute bottom-0 inset-x-0 p-3.5 bg-black/40 backdrop-blur-md border-t border-white/10 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 squircle bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-xl shrink-0">
+                            👸
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">Conte de l'Emma</h4>
+                            <p class="text-[10px] text-slate-400">Vercel WebApp</p>
+                        </div>
+                    </div>
+                    <button class="px-5 py-2 rounded-full bg-white text-slate-950 text-xs font-black tracking-wide uppercase hover:bg-slate-200 active:scale-95 transition-all shadow-md">
+                        OBRIR
+                    </button>
+                </div>
+            </article>
+        </section>
+
+        <!-- 3. CARRUSEL HORITZONTAL DE PRESTATGERIA (APPS EN FORMAT STORY RÀPIDA) -->
+        <section>
+            <div class="flex items-center justify-between mb-2.5 px-1">
+                <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span>✨</span>
+                    <span>Projectes recents</span>
+                </span>
+                <span class="text-[11px] text-slate-500">Llisca →</span>
+            </div>
+
+            <div class="flex space-x-3 overflow-x-auto no-scrollbar pb-1">
+
+                <!-- Targeta Carrusel 1: L'Impostor -->
+                <div class="w-56 shrink-0 rounded-3xl p-4 bg-gradient-to-br from-[#1e1338] to-[#121420] border border-white/10 relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-11 h-11 squircle bg-gradient-to-tr from-purple-600 to-indigo-700 flex items-center justify-center text-xl mb-3 shadow">
+                            🕵️
+                        </div>
+                        <span class="text-[9px] font-extrabold text-purple-300 uppercase tracking-wider">Joc Social</span>
+                        <h3 class="text-sm font-bold text-white mt-0.5">L'Impostor</h3>
+                        <p class="text-[11px] text-slate-400 mt-1 leading-snug">Joc multijugador per a sopars amb amics.</p>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400">Multijugador</span>
+                        <button class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold text-white">JUGAR</button>
+                    </div>
+                </div>
+
+                <!-- Targeta Carrusel 2: Conte Ivet -->
+                <div class="w-56 shrink-0 rounded-3xl p-4 bg-gradient-to-br from-[#3b0d2b] to-[#121420] border border-white/10 relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-11 h-11 squircle bg-gradient-to-tr from-pink-600 to-rose-500 flex items-center justify-center text-xl mb-3 shadow">
+                            🧚
+                        </div>
+                        <span class="text-[9px] font-extrabold text-pink-300 uppercase tracking-wider">Narrativa Infantil</span>
+                        <h3 class="text-sm font-bold text-white mt-0.5">Conte Ivet</h3>
+                        <p class="text-[11px] text-slate-400 mt-1 leading-snug">Lectura màgica amb il·lustracions de conte.</p>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400">Digital</span>
+                        <button class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold text-white">LLEGIR</button>
+                    </div>
+                </div>
+
+                <!-- Targeta Carrusel 3: La Pasta -->
+                <div class="w-56 shrink-0 rounded-3xl p-4 bg-gradient-to-br from-[#063323] to-[#121420] border border-white/10 relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="w-11 h-11 squircle bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-xl mb-3 shadow">
+                            💰
+                        </div>
+                        <span class="text-[9px] font-extrabold text-emerald-300 uppercase tracking-wider">Finances</span>
+                        <h3 class="text-sm font-bold text-white mt-0.5">La Pasta</h3>
+                        <p class="text-[11px] text-slate-400 mt-1 leading-snug">Panell de control d'estalvi i despeses.</p>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400">Personal</span>
+                        <button class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold text-white">OBRIR</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. CALAIX D'APLICACIONS ESTIL OS (LLISTA NATIVA AMB SQUIRCLES) -->
+        <section class="space-y-4">
+            
+            <!-- SECCIÓ A: Eines d'IA & Productivitat -->
+            <div class="rounded-3xl p-4 bg-[#121420] border border-white/10 shadow-lg">
+                <div class="flex items-center justify-between mb-3 px-1">
+                    <span class="text-xs font-bold text-slate-300 flex items-center space-x-1.5">
+                        <span>🤖</span>
+                        <span>Eines d'IA & Productivitat</span>
+                    </span>
+                    <span class="text-[10px] text-slate-500 font-bold bg-white/5 px-2 py-0.5 rounded-full">4 Apps</span>
+                </div>
+
+                <div class="divide-y divide-white/5">
+                    <!-- App 1 -->
+                    <div class="flex items-center justify-between py-2.5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-11 squircle bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-xl shadow">
+                                🗣️
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Traductor Intel·ligent</h4>
+                                <p class="text-[10px] text-slate-400">Traducció contextual amb IA</p>
+                            </div>
+                        </div>
+                        <button class="px-3.5 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold hover:bg-white/15">OBRIR</button>
+                    </div>
+
+                    <!-- App 2 -->
+                    <div class="flex items-center justify-between py-2.5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-11 squircle bg-gradient-to-tr from-amber-600 to-yellow-500 flex items-center justify-center text-xl shadow">
+                                📔
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Daily Journal</h4>
+                                <p class="text-[10px] text-slate-400">Diari personal i reflexions diàries</p>
+                            </div>
+                        </div>
+                        <button class="px-3.5 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold hover:bg-white/15">OBRIR</button>
+                    </div>
+
+                    <!-- App 3 -->
+                    <div class="flex items-center justify-between py-2.5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-11 squircle bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-xl shadow">
+                                📊
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Análisis Sintáctico</h4>
+                                <p class="text-[10px] text-slate-400">Desglossament interactiu de frases</p>
+                            </div>
+                        </div>
+                        <button class="px-3.5 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold hover:bg-white/15">OBRIR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓ B: Educació & Mates -->
+            <div class="rounded-3xl p-4 bg-[#121420] border border-white/10 shadow-lg">
+                <div class="flex items-center justify-between mb-3 px-1">
+                    <span class="text-xs font-bold text-slate-300 flex items-center space-x-1.5">
+                        <span>🎓</span>
+                        <span>Educació & Aprenentatge</span>
+                    </span>
+                    <span class="text-[10px] text-slate-500 font-bold bg-white/5 px-2 py-0.5 rounded-full">4 Apps</span>
+                </div>
+
+                <div class="divide-y divide-white/5">
+                    <!-- App 1 -->
+                    <div class="flex items-center justify-between py-2.5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-11 squircle bg-gradient-to-tr from-sky-600 to-blue-500 flex items-center justify-center text-xl shadow">
+                                ⏰
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Les Hores</h4>
+                                <p class="text-[10px] text-slate-400">Joc visual per aprendre el rellotge</p>
+                            </div>
+                        </div>
+                        <button class="px-3.5 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold hover:bg-white/15">OBRIR</button>
+                    </div>
+
+                    <!-- App 2 -->
+                    <div class="flex items-center justify-between py-2.5">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-11 h-11 squircle bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-xl shadow">
+                                🔢
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Fraccions amb l'Emma</h4>
+                                <p class="text-[10px] text-slate-400">Reptes de matemàtiques de 6è</p>
+                            </div>
+                        </div>
+                        <button class="px-3.5 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold hover:bg-white/15">OBRIR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓ C: Biblioteca Telegraph -->
+            <div class="rounded-3xl p-4 bg-[#121420] border border-white/10 shadow-lg">
+                <div class="flex items-center justify-between mb-2 px-1">
+                    <span class="text-xs font-bold text-white flex items-center space-x-2">
+                        <span>📑</span>
+                        <span>Contes per anar a dormir (Telegraph)</span>
+                    </span>
+                    <span class="text-[10px] text-indigo-400 font-bold">12 relats</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mb-3 px-1">Històries per llegir directament des del mòbil abans d'apagar el llum.</p>
+                
+                <div class="grid grid-cols-2 gap-2 text-left">
+                    <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 text-[11px] font-semibold text-slate-200">
+                        🍬 El Planeta Xuxes
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 text-[11px] font-semibold text-slate-200">
+                        ⚡ Llamps i Trons
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 text-[11px] font-semibold text-slate-200">
+                        🏰 L'Edat Mitjana
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-white/5 border border-white/5 text-[11px] font-semibold text-slate-200">
+                        📱 El Mòbil Nou
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- PEU DE PÀGINA -->
+        <footer class="text-center pt-2 pb-6">
+            <p class="text-xs text-slate-500">
+                Mostra 4: Híbrid Editorial (App Store) + Sistema Operatiu (OS) · Albert Garriga
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- 5. DOCK FLOTANT INFERIOR (PER ACCÉS INSTANTANI ALS PREFERITS) -->
+    <aside class="fixed bottom-4 inset-x-0 z-40 flex justify-center px-4">
+        <div class="glass-dock rounded-[28px] px-4 py-2.5 flex items-center space-x-3.5 shadow-2xl">
+            <!-- Icona 1 -->
+            <button title="Conte Emma" class="squircle w-11 h-11 bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-xl shadow">
+                👸
+            </button>
+            <!-- Icona 2 -->
+            <button title="La Pasta" class="squircle w-11 h-11 bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-xl shadow">
+                💰
+            </button>
+            <!-- Icona 3 -->
+            <button title="Traductor" class="squircle w-11 h-11 bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-xl shadow">
+                🗣️
+            </button>
+            <!-- Icona 4 -->
+            <button title="L'Impostor" class="squircle w-11 h-11 bg-gradient-to-tr from-violet-800 to-purple-900 flex items-center justify-center text-xl border border-purple-500/30 shadow">
+                🕵️
+            </button>
+            
+            <div class="w-[1px] h-6 bg-white/10 mx-1"></div>
+
+            <!-- Botó Buscar / Tots -->
+            <button class="w-11 h-11 rounded-2xl bg-white/10 hover:bg-white/15 flex items-center justify-center text-slate-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </aside>
+
+</body>
+</html>
+

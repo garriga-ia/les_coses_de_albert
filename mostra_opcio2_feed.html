@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ca" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Opció 2: Feed Editorial App Store | Albert Garriga</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #090a0f;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .feed-card {
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s ease;
+        }
+        .feed-card:active {
+            transform: scale(0.985);
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24 flex flex-col items-center">
+
+    <!-- BARRA SELECTORA SUPERIOR PER NAVEGAR ENTRE LES OPCIONS -->
+    <div class="sticky top-0 z-50 w-full max-w-md bg-[#090a0f]/85 backdrop-blur-md px-3 py-2.5 border-b border-white/10 flex items-center justify-between">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mostres:</span>
+        <div class="flex space-x-1">
+            <a href="mostra_disseny.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">1. Bento</a>
+            <a href="mostra_opcio2_feed.html" class="text-[11px] px-2 py-1 rounded-lg bg-indigo-600 text-white font-bold">2. Feed</a>
+            <a href="mostra_opcio3_os.html" class="text-[11px] px-2 py-1 rounded-lg bg-white/5 text-slate-400">3. OS</a>
+            <a href="mostra_hibrid_2_i_3.html" class="text-[11px] px-2.5 py-1 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold shadow-sm">⭐ 4. Híbrid</a>
+        </div>
+    </div>
+
+    <!-- CONTENIDOR MÒBIL -->
+    <main class="w-full max-w-md px-5 pt-6 space-y-6">
+
+        <!-- CAPÇALERA TIPUS 'AVUI' APP STORE -->
+        <header>
+            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Diumenge, 1 de novembre</p>
+            <div class="flex items-center justify-between mt-1">
+                <h1 class="text-3xl font-extrabold tracking-tight text-white">Avui al Hub</h1>
+                <!-- Avatar Albert -->
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 p-[2px]">
+                    <div class="w-full h-full bg-[#13151f] rounded-full flex items-center justify-center text-lg">
+                        ⚡
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Creacions digitals i projectes d'Albert Garriga</p>
+        </header>
+
+        <!-- CARD 1: HERO STORY (CONTE EMMA) -->
+        <article class="feed-card rounded-[32px] overflow-hidden bg-gradient-to-b from-[#1e1b4b] to-[#0f172a] relative">
+            <div class="p-6 pb-24">
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-indigo-300">Aventura d'Autor</span>
+                <h2 class="text-2xl font-black text-white mt-1 leading-tight">El conte màgic de l'Emma</h2>
+                <p class="text-xs text-indigo-200/80 mt-2 leading-relaxed">
+                    Com vaig crear un conte infantil interactiu amb personatges reals, presa de decisions i il·lustracions generades per IA.
+                </p>
+            </div>
+
+            <!-- Banda inferior estil botó d'App Store -->
+            <div class="absolute bottom-0 inset-x-0 p-4 bg-black/40 backdrop-blur-md border-t border-white/10 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 rounded-2xl bg-indigo-500 flex items-center justify-center text-xl shadow">
+                        👸
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Conte Emma</h4>
+                        <p class="text-[10px] text-slate-400">WebApp · Vercel</p>
+                    </div>
+                </div>
+                <button class="px-5 py-2 rounded-full bg-white text-slate-950 text-xs font-black tracking-wide uppercase hover:bg-slate-200 transition-colors">
+                    OBRIR
+                </button>
+            </div>
+        </article>
+
+        <!-- CARD 2: RECOLLIDA COMPACTA DE PRODUCTIVITAT -->
+        <section class="feed-card rounded-[32px] p-5 bg-[#13151f]">
+            <div class="mb-4">
+                <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Imprescindibles de diari</span>
+                <h3 class="text-lg font-bold text-white">Eines que faig servir</h3>
+            </div>
+
+            <!-- Item 1: La pasta -->
+            <div class="flex items-center justify-between py-3 border-b border-white/5">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+                        💰
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">La Pasta</h4>
+                        <p class="text-[10px] text-slate-400">Quadre d'economia domèstica</p>
+                    </div>
+                </div>
+                <button class="px-4 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold">OBRIR</button>
+            </div>
+
+            <!-- Item 2: Traductor IA -->
+            <div class="flex items-center justify-between py-3 border-b border-white/5">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl">
+                        🗣️
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Traductor IA</h4>
+                        <p class="text-[10px] text-slate-400">Traducció contextual intel·ligent</p>
+                    </div>
+                </div>
+                <button class="px-4 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold">OBRIR</button>
+            </div>
+
+            <!-- Item 3: Daily Journal -->
+            <div class="flex items-center justify-between pt-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+                        📔
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Daily Journal</h4>
+                        <p class="text-[10px] text-slate-400">Diari personal i reflexions</p>
+                    </div>
+                </div>
+                <button class="px-4 py-1.5 rounded-full bg-white/10 text-indigo-300 text-xs font-bold">OBRIR</button>
+            </div>
+        </section>
+
+        <!-- CARD 3: STORY DE JOC (L'IMPOSTOR) -->
+        <article class="feed-card rounded-[32px] overflow-hidden bg-gradient-to-b from-[#2e1065] to-[#090a0f] relative">
+            <div class="p-6 pb-24">
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-purple-300">Joc Social</span>
+                <h2 class="text-2xl font-black text-white mt-1 leading-tight">L'Impostor</h2>
+                <p class="text-xs text-purple-200/80 mt-2 leading-relaxed">
+                    Un joc creat per a sopars amb amics i família: tothom rep una paraula secreta menys un. Qui és el traïdor?
+                </p>
+            </div>
+
+            <div class="absolute bottom-0 inset-x-0 p-4 bg-black/40 backdrop-blur-md border-t border-white/10 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 rounded-2xl bg-purple-600 flex items-center justify-center text-xl shadow">
+                        🕵️
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">L'Impostor</h4>
+                        <p class="text-[10px] text-slate-400">Multijugador mòbil</p>
+                    </div>
+                </div>
+                <button class="px-5 py-2 rounded-full bg-white text-slate-950 text-xs font-black tracking-wide uppercase hover:bg-slate-200 transition-colors">
+                    JUGAR
+                </button>
+            </div>
+        </article>
+
+        <!-- CARD 4: CONTE IVET -->
+        <article class="feed-card rounded-[32px] overflow-hidden bg-gradient-to-b from-[#4a044e] to-[#0f172a] relative">
+            <div class="p-6 pb-24">
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-pink-300">Món Infantil</span>
+                <h2 class="text-2xl font-black text-white mt-1 leading-tight">El conte de l'Ivet</h2>
+                <p class="text-xs text-pink-200/80 mt-2 leading-relaxed">
+                    Una història de fades i bosc encantat, dissenyada amb format gran per llegir abans d'anar a dormir.
+                </p>
+            </div>
+
+            <div class="absolute bottom-0 inset-x-0 p-4 bg-black/40 backdrop-blur-md border-t border-white/10 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 rounded-2xl bg-pink-600 flex items-center justify-center text-xl shadow">
+                        🧚
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Conte Ivet</h4>
+                        <p class="text-[10px] text-slate-400">Lectura digital</p>
+                    </div>
+                </div>
+                <button class="px-5 py-2 rounded-full bg-white text-slate-950 text-xs font-black tracking-wide uppercase hover:bg-slate-200 transition-colors">
+                    LLEGIR
+                </button>
+            </div>
+        </article>
+
+        <footer class="text-center pt-4 pb-10">
+            <p class="text-xs text-slate-500">
+                Mostra 2: Feed Editorial estil App Store · Albert Garriga
+            </p>
+        </footer>
+
+    </main>
+
+</body>
+</html>
+
