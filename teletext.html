@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Coses de l'Albert | Teletext</title>
+<meta name="description" content="El hub de creacions de l'Albert Garriga, en format teletext dels anys 90.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blanc:#ffffff; --groc:#ffff00; --cia:#00ffff; --verd:#00ff00;
+    --magenta:#ff00ff; --vermell:#ff0000; --blau:#0000cc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000}
+  body{
+    color:var(--blanc);
+    font-family:'VT323','Courier New',monospace;
+  }
+  /* Vinyeta + línies d'escaneig CRT */
+  body::after{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:99;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:98;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%);
+  }
+  a{color:inherit;text-decoration:none}
+  a:hover{text-decoration:underline}
+  #tv{position:fixed; inset:0; display:flex; align-items:center; justify-content:center}
+  .screen{
+    width:16em;              /* 40 columnes x 0.4em (VT323) */
+    height:27.6em;           /* 24 files x 1.15em */
+    position:relative;
+    text-shadow:0 0 .07em currentColor;
+  }
+  .page{display:none; position:absolute; inset:0}
+  .page.on{display:block}
+  .r{height:1.15em; line-height:1.15em; white-space:pre; overflow:hidden; font-size:1em}
+  .r:empty::after{content:"\00a0"}
+  .groc{color:var(--groc)} .cia{color:var(--cia)} .verd{color:var(--verd)}
+  .magenta{color:var(--magenta)} .vermell{color:var(--vermell)}
+  .blau-f{color:#9c9cff}
+  .hdr{display:flex; justify-content:space-between; align-items:baseline}
+  .hdr .mig{flex:1; text-align:center}
+  .bar{
+    background:repeating-linear-gradient(90deg,
+      #f00 0 1ch, #ff0 1ch 2ch, #0f0 2ch 3ch, #0ff 3ch 4ch, #00f 4ch 5ch, #f0f 5ch 6ch);
+  }
+  .rule{background:linear-gradient(var(--magenta),var(--magenta)) 0 50%/100% 2px no-repeat}
+  .bigrow{height:4.6em; overflow:hidden}
+  .big{display:block; font-size:2em; line-height:1.15; height:1.15em; letter-spacing:.02em}
+  .blink{animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .blk{display:inline-block; width:1ch; height:1em; background:#fff; vertical-align:-.15em}
+  .cor{
+    display:inline-block; width:1ch; height:1em; background:var(--magenta);
+    vertical-align:-.15em;
+    clip-path:polygon(50% 100%, 6% 55%, 0 30%, 12% 6%, 32% 0, 50% 18%, 68% 0, 88% 6%, 100% 30%, 94% 55%);
+  }
+  .fastext{display:flex; height:1.15em; line-height:1.15em; text-align:center}
+  .fastext a{flex:1; color:#000; font-weight:bold; text-shadow:none}
+  .fastext a:hover{text-decoration:none; filter:brightness(1.25)}
+  .fx-v{background:var(--vermell)} .fx-g{background:var(--verd)}
+  .fx-y{background:var(--groc)} .fx-c{background:var(--cia)}
+  .footer{display:flex; justify-content:space-between; align-items:baseline}
+</style>
+</head>
+<body>
+<div id="tv">
+<div class="screen" id="screen">
+<section class="page" id="p100">
+<div class="r hdr"><span class="groc">P100</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="bigrow"><span class="big groc">LES COSES</span><span class="big cia">DE L'ALBERT</span></div>
+<div class="r"></div>
+<div class="r">   HUB DE CREACIONS I INTEL·LIGENCIA    </div>
+<div class="r"><span class="magenta">   EDICIÓ TELETEXT</span>                      </div>
+<div class="r"></div>
+<div class="r">   <a href="#p101"><span class="verd">101</span></a> CONTES I BIBLIOTECA              </div>
+<div class="r">   <a href="#p102"><span class="verd">102</span></a> JOCS I OCI                       </div>
+<div class="r">   <a href="#p103"><span class="verd">103</span></a> FINANCES I FAMILIA               </div>
+<div class="r">   <a href="#p104"><span class="verd">104</span></a> EINES D'IA                       </div>
+<div class="r">   <a href="#p105"><span class="verd">105</span></a> EDUCACIÓ I MATES                 </div>
+<div class="r">   <a href="#p106"><span class="verd">106</span></a> CONTES DE BONA NIT               </div>
+<div class="r"></div>
+<div class="r">Tria una pagina per comencar<span class="blk blink"></span>           </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="p101">
+<div class="r hdr"><span class="groc">P101</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="r"><span class="groc">CONTES I BIBLIOTECA</span>                     </div>
+<div class="r rule"></div>
+<div class="r"><span class="groc">&gt; CONTE DE L'EMMA</span>               <span class="cia">[VERCEL]</span></div>
+<div class="r">  Aventura interactiva creada amb IA.   </div>
+<div class="r">  <a class="verd" href="https://llibre-emma2.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>   <a class="cia" href="html/Conte%20Emma.html">&gt; LOCAL</a>                     </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; CONTE DE L'IVET</span>               <span class="cia">[VERCEL]</span></div>
+<div class="r">  Fades i bosc encantat per a tauleta.  </div>
+<div class="r">  <a class="verd" href="https://llibre-ivet.vercel.app/" target="_blank" rel="noopener">&gt; LLEGIR</a>   <a class="cia" href="html/Conte%20Ivet.html">&gt; LOCAL</a>                    </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; CONTE DE LA JUDIT</span>              <span class="cia">[LOCAL]</span></div>
+<div class="r">  Aventura d'aprenentatge i tendresa.   </div>
+<div class="r">  <a class="verd" href="html/Conte%20Judit.html">&gt; LLEGIR</a>                              </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; LA MEVA BIBLIOTECA</span>            <span class="cia">[WEBAPP]</span></div>
+<div class="r">  Cataleg i registre de lectures.       </div>
+<div class="r">  <a class="verd" href="https://llibres-webapp.vercel.app/" target="_blank" rel="noopener">&gt; EXPLORAR</a>                            </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="p102">
+<div class="r hdr"><span class="groc">P102</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="r"><span class="groc">JOCS I OCI</span>                              </div>
+<div class="r rule"></div>
+<div class="r"><span class="groc">&gt; L'IMPOSTOR</span>                <span class="cia">[JOC SOCIAL]</span></div>
+<div class="r">  Joc multijugador per a sopars.        </div>
+<div class="r">  <a class="verd" href="https://impostor-swart-kappa.vercel.app/" target="_blank" rel="noopener">&gt; JUGAR</a>                               </div>
+<div class="r"></div>
+<div class="r"><span class="cia">Mes jocs properament...</span>                 </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="p103">
+<div class="r hdr"><span class="groc">P103</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="r"><span class="groc">FINANCES I FAMILIA</span>                      </div>
+<div class="r rule"></div>
+<div class="r"><span class="groc">&gt; LA PASTA</span>                    <span class="cia">[FINANCES]</span></div>
+<div class="r">  Control d'estalvi domestic.   <a class="verd" href="https://finances-lv17-beta.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a> </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; FINANCES PER A JOVES</span>        <span class="cia">[EDUCACIÓ]</span></div>
+<div class="r">  Educació financera.   <a class="verd" href="https://showmethemoney-lovat.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>         </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; DAILY JOURNAL</span>                  <span class="cia">[DIARI]</span></div>
+<div class="r">  Diari personal i hàbits.   <a class="verd" href="https://daily-journal-two-rho.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>    </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; CREIXEMENT PERSONAL</span>          <span class="cia">[FAMÍLIA]</span></div>
+<div class="r">  Criança i formació.   <a class="verd" href="https://creixamentpersonal.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>         </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; PODCAST CLEANER</span>                <span class="cia">[ÀUDIO]</span></div>
+<div class="r">  Neteja de feeds d'àudio.   <a class="verd" href="html/Podcast%20feed.html">&gt; OBRIR</a>    </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="p104">
+<div class="r hdr"><span class="groc">P104</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="r"><span class="groc">EINES D'IA</span>  <span class="magenta">GOOGLE AI STUDIO</span>            </div>
+<div class="r rule"></div>
+<div class="r"><span class="groc">&gt; TRADUCTOR INTEL·LIGENT</span>     <span class="cia">[GOOGLE AI]</span></div>
+<div class="r">  Traducció contextual multi-idioma.    </div>
+<div class="r">  <a class="verd" href="https://ai.studio/apps/drive/1pewDyRcZOwkYa4mZ1_ttiZoM7GojElLJ?fullscreenApplet=true" target="_blank" rel="noopener">&gt; PROVAR</a>                              </div>
+<div class="r"><span class="groc">&gt; ANÀLISI SINTÀCTICA</span>           <span class="cia">[LLENGUA]</span></div>
+<div class="r">  Oracions i funcions gramaticals.      </div>
+<div class="r">  <a class="verd" href="https://ai.studio/apps/drive/1ATfh0NZxHA6k_46fcHbC1ik5wGt0ftnV?fullscreenApplet=true" target="_blank" rel="noopener">&gt; PROVAR</a>                              </div>
+<div class="r"><span class="groc">&gt; SUMA +-</span>                       <span class="cia">[CALCUL]</span></div>
+<div class="r">  Operacions matemàtiques bàsiques.     </div>
+<div class="r">  <a class="verd" href="https://ai.studio/apps/drive/1733N6zj2tv-APmPc77ZwEl_GIXTDqKCj?fullscreenApplet=true" target="_blank" rel="noopener">&gt; PROVAR</a>                              </div>
+<div class="r"><span class="groc">&gt; MATEMÀTIQUES PAS A PAS</span>     <span class="cia">[GOOGLE AI]</span></div>
+<div class="r">  Problemes resolts i explicats.        </div>
+<div class="r">  <a class="verd" href="https://ai.studio/apps/drive/1iR6ejez5lo8AcJ2cB9ESe1Ui3HGA3yxf?fullscreenApplet=true" target="_blank" rel="noopener">&gt; PROVAR</a>                              </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="p105">
+<div class="r hdr"><span class="groc">P105</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="r"><span class="groc">EDUCACIÓ I MATES</span>                        </div>
+<div class="r rule"></div>
+<div class="r"><span class="groc">&gt; PROBLEMES DE MATES</span>          <span class="cia">[EDUCACIÓ]</span></div>
+<div class="r">  Exercicis per a primària.   <a class="verd" href="https://matematiques.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>   </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; LES HORES</span>                        <span class="cia">[JOC]</span></div>
+<div class="r">  Aprèn el rellotge jugant.   <a class="verd" href="https://horaapp.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>   </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; FRACCIONS AMB L'EMMA</span>           <span class="cia">[LOCAL]</span></div>
+<div class="r">  Reptes de fraccions, 6è.   <a class="verd" href="html/Fraccions.html">&gt; OBRIR</a>    </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; EINA TEMPS VERBALS</span>         <span class="cia">[GRAMÀTICA]</span></div>
+<div class="r">  Conjugacions catalanes.   <a class="verd" href="html/Temps%20verbals.html">&gt; OBRIR</a>     </div>
+<div class="r"></div>
+<div class="r"><span class="groc">&gt; EL COS HUMÀ</span>                 <span class="cia">[CIÈNCIES]</span></div>
+<div class="r">  Anatomia i biologia.   <a class="verd" href="https://cos-huma.vercel.app/" target="_blank" rel="noopener">&gt; OBRIR</a>        </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="p106">
+<div class="r hdr"><span class="groc">P106</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="r"><span class="groc">CONTES DE BONA NIT</span><span class="cia">  (12 RELATS)</span>         </div>
+<div class="r rule"></div>
+<div class="r">Històries per llegir abans de dormir:   </div>
+<div class="r"></div>
+<div class="r">  <span class="groc">01</span> <a href="https://telegra.ph/El-conte-de-la-Candela-10-23"><span class="verd">El conte de la Candela</span></a>             </div>
+<div class="r">  <span class="groc">02</span> <a href="https://telegra.ph/El-Misteri-del-Rellotge-i-el-Planeta-Xuxes-07-23"><span class="verd">El Planeta Xuxes</span></a>                   </div>
+<div class="r">  <span class="groc">03</span> <a href="https://telegra.ph/El-misteri-dels-llamps-i-els-trons-07-14"><span class="verd">Llamps i Trons</span></a>                     </div>
+<div class="r">  <span class="groc">04</span> <a href="https://telegra.ph/LEDAT-MITJANA-03-18"><span class="verd">L'Edat Mitjana</span></a>                     </div>
+<div class="r">  <span class="groc">05</span> <a href="https://telegra.ph/La-m%C3%A0gia-i-el-misteri-del-m%C3%B2bil-nou-03-05"><span class="verd">El Mòbil Nou</span></a>                       </div>
+<div class="r">  <span class="groc">06</span> <a href="https://telegra.ph/Les-aventures-de-lEmma-lIvet-i-la-Judit-a-Tossa-de-Mar-02-10"><span class="verd">Tossa de Mar</span></a>                       </div>
+<div class="r">  <span class="groc">07</span> <a href="https://telegra.ph/Les-germanes-i-laventura-a-Vallter-02-10"><span class="verd">Aventura a Vallter</span></a>                 </div>
+<div class="r">  <span class="groc">08</span> <a href="https://telegra.ph/Joc-de-cartes--Especial-Germanes-02-10"><span class="verd">Joc de Cartes</span></a>                      </div>
+<div class="r">  <span class="groc">09</span> <a href="https://telegra.ph/El-mapa-del-bosc-m%C3%A0gic-02-10"><span class="verd">Bosc Màgic</span></a>                         </div>
+<div class="r">  <span class="groc">10</span> <a href="https://telegra.ph/El-rellotge-que-no-va-b%C3%A9-02-10"><span class="verd">Rellotge espatllat</span></a>                 </div>
+<div class="r">  <span class="groc">11</span> <a href="https://telegra.ph/LEstiu-M%C3%A0gic-al-C%C3%A0mping-Cypsela-02-10"><span class="verd">Càmping Cypsela</span></a>                    </div>
+<div class="r">  <span class="groc">12</span> <a href="https://telegra.ph/El-Campionat-del-Gimn%C3%A0s-de-les-Paraules-01-21-2"><span class="verd">Campionat del Gimnàs</span></a>               </div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="r"></div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+<section class="page" id="subtitols">
+<div class="r hdr"><span class="groc">P888</span><span class="mig blau-f">TELETEXT&nbsp;DE&nbsp;L'ALBERT</span><span class="cia"><span class="js-data">-- ---</span>&nbsp;<span class="js-hora">--:--</span></span></div>
+<div class="r bar"></div>
+<div class="r"></div>
+<div class="bigrow"><span class="big magenta">HAS TROBAT LA</span><span class="big groc">PÀGINA SECRETA!</span></div>
+<div class="r">  Aquesta pàgina no surt a l'índex.     </div>
+<div class="r">  Només hi arriben els millors          </div>
+<div class="r">  detectives.                           </div>
+<div class="r"></div>
+<div class="r"><span class="cia">  Emma, Ivet i Judit:</span>                   </div>
+<div class="r">  Si esteu llegint això, és que heu     </div>
+<div class="r">  descobert l'amagatall del pare.       </div>
+<div class="r">  Sou tres noies extraordinàries i us   </div>
+<div class="r">  estima més que res al món.            </div>
+<div class="r"><span class="verd">  PREMI: un gelat a càrrec del pare.</span>    </div>
+<div class="r"><span class="verd">  Reclameu-lo sense vergonya.</span>           </div>
+<div class="r"></div>
+<div class="r">  <span class="cor"></span> Amb amor, pare <span class="cor"></span>                    </div>
+<div class="r"></div>
+<div class="r">  <a href="#p100"><span class="cia">&gt; TORNAR A L'ÍNDEX (P100)</span></a>             </div>
+<div class="fastext"><a class="fx-v" href="#p100">100 INDEX</a><a class="fx-g" href="#p101">101 CONTES</a><a class="fx-y" href="#p104">104 IA</a><a class="fx-c" href="#p105">105 EDUC.</a></div>
+<div class="r footer"><span class="cia">Albert Garriga 2026</span><span class="peu-dreta"><span class="groc">P100-106</span> <a href="#subtitols" aria-label="pagina secreta"><span class="blk blink"></span></a></span></div>
+</section>
+</div>
+</div>
+<script>
+(function(){
+  var dies=['dg.','dl.','dt.','dc.','dj.','dv.','ds.'];
+  var mesos=['gen','feb','mar','abr','mai','jun','jul','ago','set','oct','nov','des'];
+  function p2(n){return (n<10?'0':'')+n;}
+  function tick(){
+    var d=new Date();
+    var dt=p2(d.getDate())+' '+mesos[d.getMonth()];
+    var hr=p2(d.getHours())+':'+p2(d.getMinutes());
+    var ds=document.querySelectorAll('.js-data');
+    for(var i=0;i<ds.length;i++) ds[i].textContent=dt;
+    var hs=document.querySelectorAll('.js-hora');
+    for(var j=0;j<hs.length;j++) hs[j].textContent=hr;
+  }
+  tick(); setInterval(tick,1000);
+
+  var ORDRE=['p100','p101','p102','p103','p104','p105','p106','subtitols'];
+  function mostra(){
+    var h=(location.hash||'#p100').slice(1);
+    if(ORDRE.indexOf(h)<0) h='p100';
+    var ps=document.querySelectorAll('.page');
+    for(var i=0;i<ps.length;i++) ps[i].classList.toggle('on', ps[i].id===h);
+  }
+  window.addEventListener('hashchange', mostra);
+  mostra();
+
+  document.addEventListener('keydown', function(e){
+    if(e.key!=='ArrowRight' && e.key!=='ArrowLeft') return;
+    var h=(location.hash||'#p100').slice(1);
+    var i=ORDRE.indexOf(h); if(i<0) i=0;
+    if(e.key==='ArrowRight') i=Math.min(i+1, ORDRE.length-1);
+    else i=Math.max(i-1, 0);
+    location.hash=ORDRE[i];
+    e.preventDefault();
+  });
+
+  function fit(){
+    var s=Math.min(window.innerWidth/16.6, window.innerHeight/28.6);
+    document.getElementById('screen').style.fontSize=s+'px';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+})();
+</script>
+</body>
+</html>
